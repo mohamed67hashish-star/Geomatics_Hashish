@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="theme-color" content="#121417">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Geomathics</title>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* primitives */
+:root{--g-950:#121417;--g-900:#181b1f;--g-850:#1f2328;--g-800:#2a2f36;--g-300:#b3b9c3;--g-200:#d9dce1;--sage-300:#93bba8;--sage-700:#3d7660;--rose-400:#e58a96;--rose-700:#b4233f;
+/* semantic */
+--bg:var(--g-950);--sf:var(--g-900);--sf2:var(--g-850);--ln:var(--g-800);--tx:var(--g-200);--mu:#8d94a0;--ac:var(--sage-300);--ai:#0f1a15;--dg:var(--rose-400);
+/* scale */
+--r:12px;--s1:8px;--s2:16px;--s3:24px;--s4:40px;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
+:root[data-theme=light]{--bg:#f6f7f8;--sf:#fff;--sf2:#eef0f2;--ln:#e1e4e8;--tx:#1d2127;--mu:#5d6572;--ac:var(--sage-700);--ai:#fff;--dg:var(--rose-700);color-scheme:light}
+html{scroll-padding-top:env(safe-area-inset-top,0px);-webkit-text-size-adjust:100%}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.65 "Readex Pro",system-ui,Tahoma,sans-serif;min-height:100vh;-webkit-tap-highlight-color:transparent}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:10}
+button,input,select,textarea{font:inherit;color:inherit;touch-action:manipulation}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--ac);outline-offset:3px}
+h1,h2,h3{text-wrap:balance}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:9;background:var(--bg);border-bottom:1px solid var(--ln);padding:12px var(--s2);display:flex;flex-wrap:wrap;gap:var(--s1);align-items:center}
+header h1{font-size:1.05rem;margin:0;font-weight:500;flex:1 1 auto;cursor:pointer;color:var(--tx)}
+.tools{display:flex;gap:4px;flex-wrap:wrap}
+#q{flex:1 1 100%;order:3;background:var(--sf);border:1px solid transparent;border-radius:var(--r);padding:10px 14px;min-height:44px}
+#q::placeholder{color:var(--mu)}
+#q:focus{border-color:var(--ln)}
+.btn{background:transparent;border:1px solid transparent;border-radius:10px;min-height:44px;min-width:44px;padding:0 14px;color:var(--mu);transition:background .15s,color .15s}
+.btn.pri{background:var(--ac);color:var(--ai);font-weight:500}
+.btn.dg{color:var(--dg)}
+.btn[aria-pressed=true]{color:var(--ac);border-color:var(--ln)}
+@media(hover:hover){.btn:hover{background:var(--sf2);color:var(--tx)}.btn.pri:hover{background:var(--ac);filter:brightness(1.08)}}
+main{max-width:1040px;margin:0 auto;padding:var(--s3) var(--s2) 72px}
+.bar{display:flex;align-items:center;gap:var(--s1);margin-bottom:var(--s3);flex-wrap:wrap}
+.bar h2{margin:0;font-size:1.35rem;font-weight:500;flex:1}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:var(--s2)}
+.card{position:relative;background:var(--sf);border-radius:var(--r);display:flex;flex-direction:column}
+.card::after{content:"";position:absolute;inset-block-start:18px;inset-inline-end:18px;width:9px;height:9px;border-radius:50%;background:var(--c)}
+.cm{all:unset;cursor:pointer;padding:var(--s3) var(--s3) var(--s2);display:block;flex:1;border-radius:var(--r)}
+.cm:focus-visible{outline:2px solid var(--ac);outline-offset:-2px}
+.cm .ic{font-size:1.5rem;display:block;opacity:.9}
+.cm h3{margin:var(--s1) 0 2px;font-size:1.05rem;font-weight:500}
+.cm p{margin:0;color:var(--mu);font-size:.9rem}
+.cm small{color:var(--mu);font-size:.82rem;font-variant-numeric:tabular-nums;display:block;margin-top:var(--s1)}
+.ca{display:flex;gap:4px;padding:0 var(--s1) var(--s1)}
+.chips{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:var(--s2)}
+.chip{white-space:nowrap;border-radius:99px;background:transparent;border:1px solid var(--ln);color:var(--mu);min-height:40px;padding:0 16px}
+.chip[aria-pressed=true]{background:var(--sf2);color:var(--tx);border-color:var(--sf2)}
+.list{display:flex;flex-direction:column}
+.row{display:flex;align-items:center;gap:var(--s2);border-bottom:1px solid var(--ln);padding:14px 4px;flex-wrap:wrap}
+.row .ti{font-size:1.25rem;width:2rem;text-align:center;opacity:.9}
+.row .tx{flex:1 1 180px;min-width:0}
+.row b{display:block;font-weight:500;overflow-wrap:anywhere}
+.row span{color:var(--mu);font-size:.85rem;overflow-wrap:anywhere}
+.row .ac{display:flex;gap:2px;flex-wrap:wrap}
+.empty{text-align:center;color:var(--mu);padding:64px var(--s2)}
+dialog{background:var(--sf);color:var(--tx);border:1px solid var(--ln);border-radius:16px;padding:0;width:min(620px,94vw);max-height:90vh;overscroll-behavior:contain}
+dialog::backdrop{background:#0009}
+.in{padding:var(--s3);display:grid;gap:var(--s2)}
+.in h2{margin:0;font-size:1.15rem;font-weight:500}
+label{display:grid;gap:4px;font-size:.88rem;color:var(--mu)}
+input:not([type=radio]),textarea,select{background:var(--bg);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;min-height:44px;width:100%;color:var(--tx)}
+fieldset{border:0;padding:0;margin:0}legend{font-size:.88rem;color:var(--mu);margin-bottom:6px}
+.sw{display:flex;flex-wrap:wrap;gap:8px}
+.sw label{display:block;position:relative}
+.sw input{position:absolute;opacity:0}
+.sw i{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;border:2px solid transparent;font-style:normal;font-size:1.25rem;background:var(--sf2)}
+.sw input:checked+i{border-color:var(--ac)}
+.sw input:focus-visible+i{outline:2px solid var(--ac);outline-offset:2px}
+.end{display:flex;gap:8px;justify-content:flex-end}
+.ed{min-height:140px;background:var(--bg);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;color:var(--tx)}
+.tb{display:flex;gap:4px}
+.note{line-height:1.85}
+.vw iframe,.vw video,.vw img{width:100%;border:0;border-radius:10px;background:#000;max-height:70vh}
+.vw iframe{aspect-ratio:16/9;height:auto}
+.vw iframe.pdf{aspect-ratio:auto;height:70vh;background:#fff}
+.tag{color:var(--ac);font-size:.85rem}
+#toast{position:fixed;inset-inline:0;bottom:calc(16px + env(safe-area-inset-bottom,0px));margin:auto;width:max-content;max-width:90vw;background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:99px;z-index:50;display:none}
+@media(prefers-reduced-motion:no-preference){dialog[open]{animation:pop .16s ease-out}@keyframes pop{from{opacity:0}}}
+@media(min-width:760px){#q{order:0;flex:0 1 360px}header{padding:12px var(--s3)}main{padding-top:var(--s4)}}
+/* colorize: color carries meaning (content type, subject) */
+:root{--k-file:#7fa8f5;--k-video:#f0907f;--k-link:#62cfa6;--k-note:#e8c670}
+:root[data-theme=light]{--k-file:#3f6fd8;--k-video:#d4553f;--k-link:#1f9c74;--k-note:#b88a14}
+.k-file{--k:var(--k-file)}.k-video{--k:var(--k-video)}.k-link{--k:var(--k-link)}.k-note{--k:var(--k-note)}
+.row .ti{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;background:color-mix(in srgb,var(--k) 16%,transparent);opacity:1}
+.card{background:color-mix(in srgb,var(--c) 9%,var(--sf))}
+.card::after{width:11px;height:11px}
+.cm small{color:color-mix(in srgb,var(--c) 55%,var(--tx))}
+.chip[data-id=file][aria-pressed=true]{background:color-mix(in srgb,var(--k-file) 20%,transparent);color:var(--k-file);border-color:transparent}
+.chip[data-id=video][aria-pressed=true]{background:color-mix(in srgb,var(--k-video) 20%,transparent);color:var(--k-video);border-color:transparent}
+.chip[data-id=link][aria-pressed=true]{background:color-mix(in srgb,var(--k-link) 20%,transparent);color:var(--k-link);border-color:transparent}
+.chip[data-id=note][aria-pressed=true]{background:color-mix(in srgb,var(--k-note) 20%,transparent);color:var(--k-note);border-color:transparent}
+.bar h2{border-inline-start:4px solid var(--ac);padding-inline-start:12px}
+header h1{color:var(--ac)}
+</style>
+</head>
+<body>
+<header>
+  <h1 data-act="home" data-t="title"></h1>
+  <input id="q" type="search" data-ph="search" autocomplete="off">
+  <div class="tools">
+    <button class="btn" data-act="mode" id="bMode" aria-pressed="false"></button>
+    <button class="btn" data-act="theme" aria-label="Theme">◐</button>
+    <button class="btn" data-act="lang">EN</button>
+    <button class="btn" data-act="backup" aria-label="Backup">⇅</button>
+  </div>
+</header>
+<main id="main"></main>
+<dialog id="dlg"></dialog>
+<dialog id="ask"></dialog>
+<input type="file" id="imp" accept=".json,application/json" hidden>
+<div id="toast" role="status"></div>
+<script>
+const $=s=>document.querySelector(s);
+const L={ar:{title:'Geomathics',search:'ابحث في المواد والملفات والفيديوهات',subjects:'المواد',addSubject:'إضافة مادة',editSubject:'تعديل المادة',name:'اسم المادة',desc:'وصف (اختياري)',color:'اللون',icon:'الأيقونة',save:'حفظ',cancel:'إلغاء',del:'حذف',edit:'تعديل',delSubject:'حذف المادة وكل محتوياتها (%n)؟',delItem:'حذف هذا العنصر؟',addRes:'إضافة محتوى',file:'ملف',video:'فيديو',link:'رابط',note:'ملاحظة',resTitle:'العنوان',url:'الرابط',pick:'اختر ملفًا',noSubjects:'لا توجد مواد بعد. أضف أول مادة للبدء.',noSubjectsS:'لا توجد مواد بعد.',noRes:'لا يوجد محتوى في هذه المادة.',all:'الكل',back:'كل المواد',admin:'وضع المشرف',student:'عرض الطالب',exp:'تصدير نسخة احتياطية (JSON)',imp:'استيراد نسخة احتياطية',imported:'تم استيراد البيانات',bad:'الملف غير صالح',results:'نتائج البحث',none:'لا توجد نتائج مطابقة',open:'فتح',download:'تنزيل',site:'فتح في الموقع',big:'الملف كبير جدًا (الحد 20 إلى 25 ميجابايت أونلاين)',items:'عنصر',noPrev:'لا توجد معاينة لهذا النوع. نزّل الملف لفتحه.',need:'اختر ملفًا أو أدخل رابطًا',ok:'تأكيد',text:'النص',up:'تحريك لأعلى',dn:'تحريك لأسفل',close:'إغلاق',saved:'تم الحفظ',vurl:'رابط يوتيوب أو فيميو، أو ارفع ملف فيديو',backup:'النسخ الاحتياطي',pw:'كلمة مرور المشرف',wrong:'كلمة المرور غير صحيحة',unlock:'دخول',ghHelp:'أنشئ Fine-grained token بصلاحية Contents: Read and write على هذا المستودع فقط. يُحفظ في هذا المتصفح فقط. اتركه فارغًا لفصل الربط.',owner:'اسم الحساب (Owner)',repo:'اسم المستودع (Repository)',branch:'الفرع (Branch)',token:'التوكن (Token)',ghok:'تم الحفظ على GitHub، سيظهر للطلاب خلال دقيقة تقريبًا',nowrite:'لا تملك صلاحية الرفع أو التعديل أونلاين'},
+en:{title:'Geomathics',search:'Search subjects, files and videos',subjects:'Subjects',addSubject:'Add subject',editSubject:'Edit subject',name:'Subject name',desc:'Description (optional)',color:'Color',icon:'Icon',save:'Save',cancel:'Cancel',del:'Delete',edit:'Edit',delSubject:'Delete this subject and all its content (%n)?',delItem:'Delete this item?',addRes:'Add content',file:'File',video:'Video',link:'Link',note:'Note',resTitle:'Title',url:'URL',pick:'Choose a file',noSubjects:'No subjects yet. Add your first one to begin.',noSubjectsS:'No subjects yet.',noRes:'This subject has no content yet.',all:'All',back:'All subjects',admin:'Admin mode',student:'Student view',exp:'Export backup (JSON)',imp:'Import backup',imported:'Data imported',bad:'Invalid backup file',results:'Search results',none:'No matches',open:'Open',download:'Download',site:'Open on site',big:'File is too large (20 MB limit online)',items:'items',noPrev:'No preview for this type. Download the file to open it.',need:'Choose a file or enter a URL',ok:'Confirm',text:'Text',up:'Move up',dn:'Move down',close:'Close',saved:'Saved',vurl:'YouTube or Vimeo link, or upload a video file',backup:'Backup',pw:'Admin password',wrong:'Wrong password',unlock:'Unlock',ghHelp:'Create a fine-grained token with Contents: Read and write on this repository only. It is stored in this browser only. Leave it empty to disconnect.',owner:'Owner',repo:'Repository',branch:'Branch',token:'Token',ghok:'Saved to GitHub. Students will see it in about a minute.',nowrite:'You do not have permission to upload or edit online'}};
+const COL=['#f0b95b','#5fcfa4','#7aa7ff','#ef7d8e','#b490f0','#5fd0e6'];
+const ICO=['📘','🧮','🧪','🌍','💻','🎨','📜','⚖️','🩺','📐'];
+const TI={file:'📄',video:'▶️',link:'🔗',note:'📝'};
+let gh=null;try{gh=JSON.parse(localStorage.getItem('sh_gh'))}catch(e){}
+const ghH=()=>({Authorization:'Bearer '+gh.t,Accept:'application/vnd.github+json'});
+const ghU=p=>`https://api.github.com/repos/${gh.o}/${gh.r}/contents/${p}`;
+async function ghGet(p){const r=await fetch(ghU(p)+'?ref='+gh.b+'&t='+Date.now(),{headers:ghH()});if(r.status===404)return null;if(!r.ok)throw new Error(await ghMsg(r));return r.json()}
+async function ghMsg(r){const j=await r.json().catch(()=>({}));return r.status+' '+(j.message||'')}
+async function ghPut(p,b64){const o=await ghGet(p).catch(()=>null);const r=await fetch(ghU(p),{method:'PUT',headers:ghH(),body:JSON.stringify({message:'update '+p,content:b64,branch:gh.b,...(o?{sha:o.sha}:{})})});if(!r.ok)throw new Error(await ghMsg(r))}
+async function ghDel(p){const o=await ghGet(p);if(!o)return;await fetch(ghU(p),{method:'DELETE',headers:ghH(),body:JSON.stringify({message:'delete '+p,sha:o.sha,branch:gh.b})})}
+let ghQ=Promise.resolve();
+async function site(){try{let j=null;if(gh){const o=await ghGet('data.json');if(o)j=JSON.parse(decodeURIComponent(escape(atob(o.content.replace(/\n/g,'')))))}else{const r=await fetch('data.json?t='+Date.now());if(r.ok)j=await r.json()}
+  if(j&&Array.isArray(j.subjects)){S={subjects:j.subjects};render()}}catch(e){}}
+let ref=null,S={subjects:[]},ui={admin:false,theme:'dark',lang:'ar',view:null,filter:'all',q:''};
+const t=k=>L[ui.lang][k];
+const uid=()=>Math.random().toString(36).slice(2,10);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const plain=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent};
+/* storage: settings in localStorage, data in IndexedDB (fits large files), localStorage fallback */
+const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open('studyhub',1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
+async function load(){try{const d=await idb();return await new Promise((r,j)=>{const q=d.transaction('k').objectStore('k').get('s');q.onsuccess=()=>r(q.result);q.onerror=()=>j()})}catch(e){try{return JSON.parse(localStorage.getItem('sh_s'))}catch(e){return null}}}
+async function save(){if(!ref&&gh){ghQ=ghQ.then(()=>ghPut('data.json',btoa(unescape(encodeURIComponent(JSON.stringify({subjects:S.subjects}))))).then(()=>toast(t('ghok'))).catch(e=>toast('GitHub: '+(e.message||'error'),9000)));return}
+  if(ref){try{await ref.set(JSON.parse(JSON.stringify({subjects:S.subjects})))}catch(e){toast(t('nowrite'))}return}
+  try{const d=await idb();d.transaction('k','readwrite').objectStore('k').put(S,'s')}catch(e){try{localStorage.setItem('sh_s',JSON.stringify(S))}catch(e){toast('Storage full')}}}
+function prefs(w){try{if(w)localStorage.setItem('sh_p',JSON.stringify({theme:ui.theme,lang:ui.lang}));else Object.assign(ui,JSON.parse(localStorage.getItem('sh_p'))||{})}catch(e){}}
+function toast(m,ms){const e=$('#toast');e.textContent=m;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',ms||2400)}
+function clean(h){const d=new DOMParser().parseFromString(h,'text/html');const ok=['B','I','U','STRONG','EM','UL','OL','LI','P','BR','H3','DIV','SPAN'];(function w(n){[...n.childNodes].forEach(c=>{if(c.nodeType===1){if(!ok.includes(c.tagName)){c.replaceWith(...c.childNodes);return w(n)}[...c.attributes].forEach(a=>c.removeAttribute(a.name));w(c)}else if(c.nodeType!==3)c.remove()})})(d.body);return d.body.innerHTML}
+const dataBlob=d=>{const [h,b]=d.split(','),m=h.match(/:(.*?);/)[1],bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:m})};
+const blobUrl=d=>{const [h,b]=d.split(','),m=h.match(/:(.*?);/)[1],bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);const url=URL.createObjectURL(new Blob([u],{type:m}));blobUrl.l.push(url);return url};blobUrl.l=[];
+const readFile=f=>new Promise((r,j)=>{const x=new FileReader();x.onload=()=>r(x.result);x.onerror=j;x.readAsDataURL(f)});
+async function saveFile(name,blob){let d=null;try{d=await claude.use('downloads')}catch(e){}
+  if(d){try{await d.save({filename:name,data:blob});return}catch(e){if(e&&e.code==='declined')return}}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()}
+const sub=id=>S.subjects.find(s=>s.id===id);
+const findItem=id=>{for(const s of S.subjects){const it=s.items.find(i=>i.id===id);if(it)return [s,it]}return []};
+function embed(u){let m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);if(m)return 'https://www.youtube.com/embed/'+m[1];m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/);return m?'https://player.vimeo.com/video/'+m[1]:null}
+/* views */
+function meta(it){return it.type==='file'?it.fname||'':it.type==='note'?plain(it.html).slice(0,90):it.type==='video'&&(it.data||it.asset)?it.fname||'':(it.url||'').replace(/^https?:\/\//,'').slice(0,70)}
+function rowH(it,s,ctl){const ic=it.mime&&it.mime.startsWith('image')?'🖼️':it.mime==='application/pdf'?'📕':TI[it.type];
+  const main=it.type==='link'?`<a class="btn" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer" style="display:grid;place-items:center;text-decoration:none">${t('open')}</a>`:`<button class="btn" data-act="view" data-id="${it.id}">${t('open')}</button>`;
+  const adm=ui.admin&&ctl?`<button class="btn" data-act="up" data-id="${it.id}" aria-label="${t('up')}">↑</button><button class="btn" data-act="dn" data-id="${it.id}" aria-label="${t('dn')}">↓</button><button class="btn" data-act="eitem" data-id="${it.id}" aria-label="${t('edit')}">✎</button><button class="btn dg" data-act="ditem" data-id="${it.id}" aria-label="${t('del')}">🗑</button>`:'';
+  return `<div class="row k-${it.type}"><div class="ti">${ic}</div><div class="tx"><b>${esc(it.title)}</b><span>${s&&!ctl?`<span class="tag">${esc(s.icon+' '+s.name)}</span> `:''}${esc(meta(it))}</span></div><div class="ac">${main}${adm}</div></div>`}
+function cardH(s){const adm=ui.admin?`<div class="ca"><button class="btn" data-act="esub" data-id="${s.id}">✎ ${t('edit')}</button><button class="btn dg" data-act="dsub" data-id="${s.id}" aria-label="${t('del')}">🗑</button></div>`:'';
+  return `<article class="card" style="--c:${s.color}"><button class="cm" data-act="osub" data-id="${s.id}"><span class="ic">${s.icon}</span><h3>${esc(s.name)}</h3>${s.desc?`<p>${esc(s.desc)}</p>`:''}<small>${s.items.length} ${t('items')}</small></button>${adm}</article>`}
+function render(){const m=$('#main'),q=ui.q.trim().toLowerCase();
+  if(q){const ss=S.subjects.filter(s=>(s.name+' '+s.desc).toLowerCase().includes(q));const is=[];S.subjects.forEach(s=>s.items.forEach(i=>{if((i.title+' '+meta(i)+' '+(i.type==='note'?plain(i.html):'')).toLowerCase().includes(q))is.push([s,i])}));
+    m.innerHTML=`<div class="bar"><h2>${t('results')}</h2></div>`+(ss.length||is.length?(ss.length?`<div class="grid" style="margin-bottom:18px">${ss.map(cardH).join('')}</div>`:'')+`<div class="list">${is.map(([s,i])=>rowH(i,s,false)).join('')}</div>`:`<div class="empty">${t('none')}</div>`);return}
+  const s=sub(ui.view);
+  if(!s){ui.view=null;m.innerHTML=`<div class="bar"><h2>${t('subjects')}</h2>${ui.admin?`<button class="btn pri" data-act="asub">+ ${t('addSubject')}</button>`:''}</div>`+(S.subjects.length?`<div class="grid">${S.subjects.map(cardH).join('')}</div>`:`<div class="empty">${ui.admin?t('noSubjects'):t('noSubjectsS')}</div>`);return}
+  const items=s.items.filter(i=>ui.filter==='all'||i.type===ui.filter);
+  m.innerHTML=`<div class="bar"><button class="btn" data-act="home">${ui.lang==='ar'?'→':'←'} ${t('back')}</button><h2>${s.icon} ${esc(s.name)}</h2>${ui.admin?`<button class="btn pri" data-act="aitem">+ ${t('addRes')}</button>`:''}</div>${s.desc?`<p style="color:var(--mu);margin-top:-6px">${esc(s.desc)}</p>`:''}<div class="chips">${['all','file','video','link','note'].map(k=>`<button class="chip" data-act="flt" data-id="${k}" aria-pressed="${ui.filter===k}">${t(k)}</button>`).join('')}</div>`+(items.length?`<div class="list">${items.map(i=>rowH(i,s,ui.filter==='all')).join('')}</div>`:`<div class="empty">${t('noRes')}</div>`)}
+function apply(){const h=document.documentElement;h.lang=ui.lang;h.dir=ui.lang==='ar'?'rtl':'ltr';h.dataset.theme=ui.theme;
+  document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));document.querySelectorAll('[data-ph]').forEach(e=>e.placeholder=t(e.dataset.ph));
+  const b=$('#bMode');b.setAttribute('aria-pressed',ui.admin);b.textContent=ui.admin?'🛠 '+t('admin'):'👁 '+t('student');$('[data-act=lang]').textContent=ui.lang==='ar'?'EN':'ع';document.title=t('title')}
+/* dialogs */
+const dlg=h=>{const d=$('#dlg');d.innerHTML='<div class="in">'+h+'</div>';if(!d.open)d.showModal()};
+$('#dlg').addEventListener('close',()=>{blobUrl.l.forEach(URL.revokeObjectURL);blobUrl.l=[];$('#dlg').innerHTML=''});
+document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.close()}));
+const ask=m=>new Promise(r=>{const d=$('#ask');d.innerHTML=`<div class="in"><p style="margin:0">${esc(m)}</p><div class="end"><button class="btn" id="n">${t('cancel')}</button><button class="btn pri dg" id="y" style="color:var(--ai)">${t('ok')}</button></div></div>`;d.showModal();$('#n').onclick=()=>{d.close();r(false)};$('#y').onclick=()=>{d.close();r(true)};d.onclose=()=>r(false)});
+const foot=`<div class="end"><button type="button" class="btn" data-act="close">${'%c'}</button><button class="btn pri">${'%s'}</button></div>`;
+function subForm(id){const s=sub(id)||{name:'',desc:'',color:COL[0],icon:ICO[0]};
+  dlg(`<h2>${t(id?'editSubject':'addSubject')}</h2><form id="f" style="display:grid;gap:12px"><label>${t('name')}<input name="name" required value="${esc(s.name)}"></label><label>${t('desc')}<textarea name="desc" rows="2">${esc(s.desc)}</textarea></label><fieldset><legend>${t('color')}</legend><div class="sw">${COL.map(c=>`<label><input type="radio" name="color" value="${c}" ${c===s.color?'checked':''}><i style="background:${c}"></i></label>`).join('')}</div></fieldset><fieldset><legend>${t('icon')}</legend><div class="sw">${ICO.map(c=>`<label><input type="radio" name="icon" value="${c}" ${c===s.icon?'checked':''}><i>${c}</i></label>`).join('')}</div></fieldset>${foot.replace('%c',t('cancel')).replace('%s',t('save'))}</form>`);
+  $('#f').onsubmit=e=>{e.preventDefault();const f=e.target.elements,o={name:f.name.value.trim(),desc:f.desc.value.trim(),color:f.color.value,icon:f.icon.value};if(!o.name)return;
+    if(id)Object.assign(s,o);else S.subjects.push({id:uid(),items:[],...o});save();$('#dlg').close();render()}}
+function itemForm(sid,id){const s=sub(sid),it=s.items.find(i=>i.id===id)||{type:'file',title:'',url:'',html:''};
+  dlg(`<h2>${t(id?'edit':'addRes')}</h2><form id="f" style="display:grid;gap:12px"><label>${t('addRes')}<select name="kind">${['file','video','link','note'].map(k=>`<option value="${k}" ${k===it.type?'selected':''}>${TI[k]} ${t(k)}</option>`).join('')}</select></label><label>${t('resTitle')}<input name="ttl" value="${esc(it.title)}"></label><label data-for="video link">${t('url')}<input name="url" type="text" inputmode="url" dir="ltr" placeholder="${it.type==='video'||!id?esc(t('vurl')):'https://'}" value="${esc(it.url||'')}"></label><label data-for="file video">${t('pick')}${it.fname?` (${esc(it.fname)})`:''}<input name="file" type="file" accept="${'${a}'}"></label><div data-for="note" style="display:grid;gap:6px"><div class="tb"><button type="button" class="btn" data-fmt="bold"><b>B</b></button><button type="button" class="btn" data-fmt="italic"><i>I</i></button><button type="button" class="btn" data-fmt="insertUnorderedList">•</button><button type="button" class="btn" data-fmt="formatBlock" data-v="h3">H</button></div><div class="ed note" id="ed" contenteditable="true" aria-label="${t('text')}">${clean(it.html||'')}</div></div>${foot.replace('%c',t('cancel')).replace('%s',t('save'))}</form>`);
+  const f=$('#f').elements,sync=()=>{document.querySelectorAll('#f [data-for]').forEach(e=>e.hidden=!e.dataset.for.split(' ').includes(f.kind.value));f.file.accept=f.kind.value==='video'?'video/*':'.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,image/*'};f.kind.onchange=sync;sync();
+  document.querySelectorAll('[data-fmt]').forEach(b=>{b.onmousedown=e=>e.preventDefault();b.onclick=()=>document.execCommand(b.dataset.fmt,false,b.dataset.v||null)});
+  $('#f').onsubmit=async e=>{e.preventDefault();const ty=f.kind.value,o={id:it.id||uid(),type:ty,title:f.ttl.value.trim()};const fl=f.file.files[0];
+    if(ty==='note'){o.html=clean($('#ed').innerHTML);o.title=o.title||plain(o.html).slice(0,40)||t('note')}
+    else if(ty==='link'){let u=f.url.value.trim();if(!u)return toast(t('need'));if(!/^https?:\/\//i.test(u))u='https://'+u;o.url=u;o.title=o.title||u.replace(/^https?:\/\//,'')}
+    else{const u=ty==='video'?f.url.value.trim():'';if(fl){if(fl.size>(ref?20e6:gh?25e6:30e6))return toast(t('big'));if(ref){const as=await claude.use('assets');if(!as)return toast(t('nowrite'));try{const r=await as.upload(fl);Object.assign(o,{url:r.url,asset:r.id,fname:fl.name,mime:fl.type||'application/octet-stream'})}catch(x){return toast(t('nowrite'))}}else if(gh){const pth='files/'+uid()+'-'+fl.name.replace(/[^\w.\-]+/g,'_');try{await ghPut(pth,(await readFile(fl)).split(',')[1]);Object.assign(o,{url:pth,asset:pth,fname:fl.name,mime:fl.type||'application/octet-stream'})}catch(x){return toast('GitHub: '+(x.message||'error'),9000)}}else Object.assign(o,{data:await readFile(fl),fname:fl.name,mime:fl.type||'application/octet-stream'});o.title=o.title||fl.name}
+      else if(u){o.url=/^https?:\/\//i.test(u)?u:'https://'+u;o.title=o.title||o.url.replace(/^https?:\/\//,'')}
+      else if(it.type===ty&&(it.data||it.url)){Object.assign(o,{data:it.data,asset:it.asset,fname:it.fname,mime:it.mime,url:it.url});o.title=o.title||it.title}
+      else return toast(t('need'))}
+    const i=s.items.findIndex(x=>x.id===o.id);if(i>-1)s.items[i]=o;else s.items.push(o);save();$('#dlg').close();render()}}
+function viewer(id){const [s,it]=findItem(id);if(!it)return;let b='';
+  if(it.type==='note')b=`<div class="note">${clean(it.html)}</div>`;
+  else if(it.type==='video'){if(it.data||it.asset)b=`<video controls playsinline src="${it.asset?esc(it.url):blobUrl(it.data)}"></video>`;else{const em=embed(it.url);b=(em?`<iframe src="${em}" allowfullscreen allow="fullscreen;picture-in-picture"></iframe>`:`<video controls playsinline src="${esc(it.url)}"></video>`)+`<p><a class="btn" style="display:inline-grid;place-items:center;text-decoration:none" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${t('site')}</a></p>`}}
+  else if(it.mime&&it.mime.startsWith('image'))b=`<img alt="${esc(it.title)}" src="${it.asset?esc(it.url):blobUrl(it.data)}">`;
+  else if(it.mime==='application/pdf')b=`<iframe class="pdf" src="${it.asset?esc(it.url):blobUrl(it.data)}"></iframe>`;
+  else b=`<p style="color:var(--mu)">${t('noPrev')}</p>`;
+  dlg(`<h2>${esc(it.title)}</h2><div class="vw">${b}</div><div class="end">${it.type==='file'?`<button class="btn" data-act="dl" data-id="${id}">⬇ ${t('download')}</button>`:''}<button class="btn pri" data-act="close">${t('close')}</button></div>`)}
+function move(id,d){const [s]=findItem(id),i=s.items.findIndex(x=>x.id===id),j=i+d;if(j<0||j>=s.items.length)return;[s.items[i],s.items[j]]=[s.items[j],s.items[i]];save();render()}
+function backup(){dlg(`<h2>${t('backup')}</h2><button class="btn pri" data-act="exp">⬇ ${t('exp')}</button>${ui.admin?`<button class="btn" data-act="imp">⬆ ${t('imp')}</button>`:''}${ui.admin&&!ref?`<button class="btn" data-act="gh">GitHub</button>`:''}<button class="btn" data-act="close">${t('close')}</button>`)}
+/* actions */
+const A={
+ home(){ui.view=null;ui.filter='all';ui.q='';$('#q').value='';render();scrollTo(0,0)},
+ osub(id){ui.view=id;ui.filter='all';ui.q='';$('#q').value='';render();scrollTo(0,0)},
+ flt(id){ui.filter=id;render()},
+ mode(){if(ui.admin){ui.admin=false;apply();render();return}
+  dlg(`<h2>${t('pw')}</h2><form id="f" style="display:grid;gap:12px"><label>${t('pw')}<input name="pw" type="password" dir="ltr" autocomplete="current-password" required></label><div class="end"><button type="button" class="btn" data-act="close">${t('cancel')}</button><button class="btn pri">${t('unlock')}</button></div></form>`);
+  $('#f').elements.pw.focus();
+  $('#f').onsubmit=async e=>{e.preventDefault();const v=e.target.elements.pw.value;
+    const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))].map(x=>x.toString(16).padStart(2,'0')).join('');
+    if(h==='008f0e26b16c9eca57c47dd00bc975dac14b9d9450395fffbf0a318a0a64c6f0'){ui.admin=true;$('#dlg').close();apply();render()}else{toast(t('wrong'));e.target.elements.pw.value=''}}},
+ theme(){ui.theme=ui.theme==='dark'?'light':'dark';prefs(1);apply()},
+ lang(){ui.lang=ui.lang==='ar'?'en':'ar';prefs(1);apply();render()},
+ asub(){subForm()},esub(id){subForm(id)},
+ async dsub(id){const s=sub(id);if(await ask(t('delSubject').replace('%n',s.items.length))){S.subjects=S.subjects.filter(x=>x.id!==id);if(ui.view===id)ui.view=null;save();render()}},
+ aitem(){itemForm(ui.view)},
+ eitem(id){itemForm(findItem(id)[0].id,id)},
+ async ditem(id){if(await ask(t('delItem'))){const [s,it]=findItem(id);if(it&&it.asset){if(gh)ghDel(it.asset).catch(()=>{});else if(typeof claude!=='undefined')claude.use('assets').then(a=>a&&a.delete(it.asset)).catch(()=>{})}s.items=s.items.filter(i=>i.id!==id);save();render()}},
+ up(id){move(id,-1)},dn(id){move(id,1)},
+ view(id){viewer(id)},
+ async dl(id){const [,it]=findItem(id);const r=await fetch(it.data||it.url).catch(()=>null);const bl=r?await r.blob():new Blob([Uint8Array.from(atob(it.data.split(',')[1]),c=>c.charCodeAt(0))],{type:it.mime});saveFile(it.fname||it.title,bl)},
+ close(){$('#dlg').close()},
+ backup(){backup()},
+ exp(){saveFile('geomathics-backup-'+new Date().toISOString().slice(0,10)+'.json',new Blob([JSON.stringify({v:1,subjects:S.subjects})],{type:'application/json'}))},
+ imp(){$('#imp').click()},
+ gh(){const m=location.hostname.match(/^(.+)\.github\.io$/),g=gh||{o:m?m[1]:'',r:m?location.pathname.split('/')[1]||m[1]+'.github.io':'',b:'main',t:''};
+  dlg(`<h2>GitHub</h2><p style="margin:0;color:var(--mu);font-size:.9rem">${t('ghHelp')}</p><form id="f" style="display:grid;gap:12px"><label>${t('owner')}<input name="o" dir="ltr" required value="${esc(g.o)}"></label><label>${t('repo')}<input name="r" dir="ltr" required value="${esc(g.r)}"></label><label>${t('branch')}<input name="b" dir="ltr" required value="${esc(g.b)}"></label><label>${t('token')}<input name="t" type="password" dir="ltr" autocomplete="off" value="${esc(g.t)}"></label><div class="end"><button type="button" class="btn" data-act="close">${t('cancel')}</button><button class="btn pri">${t('save')}</button></div></form>`);
+  $('#f').onsubmit=e=>{e.preventDefault();const f=e.target.elements,v={o:f.o.value.trim(),r:f.r.value.trim(),b:f.b.value.trim(),t:f.t.value.trim()};try{if(v.t){localStorage.setItem('sh_gh',JSON.stringify(v));gh=v}else{localStorage.removeItem('sh_gh');gh=null}}catch(x){}$('#dlg').close();site();if(v.t)(async()=>{try{const r=await fetch(`https://api.github.com/repos/${v.o}/${v.r}`,{headers:{Authorization:'Bearer '+v.t,Accept:'application/vnd.github+json'}});const j=await r.json().catch(()=>({}));toast(r.ok?'GitHub OK: '+v.o+'/'+v.r:'GitHub '+r.status+': '+(j.message||''),9000)}catch(x){toast('Network error',6000)}})()}}
+};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&A[b.dataset.act])A[b.dataset.act](b.dataset.id)});
+$('#q').addEventListener('input',e=>{ui.q=e.target.value;render()});
+$('#imp').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{const j=JSON.parse(await f.text());if(!Array.isArray(j.subjects))throw 0;S.subjects=j.subjects.map(s=>({id:s.id||uid(),name:String(s.name||''),desc:String(s.desc||''),color:COL.includes(s.color)?s.color:COL[0],icon:String(s.icon||ICO[0]),items:(s.items||[]).map(i=>({...i,id:i.id||uid(),title:String(i.title||''),html:i.html?clean(i.html):''}))}));ui.view=null;if(ref){const as=await claude.use('assets');for(const s of S.subjects)for(const i of s.items)if(i.data&&as){const r=await as.upload(dataBlob(i.data));Object.assign(i,{url:r.url,asset:r.id});delete i.data}}await save();$('#dlg').close();render();toast(t('imported'))}catch(x){toast(t('bad'))}});
+(async()=>{prefs();const d=await load();
+  S=d&&Array.isArray(d.subjects)?d:{subjects:[{id:uid(),name:'ابدأ من هنا · Start here',desc:'',color:COL[2],icon:'📘',items:[{id:uid(),type:'note',title:'Welcome · مرحبًا',html:'<p>Switch to Admin mode to add subjects, files, videos, links and notes. · فعّل وضع المشرف لإضافة المواد والملفات والفيديوهات والروابط والملاحظات.</p>'}]}]};
+  apply();render();connect()})();
+async function connect(){try{const db=await claude.use('db');if(!db){site();return}ref=db.doc('lib/state');ref.onSnapshot(sn=>{S={subjects:sn.exists&&Array.isArray(sn.data().subjects)?sn.data().subjects:[]};render()},()=>{ref=null})}catch(e){ref=null;site()}}
+</script>
+</body>
+</html>
