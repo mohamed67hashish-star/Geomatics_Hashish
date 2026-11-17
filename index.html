@@ -131,6 +131,9 @@ async function ghDel(p){const o=await ghGet(p);if(!o)return;await fetch(ghU(p),{
 let ghQ=Promise.resolve();
 async function site(){try{let j=null;if(gh){const o=await ghGet('data.json');if(o)j=JSON.parse(decodeURIComponent(escape(atob(o.content.replace(/\n/g,'')))))}else{const r=await fetch('data.json?t='+Date.now());if(r.ok)j=await r.json()}
   if(j&&Array.isArray(j.subjects)){S={subjects:j.subjects};render()}}catch(e){}}
+/* ghSync: after saving the GitHub token, if the remote data.json is still empty,
+   push the current local subjects so the admin doesn't lose anything they added before linking. */
+async function ghSync(){if(!gh)return site();try{const o=await ghGet('data.json');if(!o&&S.subjects.length>0){await ghPut('data.json',btoa(unescape(encodeURIComponent(JSON.stringify({subjects:S.subjects})))));}await site()}catch(e){toast('GitHub: '+(e.message||'error'),9000)}}
 let ref=null,S={subjects:[]},ui={admin:false,theme:'dark',lang:'ar',view:null,filter:'all',q:''};
 const t=k=>L[ui.lang][k];
 const uid=()=>Math.random().toString(36).slice(2,10);
@@ -230,7 +233,7 @@ const A={
  imp(){$('#imp').click()},
  gh(){const m=location.hostname.match(/^(.+)\.github\.io$/),g=gh||{o:m?m[1]:'',r:m?location.pathname.split('/')[1]||m[1]+'.github.io':'',b:'main',t:''};
   dlg(`<h2>GitHub</h2><p style="margin:0;color:var(--mu);font-size:.9rem">${t('ghHelp')}</p><form id="f" style="display:grid;gap:12px"><label>${t('owner')}<input name="o" dir="ltr" required value="${esc(g.o)}"></label><label>${t('repo')}<input name="r" dir="ltr" required value="${esc(g.r)}"></label><label>${t('branch')}<input name="b" dir="ltr" required value="${esc(g.b)}"></label><label>${t('token')}<input name="t" type="password" dir="ltr" autocomplete="off" value="${esc(g.t)}"></label><div class="end"><button type="button" class="btn" data-act="close">${t('cancel')}</button><button class="btn pri">${t('save')}</button></div></form>`);
-  $('#f').onsubmit=e=>{e.preventDefault();const f=e.target.elements,v={o:f.o.value.trim(),r:f.r.value.trim(),b:f.b.value.trim(),t:f.t.value.trim()};try{if(v.t){localStorage.setItem('sh_gh',JSON.stringify(v));gh=v}else{localStorage.removeItem('sh_gh');gh=null}}catch(x){}$('#dlg').close();site();if(v.t)(async()=>{try{const r=await fetch(`https://api.github.com/repos/${v.o}/${v.r}`,{headers:{Authorization:'Bearer '+v.t,Accept:'application/vnd.github+json'}});const j=await r.json().catch(()=>({}));toast(r.ok?'GitHub OK: '+v.o+'/'+v.r:'GitHub '+r.status+': '+(j.message||''),9000)}catch(x){toast('Network error',6000)}})()}}
+  $('#f').onsubmit=e=>{e.preventDefault();const f=e.target.elements,v={o:f.o.value.trim(),r:f.r.value.trim(),b:f.b.value.trim(),t:f.t.value.trim()};try{if(v.t){localStorage.setItem('sh_gh',JSON.stringify(v));gh=v}else{localStorage.removeItem('sh_gh');gh=null}}catch(x){}$('#dlg').close();ghSync();if(v.t)(async()=>{try{const r=await fetch(`https://api.github.com/repos/${v.o}/${v.r}`,{headers:{Authorization:'Bearer '+v.t,Accept:'application/vnd.github+json'}});const j=await r.json().catch(()=>({}));toast(r.ok?'GitHub OK: '+v.o+'/'+v.r:'GitHub '+r.status+': '+(j.message||''),9000)}catch(x){toast('Network error',6000)}})()}}
 };
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&A[b.dataset.act])A[b.dataset.act](b.dataset.id)});
 $('#q').addEventListener('input',e=>{ui.q=e.target.value;render()});
@@ -239,7 +242,11 @@ $('#imp').addEventListener('change',async e=>{const f=e.target.files[0];e.target
 (async()=>{prefs();const d=await load();
   S=d&&Array.isArray(d.subjects)?d:{subjects:[{id:uid(),name:'ابدأ من هنا · Start here',desc:'',color:COL[2],icon:'📘',items:[{id:uid(),type:'note',title:'Welcome · مرحبًا',html:'<p>Switch to Admin mode to add subjects, files, videos, links and notes. · فعّل وضع المشرف لإضافة المواد والملفات والفيديوهات والروابط والملاحظات.</p>'}]}]};
   apply();render();connect()})();
-async function connect(){try{const db=await claude.use('db');if(!db){site();return}ref=db.doc('lib/state');ref.onSnapshot(sn=>{S={subjects:sn.exists&&Array.isArray(sn.data().subjects)?sn.data().subjects:[]};render()},()=>{ref=null})}catch(e){ref=null;site()}}
+async function connect(){
+  /* GitHub Pages: read data.json from the site root for every visitor.
+     The admin writes it back through the GitHub API once a token is set. */
+  await site();
+}
 </script>
 </body>
 </html>
