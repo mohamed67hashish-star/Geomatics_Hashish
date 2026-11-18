@@ -68,7 +68,7 @@ fieldset{border:0;padding:0;margin:0}legend{font-size:.88rem;color:var(--mu);mar
 .sw i{display:grid;place-items:center;width:44px;height:44px;border-radius:12px;border:2px solid transparent;font-style:normal;font-size:1.25rem;background:var(--sf2)}
 .sw input:checked+i{border-color:var(--ac)}
 .sw input:focus-visible+i{outline:2px solid var(--ac);outline-offset:2px}
-.end{display:flex;gap:8px;justify-content:flex-end}
+.end{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
 .ed{min-height:140px;background:var(--bg);border:1px solid var(--ln);border-radius:10px;padding:10px 12px;color:var(--tx)}
 .tb{display:flex;gap:4px}
 .note{line-height:1.85}
@@ -92,6 +92,7 @@ fieldset{border:0;padding:0;margin:0}legend{font-size:.88rem;color:var(--mu);mar
 .chip[data-id=note][aria-pressed=true]{background:color-mix(in srgb,var(--k-note) 20%,transparent);color:var(--k-note);border-color:transparent}
 .bar h2{border-inline-start:4px solid var(--ac);padding-inline-start:12px}
 header h1{color:var(--ac)}
+.verRow{display:grid;gap:6px;padding:10px;border:1px solid var(--ln);border-radius:10px;background:var(--bg)}
 </style>
 </head>
 <body>
@@ -112,8 +113,8 @@ header h1{color:var(--ac)}
 <div id="toast" role="status"></div>
 <script>
 const $=s=>document.querySelector(s);
-const L={ar:{title:'Geomathics',search:'ابحث في المواد والملفات والفيديوهات',subjects:'المواد',addSubject:'إضافة مادة',editSubject:'تعديل المادة',name:'اسم المادة',desc:'وصف (اختياري)',color:'اللون',icon:'الأيقونة',save:'حفظ',cancel:'إلغاء',del:'حذف',edit:'تعديل',delSubject:'حذف المادة وكل محتوياتها (%n)؟',delItem:'حذف هذا العنصر؟',addRes:'إضافة محتوى',file:'ملف',video:'فيديو',link:'رابط',note:'ملاحظة',resTitle:'العنوان',url:'الرابط',pick:'اختر ملفًا',pick2:'النسخة المعادة تصميمها (اختياري)',chooseVer:'اختر النسخة التي تريد فتحها',verOrig:'النسخة الأصلية',verNew:'النسخة المعادة تصميمها',twoVer:'نسختان',noSubjects:'لا توجد مواد بعد. أضف أول مادة للبدء.',noSubjectsS:'لا توجد مواد بعد.',noRes:'لا يوجد محتوى في هذه المادة.',all:'الكل',back:'كل المواد',admin:'وضع المشرف',student:'عرض الطالب',exp:'تصدير نسخة احتياطية (JSON)',imp:'استيراد نسخة احتياطية',imported:'تم استيراد البيانات',bad:'الملف غير صالح',results:'نتائج البحث',none:'لا توجد نتائج مطابقة',open:'فتح',download:'تنزيل',site:'فتح في الموقع',big:'الملف كبير جدًا (الحد 20 إلى 25 ميجابايت أونلاين)',items:'عنصر',noPrev:'لا توجد معاينة لهذا النوع. نزّل الملف لفتحه.',need:'اختر ملفًا أو أدخل رابطًا',ok:'تأكيد',text:'النص',up:'تحريك لأعلى',dn:'تحريك لأسفل',close:'إغلاق',saved:'تم الحفظ',vurl:'رابط يوتيوب أو فيميو، أو ارفع ملف فيديو',backup:'النسخ الاحتياطي',pw:'كلمة مرور المشرف',wrong:'كلمة المرور غير صحيحة',unlock:'دخول',ghHelp:'أنشئ Fine-grained token بصلاحية Contents: Read and write على هذا المستودع فقط. يُحفظ في هذا المتصفح فقط. اتركه فارغًا لفصل الربط.',owner:'اسم الحساب (Owner)',repo:'اسم المستودع (Repository)',branch:'الفرع (Branch)',token:'التوكن (Token)',ghok:'تم الحفظ على GitHub، سيظهر للطلاب خلال دقيقة تقريبًا',nowrite:'لا تملك صلاحية الرفع أو التعديل أونلاين'},
-en:{title:'Geomathics',search:'Search subjects, files and videos',subjects:'Subjects',addSubject:'Add subject',editSubject:'Edit subject',name:'Subject name',desc:'Description (optional)',color:'Color',icon:'Icon',save:'Save',cancel:'Cancel',del:'Delete',edit:'Edit',delSubject:'Delete this subject and all its content (%n)?',delItem:'Delete this item?',addRes:'Add content',file:'File',video:'Video',link:'Link',note:'Note',resTitle:'Title',url:'URL',pick:'Choose a file',pick2:'Redesigned version (optional)',chooseVer:'Choose which version to open',verOrig:'Original version',verNew:'Redesigned version',twoVer:'2 versions',noSubjects:'No subjects yet. Add your first one to begin.',noSubjectsS:'No subjects yet.',noRes:'This subject has no content yet.',all:'All',back:'All subjects',admin:'Admin mode',student:'Student view',exp:'Export backup (JSON)',imp:'Import backup',imported:'Data imported',bad:'Invalid backup file',results:'Search results',none:'No matches',open:'Open',download:'Download',site:'Open on site',big:'File is too large (20 MB limit online)',items:'items',noPrev:'No preview for this type. Download the file to open it.',need:'Choose a file or enter a URL',ok:'Confirm',text:'Text',up:'Move up',dn:'Move down',close:'Close',saved:'Saved',vurl:'YouTube or Vimeo link, or upload a video file',backup:'Backup',pw:'Admin password',wrong:'Wrong password',unlock:'Unlock',ghHelp:'Create a fine-grained token with Contents: Read and write on this repository only. It is stored in this browser only. Leave it empty to disconnect.',owner:'Owner',repo:'Repository',branch:'Branch',token:'Token',ghok:'Saved to GitHub. Students will see it in about a minute.',nowrite:'You do not have permission to upload or edit online'}};
+const L={ar:{title:'Geomathics',search:'ابحث في المواد والملفات والفيديوهات',subjects:'المواد',addSubject:'إضافة مادة',editSubject:'تعديل المادة',name:'اسم المادة',desc:'وصف (اختياري)',color:'اللون',icon:'الأيقونة',save:'حفظ',cancel:'إلغاء',del:'حذف',edit:'تعديل',delSubject:'حذف المادة وكل محتوياتها (%n)؟',delItem:'حذف هذا العنصر؟',addRes:'إضافة محتوى',file:'ملف',video:'فيديو',link:'رابط',note:'ملاحظة',resTitle:'العنوان',url:'الرابط',pick:'اختر ملفًا',versions:'النسخ',version:'نسخة',verLabel:'اسم النسخة (يظهر للطالب)',addVer:'إضافة نسخة',chooseVer:'اختر النسخة التي تريد فتحها',noSubjects:'لا توجد مواد بعد. أضف أول مادة للبدء.',noSubjectsS:'لا توجد مواد بعد.',noRes:'لا يوجد محتوى في هذه المادة.',all:'الكل',back:'كل المواد',admin:'وضع المشرف',student:'عرض الطالب',exp:'تصدير نسخة احتياطية (JSON)',imp:'استيراد نسخة احتياطية',imported:'تم استيراد البيانات',bad:'الملف غير صالح',results:'نتائج البحث',none:'لا توجد نتائج مطابقة',open:'فتح',download:'تنزيل',site:'فتح في الموقع',big:'الملف كبير جدًا (الحد 20 إلى 25 ميجابايت أونلاين)',items:'عنصر',noPrev:'لا توجد معاينة لهذا النوع. نزّل الملف لفتحه.',need:'اختر ملفًا أو أدخل رابطًا',ok:'تأكيد',text:'النص',up:'تحريك لأعلى',dn:'تحريك لأسفل',close:'إغلاق',saved:'تم الحفظ',vurl:'رابط يوتيوب أو فيميو، أو ارفع ملف فيديو',backup:'النسخ الاحتياطي',pw:'كلمة مرور المشرف',wrong:'كلمة المرور غير صحيحة',unlock:'دخول',ghHelp:'أنشئ Fine-grained token بصلاحية Contents: Read and write على هذا المستودع فقط. يُحفظ في هذا المتصفح فقط. اتركه فارغًا لفصل الربط.',owner:'اسم الحساب (Owner)',repo:'اسم المستودع (Repository)',branch:'الفرع (Branch)',token:'التوكن (Token)',ghok:'تم الحفظ على GitHub، سيظهر للطلاب خلال دقيقة تقريبًا',nowrite:'لا تملك صلاحية الرفع أو التعديل أونلاين'},
+en:{title:'Geomathics',search:'Search subjects, files and videos',subjects:'Subjects',addSubject:'Add subject',editSubject:'Edit subject',name:'Subject name',desc:'Description (optional)',color:'Color',icon:'Icon',save:'Save',cancel:'Cancel',del:'Delete',edit:'Edit',delSubject:'Delete this subject and all its content (%n)?',delItem:'Delete this item?',addRes:'Add content',file:'File',video:'Video',link:'Link',note:'Note',resTitle:'Title',url:'URL',pick:'Choose a file',versions:'Versions',version:'Version',verLabel:'Version name (shown to student)',addVer:'Add version',chooseVer:'Choose which version to open',noSubjects:'No subjects yet. Add your first one to begin.',noSubjectsS:'No subjects yet.',noRes:'This subject has no content yet.',all:'All',back:'All subjects',admin:'Admin mode',student:'Student view',exp:'Export backup (JSON)',imp:'Import backup',imported:'Data imported',bad:'Invalid backup file',results:'Search results',none:'No matches',open:'Open',download:'Download',site:'Open on site',big:'File is too large (20 MB limit online)',items:'items',noPrev:'No preview for this type. Download the file to open it.',need:'Choose a file or enter a URL',ok:'Confirm',text:'Text',up:'Move up',dn:'Move down',close:'Close',saved:'Saved',vurl:'YouTube or Vimeo link, or upload a video file',backup:'Backup',pw:'Admin password',wrong:'Wrong password',unlock:'Unlock',ghHelp:'Create a fine-grained token with Contents: Read and write on this repository only. It is stored in this browser only. Leave it empty to disconnect.',owner:'Owner',repo:'Repository',branch:'Branch',token:'Token',ghok:'Saved to GitHub. Students will see it in about a minute.',nowrite:'You do not have permission to upload or edit online'}};
 const COL=['#f0b95b','#5fcfa4','#7aa7ff','#ef7d8e','#b490f0','#5fd0e6'];
 const ICO=['📘','🧮','🔎','🌍','💻','📈','📜','⚖️','🩺','📐'];
 const TI={file:'📄',video:'▶️',link:'🔗',note:'📝'};
@@ -126,13 +127,28 @@ async function ghPut(p,b64){const o=await ghGet(p).catch(()=>null);const r=await
 async function ghDel(p){const o=await ghGet(p);if(!o)return;await fetch(ghU(p),{method:'DELETE',headers:ghH(),body:JSON.stringify({message:'delete '+p,sha:o.sha,branch:gh.b})})}
 let ghQ=Promise.resolve();
 async function site(){try{let j=null;if(gh){const o=await ghGet('data.json');if(o)j=JSON.parse(decodeURIComponent(escape(atob(o.content.replace(/\n/g,'')))))}else{const r=await fetch('data.json?t='+Date.now());if(r.ok)j=await r.json()}
-  if(j&&Array.isArray(j.subjects)){S={subjects:j.subjects};render()}}catch(e){}}
+  if(j&&Array.isArray(j.subjects)){S={subjects:migrate(j.subjects)};render()}}catch(e){}}
 async function ghSync(){if(!gh)return site();try{const o=await ghGet('data.json');if(!o&&S.subjects.length>0){await ghPut('data.json',btoa(unescape(encodeURIComponent(JSON.stringify({subjects:S.subjects})))));}await site()}catch(e){toast('GitHub: '+(e.message||'error'),9000)}}
 let ref=null,S={subjects:[]},ui={admin:false,theme:'dark',lang:'ar',view:null,filter:'all',q:''};
 const t=k=>L[ui.lang][k];
 const uid=()=>Math.random().toString(36).slice(2,10);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent};
+const verLabel=(v,i)=>(v&&v.label&&String(v.label).trim())?String(v.label).trim():(t('version')+' '+(i+1));
+/* migrate older 2-version items into a versions[] array */
+function migrate(subjects){
+  for(const s of subjects||[]){
+    for(const it of s.items||[]){
+      if(it.type==='file' && !Array.isArray(it.versions)){
+        const vers=[];
+        if(it.data||it.url) vers.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime});
+        if(it.data2||it.url2) vers.push({id:uid(),label:'',data:it.data2,asset:it.asset2,url:it.url2,fname:it.fname2,mime:it.mime2});
+        if(vers.length) it.versions=vers;
+      }
+    }
+  }
+  return subjects;
+}
 const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open('studyhub',1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
 async function load(){try{const d=await idb();return await new Promise((r,j)=>{const q=d.transaction('k').objectStore('k').get('s');q.onsuccess=()=>r(q.result);q.onerror=()=>j()})}catch(e){try{return JSON.parse(localStorage.getItem('sh_s'))}catch(e){return null}}}
 async function save(){if(!ref&&gh){ghQ=ghQ.then(()=>ghPut('data.json',btoa(unescape(encodeURIComponent(JSON.stringify({subjects:S.subjects}))))).then(()=>toast(t('ghok'))).catch(e=>toast('GitHub: '+(e.message||'error'),9000)));return}
@@ -147,17 +163,28 @@ const readFile=f=>new Promise((r,j)=>{const x=new FileReader();x.onload=()=>r(x.
 async function saveFile(name,blob){let d=null;try{d=await claude.use('downloads')}catch(e){}
   if(d){try{await d.save({filename:name,data:blob});return}catch(e){if(e&&e.code==='declined')return}}
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()}
+async function uploadFile(fl){
+  if(fl.size>(ref?20e6:gh?25e6:30e6)) throw new Error(t('big'));
+  const o={fname:fl.name,mime:fl.type||'application/octet-stream'};
+  if(ref){const as=await claude.use('assets');if(!as)throw new Error(t('nowrite'));const r=await as.upload(fl);o.url=r.url;o.asset=r.id}
+  else if(gh){const pth='files/'+uid()+'-'+fl.name.replace(/[^\w.\-]+/g,'_');await ghPut(pth,(await readFile(fl)).split(',')[1]);o.url=pth;o.asset=pth}
+  else{o.data=await readFile(fl)}
+  return o;
+}
+function dropAsset(id){if(!id)return;if(gh)ghDel(id).catch(()=>{});else if(typeof claude!=='undefined')claude.use('assets').then(a=>a&&a.delete(id)).catch(()=>{})}
 const sub=id=>S.subjects.find(s=>s.id===id);
 const findItem=id=>{for(const s of S.subjects){const it=s.items.find(i=>i.id===id);if(it)return [s,it]}return []};
 function embed(u){let m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);if(m)return 'https://www.youtube.com/embed/'+m[1];m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/);return m?'https://player.vimeo.com/video/'+m[1]:null}
-/* views */
 function meta(it){
   let m;
-  if(it.type==='file') m=it.fname||'';
+  if(it.type==='file'){
+    const vers=it.versions||[];
+    m=vers.length?vers[0].fname||'':it.fname||'';
+    if(vers.length>1) m+=' · '+vers.length+' '+t('versions');
+  }
   else if(it.type==='note') m=plain(it.html).slice(0,90);
   else if(it.type==='video'&&(it.data||it.asset)) m=it.fname||'';
   else m=(it.url||'').replace(/^https?:\/\//,'').slice(0,70);
-  if(it.type==='file'&&(it.data2||it.url2)) m+=' · ✨ '+t('twoVer');
   return m;
 }
 function rowH(it,s,ctl){const ic=it.mime&&it.mime.startsWith('image')?'🖼️':it.mime==='application/pdf'?'📕':TI[it.type];
@@ -176,7 +203,6 @@ function render(){const m=$('#main'),q=ui.q.trim().toLowerCase();
 function apply(){const h=document.documentElement;h.lang=ui.lang;h.dir=ui.lang==='ar'?'rtl':'ltr';h.dataset.theme=ui.theme;
   document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));document.querySelectorAll('[data-ph]').forEach(e=>e.placeholder=t(e.dataset.ph));
   const b=$('#bMode');b.setAttribute('aria-pressed',ui.admin);b.textContent=ui.admin?'🛠 '+t('admin'):'👁 '+t('student');$('[data-act=lang]').textContent=ui.lang==='ar'?'EN':'ع';document.title=t('title')}
-/* dialogs */
 const dlg=h=>{const d=$('#dlg');d.innerHTML='<div class="in">'+h+'</div>';if(!d.open)d.showModal()};
 $('#dlg').addEventListener('close',()=>{blobUrl.l.forEach(URL.revokeObjectURL);blobUrl.l=[];$('#dlg').innerHTML=''});
 document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.close()}));
@@ -187,106 +213,182 @@ function subForm(id){const s=sub(id)||{name:'',desc:'',color:COL[0],icon:ICO[0]}
   $('#f').onsubmit=e=>{e.preventDefault();const f=e.target.elements,o={name:f.name.value.trim(),desc:f.desc.value.trim(),color:f.color.value,icon:f.icon.value};if(!o.name)return;
     if(id)Object.assign(s,o);else S.subjects.push({id:uid(),items:[],...o});save();$('#dlg').close();render()}}
 function itemForm(sid,id){
-  const s=sub(sid),it=s.items.find(i=>i.id===id)||{type:'file',title:'',url:'',html:''};
+  const s=sub(sid);
+  const it=s.items.find(i=>i.id===id)||{type:'file',title:'',url:'',html:''};
+  /* Initial versions array — migrated from old single/second fields if needed */
+  let versions=[];
+  if(Array.isArray(it.versions)){
+    versions=JSON.parse(JSON.stringify(it.versions));
+  } else if(it.type==='file'){
+    if(it.data||it.url) versions.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime});
+    if(it.data2||it.url2) versions.push({id:uid(),label:'',data:it.data2,asset:it.asset2,url:it.url2,fname:it.fname2,mime:it.mime2});
+  }
   dlg(`<h2>${t(id?'edit':'addRes')}</h2><form id="f" style="display:grid;gap:12px">
     <label>${t('addRes')}<select name="kind">${['file','video','link','note'].map(k=>`<option value="${k}" ${k===it.type?'selected':''}>${TI[k]} ${t(k)}</option>`).join('')}</select></label>
     <label>${t('resTitle')}<input name="ttl" value="${esc(it.title)}"></label>
-    <label data-for="video link">${t('url')}<input name="url" type="text" inputmode="url" dir="ltr" placeholder="${it.type==='video'||!id?esc(t('vurl')):'https://'}" value="${esc(it.url||'')}"></label>
-    <label data-for="file video">${t('pick')}${it.fname?` (${esc(it.fname)})`:''}<input name="file" type="file" accept="${'${a}'}"></label>
-    <label data-for="file" style="border-top:1px dashed var(--ln);padding-top:12px">
-      ${t('pick2')}${it.fname2?` (${esc(it.fname2)}) <button type="button" class="btn dg" style="min-height:0;padding:2px 8px;font-size:.8rem" id="rmv2">${t('del')}</button>`:''}
-      <input name="file2" type="file" accept="${'${a}'}">
-    </label>
+    <label data-for="video link">${t('url')}<input name="url" type="text" inputmode="url" dir="ltr" placeholder="${esc(t('vurl'))}" value="${esc(it.url||'')}"></label>
+    <label data-for="video">${t('pick')}${it.type==='video'&&it.fname?` (${esc(it.fname)})`:''}<input name="file" type="file" accept="video/*"></label>
+    <div data-for="file" style="display:grid;gap:10px;border-top:1px dashed var(--ln);padding-top:12px">
+      <div style="font-size:.88rem;color:var(--mu)">${t('versions')}</div>
+      <div id="vers" style="display:grid;gap:10px"></div>
+      <button type="button" class="btn" id="addVer" style="border:1px dashed var(--ln);justify-self:start;min-height:40px;padding:0 14px">+ ${t('addVer')}</button>
+    </div>
     <div data-for="note" style="display:grid;gap:6px"><div class="tb"><button type="button" class="btn" data-fmt="bold"><b>B</b></button><button type="button" class="btn" data-fmt="italic"><i>I</i></button><button type="button" class="btn" data-fmt="insertUnorderedList">•</button><button type="button" class="btn" data-fmt="formatBlock" data-v="h3">H</button></div><div class="ed note" id="ed" contenteditable="true" aria-label="${t('text')}">${clean(it.html||'')}</div></div>
     ${foot.replace('%c',t('cancel')).replace('%s',t('save'))}
   </form>`);
   const f=$('#f').elements;
+  const versEl=$('#vers');
+  function renderVers(){
+    if(versions.length===0) versions.push({id:uid(),label:''});
+    versEl.innerHTML=versions.map((v,i)=>{
+      const display=v.newFile?'✓ '+v.newFile.name:v.fname?'✓ '+v.fname:t('pick');
+      const color=(v.newFile||v.fname)?'var(--ac)':'var(--mu)';
+      return `<div class="verRow" data-i="${i}">
+        <div style="display:flex;gap:6px;align-items:center">
+          <input type="text" class="verLabel" placeholder="${t('verLabel')}" value="${esc(v.label||'')}" style="flex:1;min-width:0">
+          ${versions.length>1?`<button type="button" class="btn dg verDel" data-i="${i}" aria-label="${t('del')}" style="min-height:36px;min-width:36px;padding:0 10px">🗑</button>`:''}
+        </div>
+        <label style="display:grid;gap:4px;font-size:.8rem;color:var(--mu);cursor:pointer">
+          <span class="verName" style="color:${color};overflow-wrap:anywhere">${esc(display)}</span>
+          <input type="file" class="verFile" style="min-height:40px;padding:6px">
+        </label>
+      </div>`;
+    }).join('');
+    versEl.querySelectorAll('.verLabel').forEach(inp=>{
+      inp.oninput=e=>{const i=+e.target.closest('.verRow').dataset.i;versions[i].label=e.target.value};
+    });
+    versEl.querySelectorAll('.verFile').forEach(inp=>{
+      inp.onchange=e=>{
+        const row=e.target.closest('.verRow'),i=+row.dataset.i;
+        versions[i].newFile=e.target.files[0]||null;
+        const nameEl=row.querySelector('.verName');
+        if(versions[i].newFile){nameEl.textContent='✓ '+versions[i].newFile.name;nameEl.style.color='var(--ac)'}
+        else if(versions[i].fname){nameEl.textContent='✓ '+versions[i].fname;nameEl.style.color='var(--ac)'}
+        else{nameEl.textContent=t('pick');nameEl.style.color='var(--mu)'}
+      };
+    });
+    versEl.querySelectorAll('.verDel').forEach(btn=>{
+      btn.onclick=e=>{
+        e.preventDefault();
+        const i=+btn.dataset.i;
+        versions.splice(i,1);
+        renderVers();
+      };
+    });
+  }
+  renderVers();
+  $('#addVer').onclick=e=>{
+    e.preventDefault();
+    versions.push({id:uid(),label:''});
+    renderVers();
+  };
   const sync=()=>{
     document.querySelectorAll('#f [data-for]').forEach(e=>e.hidden=!e.dataset.for.split(' ').includes(f.kind.value));
-    const acc=f.kind.value==='video'?'video/*':'.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,image/*';
-    f.file.accept=acc;
-    if(f.file2)f.file2.accept=acc;
   };
   f.kind.onchange=sync;sync();
   document.querySelectorAll('[data-fmt]').forEach(b=>{b.onmousedown=e=>e.preventDefault();b.onclick=()=>document.execCommand(b.dataset.fmt,false,b.dataset.v||null)});
-  let rmV2=false;
-  const rmv2Btn=$('#rmv2');
-  if(rmv2Btn){
-    rmv2Btn.onclick=e=>{e.preventDefault();rmV2=true;rmv2Btn.textContent='✓';rmv2Btn.disabled=true};
-  }
   $('#f').onsubmit=async e=>{
     e.preventDefault();
-    const ty=f.kind.value,o={id:it.id||uid(),type:ty,title:f.ttl.value.trim()};
-    const fl=f.file.files[0];
-    const fl2=f.file2?f.file2.files[0]:null;
-    if(ty==='note'){o.html=clean($('#ed').innerHTML);o.title=o.title||plain(o.html).slice(0,40)||t('note')}
-    else if(ty==='link'){let u=f.url.value.trim();if(!u)return toast(t('need'));if(!/^https?:\/\//i.test(u))u='https://'+u;o.url=u;o.title=o.title||u.replace(/^https?:\/\//,'')}
-    else{
-      const u=ty==='video'?f.url.value.trim():'';
+    const ty=f.kind.value;
+    const o={id:it.id||uid(),type:ty,title:f.ttl.value.trim()};
+    const fl=f.file?f.file.files[0]:null;
+    const u=f.url?f.url.value.trim():'';
+    /* Track all assets currently owned by this item (for cleanup) */
+    const oldAssets=new Set();
+    if(it.asset) oldAssets.add(it.asset);
+    if(it.asset2) oldAssets.add(it.asset2);
+    if(Array.isArray(it.versions)) it.versions.forEach(v=>{if(v.asset) oldAssets.add(v.asset)});
+    if(ty==='note'){
+      o.html=clean($('#ed').innerHTML);
+      o.title=o.title||plain(o.html).slice(0,40)||t('note');
+    } else if(ty==='link'){
+      if(!u) return toast(t('need'));
+      o.url=/^https?:\/\//i.test(u)?u:'https://'+u;
+      o.title=o.title||o.url.replace(/^https?:\/\//,'');
+    } else if(ty==='video'){
       if(fl){
-        if(fl.size>(ref?20e6:gh?25e6:30e6))return toast(t('big'));
-        if(ref){const as=await claude.use('assets');if(!as)return toast(t('nowrite'));try{const r=await as.upload(fl);Object.assign(o,{url:r.url,asset:r.id,fname:fl.name,mime:fl.type||'application/octet-stream'})}catch(x){return toast(t('nowrite'))}}
-        else if(gh){const pth='files/'+uid()+'-'+fl.name.replace(/[^\w.\-]+/g,'_');try{await ghPut(pth,(await readFile(fl)).split(',')[1]);Object.assign(o,{url:pth,asset:pth,fname:fl.name,mime:fl.type||'application/octet-stream'})}catch(x){return toast('GitHub: '+(x.message||'error'),9000)}}
-        else Object.assign(o,{data:await readFile(fl),fname:fl.name,mime:fl.type||'application/octet-stream'});
-        o.title=o.title||fl.name
+        try{Object.assign(o,await uploadFile(fl))}catch(err){return toast(err.message)}
+        o.title=o.title||fl.name;
+      } else if(u){
+        o.url=/^https?:\/\//i.test(u)?u:'https://'+u;
+        o.title=o.title||o.url.replace(/^https?:\/\//,'');
+      } else if(it.type==='video'&&(it.data||it.url)){
+        Object.assign(o,{data:it.data,asset:it.asset,fname:it.fname,mime:it.mime,url:it.url});
+        o.title=o.title||it.title;
+      } else return toast(t('need'));
+    } else if(ty==='file'){
+      const processed=[];
+      for(const v of versions){
+        const nv={id:v.id||uid(),label:(v.label||'').trim()};
+        if(v.newFile){
+          try{Object.assign(nv,await uploadFile(v.newFile))}catch(err){return toast(err.message)}
+        } else if(v.data||v.url){
+          nv.data=v.data;nv.asset=v.asset;nv.url=v.url;nv.fname=v.fname;nv.mime=v.mime;
+        } else continue;
+        processed.push(nv);
       }
-      else if(u){o.url=/^https?:\/\//i.test(u)?u:'https://'+u;o.title=o.title||o.url.replace(/^https?:\/\//,'')}
-      else if(it.type===ty&&(it.data||it.url)){Object.assign(o,{data:it.data,asset:it.asset,fname:it.fname,mime:it.mime,url:it.url});o.title=o.title||it.title}
-      else return toast(t('need'));
-      /* Second (redesigned) version — only for file type */
-      if(ty==='file'){
-        if(fl2){
-          if(fl2.size>(ref?20e6:gh?25e6:30e6))return toast(t('big'));
-          if(ref){const as=await claude.use('assets');if(!as)return toast(t('nowrite'));try{const r=await as.upload(fl2);Object.assign(o,{url2:r.url,asset2:r.id,fname2:fl2.name,mime2:fl2.type||'application/octet-stream'})}catch(x){return toast(t('nowrite'))}}
-          else if(gh){const pth='files/'+uid()+'-'+fl2.name.replace(/[^\w.\-]+/g,'_');try{await ghPut(pth,(await readFile(fl2)).split(',')[1]);Object.assign(o,{url2:pth,asset2:pth,fname2:fl2.name,mime2:fl2.type||'application/octet-stream'})}catch(x){return toast('GitHub: '+(x.message||'error'),9000)}}
-          else Object.assign(o,{data2:await readFile(fl2),fname2:fl2.name,mime2:fl2.type||'application/octet-stream'});
-        }
-        else if(rmV2&&it.fname2){
-          if(it.asset2){if(gh)ghDel(it.asset2).catch(()=>{});else if(typeof claude!=='undefined')claude.use('assets').then(a=>a&&a.delete(it.asset2)).catch(()=>{})}
-        }
-        else if(it.fname2){Object.assign(o,{data2:it.data2,asset2:it.asset2,fname2:it.fname2,mime2:it.mime2,url2:it.url2})}
-      }
+      if(!processed.length) return toast(t('need'));
+      o.versions=processed;
+      /* Keep legacy primary fields in sync for backward compatibility */
+      Object.assign(o,{url:processed[0].url,data:processed[0].data,asset:processed[0].asset,fname:processed[0].fname,mime:processed[0].mime});
+      if(!o.title) o.title=processed[0].fname||t('file');
     }
     const i=s.items.findIndex(x=>x.id===o.id);
-    if(i>-1)s.items[i]=o;else s.items.push(o);
-    save();$('#dlg').close();render()
-  }
+    if(i>-1) s.items[i]=o; else s.items.push(o);
+    /* Delete any old asset that is no longer referenced by the new item */
+    const newAssets=new Set();
+    if(o.asset) newAssets.add(o.asset);
+    if(Array.isArray(o.versions)) o.versions.forEach(v=>{if(v.asset) newAssets.add(v.asset)});
+    for(const a of oldAssets){ if(!newAssets.has(a)) dropAsset(a); }
+    save();$('#dlg').close();render();
+  };
 }
-function viewer(id,ver){
+function viewer(id,verId){
   const [s,it]=findItem(id);if(!it)return;
-  /* If file has two versions and no version chosen yet, show chooser */
-  if(it.type==='file'&&(it.data2||it.url2)&&!ver){
-    dlg(`<h2>${esc(it.title)}</h2><p style="margin:0;color:var(--mu)">${t('chooseVer')}</p>
+  /* Lazy migrate in case data wasn't migrated */
+  if(it.type==='file'&&!Array.isArray(it.versions)){
+    const vers=[];
+    if(it.data||it.url) vers.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime});
+    if(it.data2||it.url2) vers.push({id:uid(),label:'',data:it.data2,asset:it.asset2,url:it.url2,fname:it.fname2,mime:it.mime2});
+    if(vers.length) it.versions=vers;
+  }
+  /* Multiple versions → show chooser */
+  if(it.type==='file'&&it.versions&&it.versions.length>1&&!verId){
+    dlg(`<h2>${esc(it.title)}</h2>
+      <p style="margin:0;color:var(--mu)">${t('chooseVer')}</p>
       <div style="display:grid;gap:8px">
-        <button class="btn" data-act="view" data-id="${id}" data-ver="orig" style="padding:14px 16px;border-color:var(--ln);border-radius:12px;display:block;width:100%;text-align:start;min-height:0;line-height:1.4">
-          <span style="display:block;color:var(--tx);font-weight:500">📄 ${t('verOrig')}</span>
-          ${it.fname?`<span style="display:block;font-size:.8rem;color:var(--mu);margin-top:2px;overflow-wrap:anywhere">${esc(it.fname)}</span>`:''}
-        </button>
-        <button class="btn" data-act="view" data-id="${id}" data-ver="new" style="padding:14px 16px;border-color:var(--ac);border-radius:12px;display:block;width:100%;text-align:start;min-height:0;line-height:1.4">
-          <span style="display:block;color:var(--ac);font-weight:500">✨ ${t('verNew')}</span>
-          ${it.fname2?`<span style="display:block;font-size:.8rem;color:var(--mu);margin-top:2px;overflow-wrap:anywhere">${esc(it.fname2)}</span>`:''}
-        </button>
+        ${it.versions.map((v,i)=>`
+          <button class="btn" data-act="view" data-id="${id}" data-ver="${v.id}" style="display:block;width:100%;text-align:start;padding:12px 14px;border:1px solid var(--ln);border-radius:12px;min-height:0;line-height:1.4">
+            <span style="display:block;color:var(--tx);font-weight:500">📄 ${esc(verLabel(v,i))}</span>
+            ${v.fname?`<span style="display:block;font-size:.8rem;color:var(--mu);margin-top:2px;overflow-wrap:anywhere">${esc(v.fname)}</span>`:''}
+          </button>
+        `).join('')}
         <button class="btn" data-act="close" style="border-radius:12px;min-height:44px">${t('cancel')}</button>
       </div>`);
     return;
   }
-  const useNew=ver==='new'&&(it.data2||it.url2);
-  const mime=useNew?(it.mime2||it.mime):it.mime;
-  const data=useNew?it.data2:it.data;
-  const url=useNew?it.url2:it.url;
-  const asset=useNew?it.asset2:it.asset;
+  /* Resolve version-specific data */
+  let v=null;
+  if(it.type==='file'&&it.versions){
+    v=verId?it.versions.find(x=>x.id===verId):it.versions[0];
+    if(!v) v=it.versions[0];
+  }
+  const mime=v?v.mime:it.mime;
+  const data=v?v.data:it.data;
+  const url=v?v.url:it.url;
+  const asset=v?v.asset:it.asset;
   let b='';
-  if(it.type==='note')b=`<div class="note">${clean(it.html)}</div>`;
+  if(it.type==='note') b=`<div class="note">${clean(it.html)}</div>`;
   else if(it.type==='video'){if(it.data||it.asset)b=`<video controls playsinline src="${it.asset?esc(it.url):blobUrl(it.data)}"></video>`;else{const em=embed(it.url);b=(em?`<iframe src="${em}" allowfullscreen allow="fullscreen;picture-in-picture"></iframe>`:`<video controls playsinline src="${esc(it.url)}"></video>`)+`<p><a class="btn" style="display:inline-grid;place-items:center;text-decoration:none" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${t('site')}</a></p>`}}
-  else if(mime&&mime.startsWith('image'))b=`<img alt="${esc(it.title)}" src="${asset?esc(url):blobUrl(data)}">`;
-  else if(mime==='application/pdf')b=`<iframe class="pdf" src="${asset?esc(url):blobUrl(data)}"></iframe>`;
+  else if(mime&&mime.startsWith('image')) b=`<img alt="${esc(it.title)}" src="${asset?esc(url):blobUrl(data)}">`;
+  else if(mime==='application/pdf') b=`<iframe class="pdf" src="${asset?esc(url):blobUrl(data)}"></iframe>`;
   else b=`<p style="color:var(--mu)">${t('noPrev')}</p>`;
-  const verLabel=useNew?' ✨':'';
-  dlg(`<h2>${esc(it.title)}${verLabel}</h2><div class="vw">${b}</div><div class="end">${it.type==='file'?`<button class="btn" data-act="dl" data-id="${id}" data-ver="${ver||'orig'}">⬇ ${t('download')}</button>`:''}<button class="btn pri" data-act="close">${t('close')}</button></div>`)
+  const verTag=v&&it.versions&&it.versions.length>1?' · '+esc(verLabel(v,it.versions.indexOf(v))):'';
+  const dlVer=verId||(it.versions&&it.versions[0]?it.versions[0].id:'');
+  dlg(`<h2>${esc(it.title)}${verTag}</h2><div class="vw">${b}</div><div class="end">${it.type==='file'?`<button class="btn" data-act="dl" data-id="${id}" data-ver="${dlVer}">⬇ ${t('download')}</button>`:''}<button class="btn pri" data-act="close">${t('close')}</button></div>`);
 }
 function move(id,d){const [s]=findItem(id),i=s.items.findIndex(x=>x.id===id),j=i+d;if(j<0||j>=s.items.length)return;[s.items[i],s.items[j]]=[s.items[j],s.items[i]];save();render()}
 function backup(){dlg(`<h2>${t('backup')}</h2><button class="btn pri" data-act="exp">⬇ ${t('exp')}</button>${ui.admin?`<button class="btn" data-act="imp">⬆ ${t('imp')}</button>`:''}${ui.admin&&!ref?`<button class="btn" data-act="gh">GitHub</button>`:''}<button class="btn" data-act="close">${t('close')}</button>`)}
-/* actions */
 const A={
  home(){ui.view=null;ui.filter='all';ui.q='';$('#q').value='';render();scrollTo(0,0)},
  osub(id){ui.view=id;ui.filter='all';ui.q='';$('#q').value='';render();scrollTo(0,0)},
@@ -300,16 +402,56 @@ const A={
  theme(){ui.theme=ui.theme==='dark'?'light':'dark';prefs(1);apply()},
  lang(){ui.lang=ui.lang==='ar'?'en':'ar';prefs(1);apply();render()},
  asub(){subForm()},esub(id){subForm(id)},
- async dsub(id){const s=sub(id);if(await ask(t('delSubject').replace('%n',s.items.length))){S.subjects=S.subjects.filter(x=>x.id!==id);if(ui.view===id)ui.view=null;save();render()}},
+ async dsub(id){const s=sub(id);if(await ask(t('delSubject').replace('%n',s.items.length))){
+    /* Clean up every asset under this subject */
+    for(const it of s.items){
+      const assets=new Set();
+      if(it.asset) assets.add(it.asset);
+      if(it.asset2) assets.add(it.asset2);
+      if(Array.isArray(it.versions)) it.versions.forEach(v=>{if(v.asset) assets.add(v.asset)});
+      for(const a of assets) dropAsset(a);
+    }
+    S.subjects=S.subjects.filter(x=>x.id!==id);
+    if(ui.view===id) ui.view=null;
+    save();render();
+  }},
  aitem(){itemForm(ui.view)},
  eitem(id){itemForm(findItem(id)[0].id,id)},
- async ditem(id){if(await ask(t('delItem'))){const [s,it]=findItem(id);if(it){if(it.asset){if(gh)ghDel(it.asset).catch(()=>{});else if(typeof claude!=='undefined')claude.use('assets').then(a=>a&&a.delete(it.asset)).catch(()=>{})}if(it.asset2){if(gh)ghDel(it.asset2).catch(()=>{});else if(typeof claude!=='undefined')claude.use('assets').then(a=>a&&a.delete(it.asset2)).catch(()=>{})}}s.items=s.items.filter(i=>i.id!==id);save();render()}},
+ async ditem(id){if(await ask(t('delItem'))){
+    const [s,it]=findItem(id);
+    if(it){
+      const assets=new Set();
+      if(it.asset) assets.add(it.asset);
+      if(it.asset2) assets.add(it.asset2);
+      if(Array.isArray(it.versions)) it.versions.forEach(v=>{if(v.asset) assets.add(v.asset)});
+      for(const a of assets) dropAsset(a);
+    }
+    s.items=s.items.filter(i=>i.id!==id);save();render();
+  }},
  up(id){move(id,-1)},dn(id){move(id,1)},
  view(id,ver){viewer(id,ver)},
- async dl(id,ver){const [,it]=findItem(id);const useNew=ver==='new'&&(it.data2||it.url2);const data=useNew?it.data2:it.data;const url=useNew?it.url2:it.url;const fname=useNew?it.fname2:it.fname;const mime=useNew?(it.mime2||it.mime):it.mime;const src=data||url;if(!src)return;const r=await fetch(src).catch(()=>null);const bl=r?await r.blob():new Blob([Uint8Array.from(atob(data.split(',')[1]),c=>c.charCodeAt(0))],{type:mime});saveFile(fname||it.title,bl)},
+ async dl(id,verId){
+    const [,it]=findItem(id);if(!it)return;
+    let v=null;
+    if(it.type==='file'&&Array.isArray(it.versions)){
+      v=verId?it.versions.find(x=>x.id===verId):it.versions[0];
+    }
+    const data=v?v.data:it.data;
+    const url=v?v.url:it.url;
+    const fname=v?v.fname:it.fname;
+    const mime=v?v.mime:it.mime;
+    const src=data||url;
+    if(!src) return;
+    const r=await fetch(src).catch(()=>null);
+    let bl;
+    if(r) bl=await r.blob();
+    else if(data) bl=new Blob([Uint8Array.from(atob(data.split(',')[1]),c=>c.charCodeAt(0))],{type:mime});
+    if(!bl) return;
+    saveFile(fname||it.title,bl);
+  },
  close(){$('#dlg').close()},
  backup(){backup()},
- exp(){saveFile('geomathics-backup-'+new Date().toISOString().slice(0,10)+'.json',new Blob([JSON.stringify({v:1,subjects:S.subjects})],{type:'application/json'}))},
+ exp(){saveFile('geomathics-backup-'+new Date().toISOString().slice(0,10)+'.json',new Blob([JSON.stringify({v:2,subjects:S.subjects})],{type:'application/json'}))},
  imp(){$('#imp').click()},
  gh(){const m=location.hostname.match(/^(.+)\.github\.io$/),g=gh||{o:m?m[1]:'',r:m?location.pathname.split('/')[1]||m[1]+'.github.io':'',b:'main',t:''};
   dlg(`<h2>GitHub</h2><p style="margin:0;color:var(--mu);font-size:.9rem">${t('ghHelp')}</p><form id="f" style="display:grid;gap:12px"><label>${t('owner')}<input name="o" dir="ltr" required value="${esc(g.o)}"></label><label>${t('repo')}<input name="r" dir="ltr" required value="${esc(g.r)}"></label><label>${t('branch')}<input name="b" dir="ltr" required value="${esc(g.b)}"></label><label>${t('token')}<input name="t" type="password" dir="ltr" autocomplete="off" value="${esc(g.t)}"></label><div class="end"><button type="button" class="btn" data-act="close">${t('cancel')}</button><button class="btn pri">${t('save')}</button></div></form>`);
@@ -317,10 +459,28 @@ const A={
 };
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&A[b.dataset.act])A[b.dataset.act](b.dataset.id,b.dataset.ver)});
 $('#q').addEventListener('input',e=>{ui.q=e.target.value;render()});
-$('#imp').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
-  try{const j=JSON.parse(await f.text());if(!Array.isArray(j.subjects))throw 0;S.subjects=j.subjects.map(s=>({id:s.id||uid(),name:String(s.name||''),desc:String(s.desc||''),color:COL.includes(s.color)?s.color:COL[0],icon:String(s.icon||ICO[0]),items:(s.items||[]).map(i=>({...i,id:i.id||uid(),title:String(i.title||''),html:i.html?clean(i.html):''}))}));ui.view=null;if(ref){const as=await claude.use('assets');for(const s of S.subjects)for(const i of s.items){if(i.data&&as){const r=await as.upload(dataBlob(i.data));Object.assign(i,{url:r.url,asset:r.id});delete i.data}if(i.data2&&as){const r=await as.upload(dataBlob(i.data2));Object.assign(i,{url2:r.url,asset2:r.id});delete i.data2}}}await save();$('#dlg').close();render();toast(t('imported'))}catch(x){toast(t('bad'))}});
+$('#imp').addEventListener('change',async e=>{
+  const f=e.target.files[0];e.target.value='';if(!f)return;
+  try{
+    const j=JSON.parse(await f.text());if(!Array.isArray(j.subjects))throw 0;
+    const raw=j.subjects.map(s=>({id:s.id||uid(),name:String(s.name||''),desc:String(s.desc||''),color:COL.includes(s.color)?s.color:COL[0],icon:String(s.icon||ICO[0]),items:(s.items||[]).map(i=>({...i,id:i.id||uid(),title:String(i.title||''),html:i.html?clean(i.html):''}))}));
+    S.subjects=migrate(raw);
+    ui.view=null;
+    if(ref){const as=await claude.use('assets');
+      for(const s of S.subjects)for(const i of s.items){
+        if(Array.isArray(i.versions)){
+          for(const v of i.versions){
+            if(v.data&&as){const r=await as.upload(dataBlob(v.data));v.url=r.url;v.asset=r.id;delete v.data;}
+          }
+          if(i.versions[0]) Object.assign(i,{url:i.versions[0].url,data:i.versions[0].data,asset:i.versions[0].asset,fname:i.versions[0].fname,mime:i.versions[0].mime});
+        } else if(i.data&&as){const r=await as.upload(dataBlob(i.data));Object.assign(i,{url:r.url,asset:r.id});delete i.data;}
+      }
+    }
+    await save();$('#dlg').close();render();toast(t('imported'));
+  }catch(x){toast(t('bad'))}
+});
 (async()=>{prefs();const d=await load();
-  S=d&&Array.isArray(d.subjects)?d:{subjects:[{id:uid(),name:'ابدأ من هنا · Start here',desc:'',color:COL[2],icon:'📘',items:[{id:uid(),type:'note',title:'Welcome · مرحبًا',html:'<p>Switch to Admin mode to add subjects, files, videos, links and notes. · فعّل وضع المشرف لإضافة المواد والملفات والفيديوهات والروابط والملاحظات.</p>'}]}]};
+  S=d&&Array.isArray(d.subjects)?{subjects:migrate(d.subjects)}:{subjects:[{id:uid(),name:'ابدأ من هنا · Start here',desc:'',color:COL[2],icon:'📘',items:[{id:uid(),type:'note',title:'Welcome · مرحبًا',html:'<p>Switch to Admin mode to add subjects, files, videos, links and notes. · فعّل وضع المشرف لإضافة المواد والملفات والفيديوهات والروابط والملاحظات.</p>'}]}]};
   apply();render();connect()})();
 async function connect(){await site()}
 </script>
