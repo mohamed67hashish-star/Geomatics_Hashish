@@ -197,10 +197,17 @@ const AN={
   },
   visit(){
     if(!this.ready)return;
-    try{if(!localStorage.getItem('sh_uv')){localStorage.setItem('sh_uv','1');this._up('visitors')}}catch(e){}
+    // تسجيل الزائر الفريد مرة واحدة فقط لكل متصفح
+    try{
+      if(!localStorage.getItem('sh_uv')){
+        localStorage.setItem('sh_uv','1');
+        this._up('visitors');
+      }
+    }catch(e){}
     this._up('opens');
     this.ping();
   },
+
   ping(){
     if(!this.ready)return;
     clearTimeout(this._t);
