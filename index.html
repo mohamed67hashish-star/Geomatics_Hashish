@@ -533,7 +533,10 @@ function viewer(id,verId){
   const data=v?v.data:it.data;
   const url=v?v.url:it.url;
   const asset=v?v.asset:it.asset;
+  
   AN.trackOpen(it.id);
+  if(v) AN.trackOpen(it.id + '-' + v.id); /* Track specific version opens */
+
   let b='';
   if(it.type==='note') b=`<div class="note">${clean(it.html)}</div>`;
   else if(it.type==='video'){if(it.data||it.asset)b=`<video controls playsinline src="${it.asset?esc(it.url):blobUrl(it.data)}"></video>`;else{const em=embed(it.url);b=(em?`<iframe src="${em}" allowfullscreen allow="fullscreen;picture-in-picture"></iframe>`:`<video controls playsinline src="${esc(it.url)}"></video>`)+`<p><a class="btn" style="display:inline-grid;place-items:center;text-decoration:none" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${t('site')}</a></p>`}}
@@ -564,12 +567,34 @@ function viewer(id,verId){
 }
 function move(id,d){const [s]=findItem(id),i=s.items.findIndex(x=>x.id===id),j=i+d;if(j<0||j>=s.items.length)return;[s.items[i],s.items[j]]=[s.items[j],s.items[i]];save();render()}
 function backup(){dlg(`<h2>${t('backup')}</h2><button class="btn pri" data-act="exp">⬇ ${t('exp')}</button>${ui.admin?`<button class="btn" data-act="imp">⬆ ${t('imp')}</button>`:''}${ui.admin&&!ref?`<button class="btn" data-act="gh">GitHub</button>`:''}<button class="btn" data-act="close">${t('close')}</button>`)}
-/* ================= Stats dialog (admin only, cache-first) ================= */
+/* ================= Stats dialog (admin only, cache-first, detailed per version) ================= */
 let _statsCtx=null;
 
 async function statsDlg(){
   const items=[];
-  S.subjects.forEach(s=>s.items.forEach(it=>{items.push({id:it.id,type:it.type,title:it.title,subject:s.icon+' '+s.name})}));
+  S.subjects.forEach(s=>s.items.forEach(it=>{
+    if(it.type==='file' && Array.isArray(it.versions) && it.versions.length > 0){
+      it.versions.forEach((v, i) => {
+        const info = verInfo(v);
+        items.push({
+          id: it.id + '-' + v.id,
+          type: 'file',
+          title: it.title + ' · ' + verLabel(v, i),
+          subject: s.icon + ' ' + s.name,
+          details: [v.fname, info.size ? fmtSize(info.size) : ''].filter(Boolean).join(' · '),
+          isLatest: i === 0
+        });
+      });
+    } else {
+      items.push({
+        id: it.id,
+        type: it.type,
+        title: it.title,
+        subject: s.icon + ' ' + s.name
+      });
+    }
+  }));
+  
   _statsCtx={items};
   dlg(`<h2>📊 ${t('stats')}</h2><div id="statsBody" style="display:grid;gap:12px"></div><div class="end"><button class="btn" data-act="statsRefresh">🔄 ${t('refresh')}</button><button class="btn pri" data-act="close">${t('close')}</button></div>`);
   _statsRender(false);      /* فوري من الكاش — 0ms */
@@ -630,7 +655,9 @@ function _statsRender(isFresh,data){
     html+='<div>';
     sorted.forEach(({f,st})=>{
       const dl=f.type==='file'?`<span title="${t('fileDownloads')}">⬇ ${st.downloads}</span>`:'';
-      html+=`<div class="statRow"><div class="tx"><b>${esc(f.title)}</b><span class="s">${esc(f.subject)}</span></div><div class="n"><span title="${t('fileOpens')}">👁 ${st.opens}</span>${dl}</div></div>`;
+      const det=f.details?`<span class="s" style="display:block;font-size:.75rem;color:var(--mu);margin-top:2px">${esc(f.details)}</span>`:'';
+      const latestTag = f.isLatest ? `<span class="verTag pri" style="font-size:.6rem;padding:1px 6px;margin-inline-start:4px">${t('latest')}</span>` : '';
+      html+=`<div class="statRow"><div class="tx"><b>${esc(f.title)}${latestTag}</b>${det}<span class="s">${esc(f.subject)}</span></div><div class="n"><span title="${t('fileOpens')}">👁 ${st.opens}</span>${dl}</div></div>`;
     });
     html+='</div>';
   }
@@ -733,6 +760,7 @@ const A={
     else if(data) bl=new Blob([Uint8Array.from(atob(data.split(',')[1]),c=>c.charCodeAt(0))],{type:mime});
     if(!bl) return;
     AN.trackDownload(id);
+    if(v) AN.trackDownload(id + '-' + v.id); /* Track specific version download */
     saveFile(fname||it.title,bl);
   },
  close(){$('#dlg').close()},
