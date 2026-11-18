@@ -104,6 +104,9 @@ header h1{color:var(--ac)}
 .statRow b{display:block;font-weight:500;font-size:.92rem;overflow-wrap:anywhere}
 .statRow span.s{color:var(--mu);font-size:.78rem}
 .statRow .n{display:flex;gap:14px;font-variant-numeric:tabular-nums;font-size:.9rem;white-space:nowrap;color:var(--tx)}
+.statRow.statSub{padding-inline-start:30px;padding-block:6px;opacity:.92;border-bottom:1px solid color-mix(in srgb,var(--ln) 55%,transparent)}
+.statRow.statSub .tx b{font-size:.85rem;font-weight:400;color:var(--tx)}
+.statRow.statSub .n{font-size:.82rem;gap:10px;color:var(--mu)}
 @media(max-width:430px){.statGrid{grid-template-columns:1fr 1fr}.statGrid .statCard:last-child{grid-column:1/-1}}
 /* ---- version cards (viewer) ---- */
 .verList{display:grid;gap:10px}
@@ -114,7 +117,8 @@ header h1{color:var(--ac)}
 .verTag{font-size:.72rem;padding:2px 8px;border-radius:99px;background:var(--sf2);color:var(--mu);white-space:nowrap;border:1px solid var(--ln)}
 .verTag.pri{background:color-mix(in srgb,var(--ac) 20%,transparent);color:var(--ac);border-color:transparent}
 .verMeta{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--mu);align-items:center}
-.verActs{display:flex;gap:6px;flex-wrap:wrap}
+.verActs{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
+.verStats{margin-inline-start:auto;font-size:.78rem;color:var(--mu);font-variant-numeric:tabular-nums;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -136,8 +140,8 @@ header h1{color:var(--ac)}
 <div id="toast" role="status"></div>
 <script>
 const $=s=>document.querySelector(s);
-const L={ar:{title:'Geomathics',search:'ابحث في المواد والملفات والفيديوهات',subjects:'المواد',addSubject:'إضافة مادة',editSubject:'تعديل المادة',name:'اسم المادة',desc:'وصف (اختياري)',color:'اللون',icon:'الأيقونة',save:'حفظ',cancel:'إلغاء',del:'حذف',edit:'تعديل',delSubject:'حذف المادة وكل محتوياتها (%n)؟',delItem:'حذف هذا العنصر؟',addRes:'إضافة محتوى',file:'ملف',video:'فيديو',link:'رابط',note:'ملاحظة',resTitle:'العنوان',url:'الرابط',pick:'اختر ملفًا',versions:'النسخ',version:'نسخة',verLabel:'اسم النسخة (يظهر للطالب)',addVer:'إضافة نسخة',chooseVer:'اختر النسخة التي تريد فتحها',noSubjects:'لا توجد مواد بعد. أضف أول مادة للبدء.',noSubjectsS:'لا توجد مواد بعد.',noRes:'لا يوجد محتوى في هذه المادة.',all:'الكل',back:'كل المواد',admin:'وضع المشرف',student:'عرض الطالب',exp:'تصدير نسخة احتياطية (JSON)',imp:'استيراد نسخة احتياطية',imported:'تم استيراد البيانات',bad:'الملف غير صالح',results:'نتائج البحث',none:'لا توجد نتائج مطابقة',open:'فتح',download:'تنزيل',site:'فتح في الموقع',big:'الملف كبير جدًا (الحد 20 إلى 25 ميجابايت أونلاين)',items:'عنصر',noPrev:'لا توجد معاينة لهذا النوع. نزّل الملف لفتحه.',need:'اختر ملفًا أو أدخل رابطًا',ok:'تأكيد',text:'النص',up:'تحريك لأعلى',dn:'تحريك لأسفل',close:'إغلاق',saved:'تم الحفظ',vurl:'رابط يوتيوب أو فيميو، أو ارفع ملف فيديو',backup:'النسخ الاحتياطي',pw:'كلمة مرور المشرف',wrong:'كلمة المرور غير صحيحة',unlock:'دخول',ghHelp:'أنشئ Fine-grained token بصلاحية Contents: Read and write على هذا المستودع فقط. يُحفظ في هذا المتصفح فقط. اتركه فارغًا لفصل الربط.',owner:'اسم الحساب (Owner)',repo:'اسم المستودع (Repository)',branch:'الفرع (Branch)',token:'التوكن (Token)',ghok:'تم الحفظ على GitHub، سيظهر للطلاب خلال دقيقة تقريبًا',nowrite:'لا تملك صلاحية الرفع أو التعديل أونلاين',stats:'الإحصائيات',totalVisits:'مرات فتح الموقع',uniqueVisitors:'زوار الموقع',onlineNow:'متصل الآن',fileStats:'إحصائيات المحتوى',fileOpens:'مرة فتح',fileDownloads:'مرة تنزيل',noFiles:'لا يوجد محتوى بعد',loading:'جارٍ التحميل…',statsNote:'إحصائيات تقريبية عبر خدمتي عدّ خارجيتين (counterapi.dev + abacus).',lastUpd:'آخر تحديث',cached:'بيانات محفوظة من آخر قراءة (الخدمة غير متاحة الآن).',totalOpens:'مرات فتح المحتوى',refresh:'تحديث',latest:'الأحدث'},
-en:{title:'Geomathics',search:'Search subjects, files and videos',subjects:'Subjects',addSubject:'Add subject',editSubject:'Edit subject',name:'Subject name',desc:'Description (optional)',color:'Color',icon:'Icon',save:'Save',cancel:'Cancel',del:'Delete',edit:'Edit',delSubject:'Delete this subject and all its content (%n)?',delItem:'Delete this item?',addRes:'Add content',file:'File',video:'Video',link:'Link',note:'Note',resTitle:'Title',url:'URL',pick:'Choose a file',versions:'Versions',version:'Version',verLabel:'Version name (shown to student)',addVer:'Add version',chooseVer:'Choose which version to open',noSubjects:'No subjects yet. Add your first one to begin.',noSubjectsS:'No subjects yet.',noRes:'This subject has no content yet.',all:'All',back:'All subjects',admin:'Admin mode',student:'Student view',exp:'Export backup (JSON)',imp:'Import backup',imported:'Data imported',bad:'Invalid backup file',results:'Search results',none:'No matches',open:'Open',download:'Download',site:'Open on site',big:'File is too large (20 MB limit online)',items:'items',noPrev:'No preview for this type. Download the file to open it.',need:'Choose a file or enter a URL',ok:'Confirm',text:'Text',up:'Move up',dn:'Move down',close:'Close',saved:'Saved',vurl:'YouTube or Vimeo link, or upload a video file',backup:'Backup',pw:'Admin password',wrong:'Wrong password',unlock:'Unlock',ghHelp:'Create a fine-grained token with Contents: Read and write on this repository only. It is stored in this browser only. Leave it empty to disconnect.',owner:'Owner',repo:'Repository',branch:'Branch',token:'Token',ghok:'Saved to GitHub. Students will see it in about a minute.',nowrite:'You do not have permission to upload or edit online',stats:'Statistics',totalVisits:'Site opens',uniqueVisitors:'Unique visitors',onlineNow:'Online now',fileStats:'Content statistics',fileOpens:'opens',fileDownloads:'downloads',noFiles:'No content yet',loading:'Loading…',statsNote:'Approximate stats via two external counter services (counterapi.dev + abacus).',lastUpd:'Last updated',cached:'Cached from last reading (service unavailable now).',totalOpens:'Content opens',refresh:'Refresh',latest:'Latest'}};
+const L={ar:{title:'Geomathics',search:'ابحث في المواد والملفات والفيديوهات',subjects:'المواد',addSubject:'إضافة مادة',editSubject:'تعديل المادة',name:'اسم المادة',desc:'وصف (اختياري)',color:'اللون',icon:'الأيقونة',save:'حفظ',cancel:'إلغاء',del:'حذف',edit:'تعديل',delSubject:'حذف المادة وكل محتوياتها (%n)؟',delItem:'حذف هذا العنصر؟',addRes:'إضافة محتوى',file:'ملف',video:'فيديو',link:'رابط',note:'ملاحظة',resTitle:'العنوان',url:'الرابط',pick:'اختر ملفًا',versions:'النسخ',version:'نسخة',verLabel:'اسم النسخة (يظهر للطالب)',addVer:'إضافة نسخة',chooseVer:'اختر النسخة التي تريد فتحها',noSubjects:'لا توجد مواد بعد. أضف أول مادة للبدء.',noSubjectsS:'لا توجد مواد بعد.',noRes:'لا يوجد محتوى في هذه المادة.',all:'الكل',back:'كل المواد',admin:'وضع المشرف',student:'عرض الطالب',exp:'تصدير نسخة احتياطية (JSON)',imp:'استيراد نسخة احتياطية',imported:'تم استيراد البيانات',bad:'الملف غير صالح',results:'نتائج البحث',none:'لا توجد نتائج مطابقة',open:'فتح',download:'تنزيل',site:'فتح في الموقع',big:'الملف كبير جدًا (الحد 20 إلى 25 ميجابايت أونلاين)',items:'عنصر',noPrev:'لا توجد معاينة لهذا النوع. نزّل الملف لفتحه.',need:'اختر ملفًا أو أدخل رابطًا',ok:'تأكيد',text:'النص',up:'تحريك لأعلى',dn:'تحريك لأسفل',close:'إغلاق',saved:'تم الحفظ',vurl:'رابط يوتيوب أو فيميو، أو ارفع ملف فيديو',backup:'النسخ الاحتياطي',pw:'كلمة مرور المشرف',wrong:'كلمة المرور غير صحيحة',unlock:'دخول',ghHelp:'أنشئ Fine-grained token بصلاحية Contents: Read and write على هذا المستودع فقط. يُحفظ في هذا المتصفح فقط. اتركه فارغًا لفصل الربط.',owner:'اسم الحساب (Owner)',repo:'اسم المستودع (Repository)',branch:'الفرع (Branch)',token:'التوكن (Token)',ghok:'تم الحفظ على GitHub، سيظهر للطلاب خلال دقيقة تقريبًا',nowrite:'لا تملك صلاحية الرفع أو التعديل أونلاين',stats:'الإحصائيات',totalVisits:'مرات فتح الموقع',uniqueVisitors:'زوار الموقع',onlineNow:'متصل الآن',fileStats:'إحصائيات المحتوى',fileOpens:'مرة فتح',fileDownloads:'مرة تنزيل',noFiles:'لا يوجد محتوى بعد',loading:'جارٍ التحميل…',statsNote:'الإحصائيات محفوظة في مستودع GitHub وتظهر موحّدة على جميع الأجهزة.',lastUpd:'آخر تحديث',cached:'نسخة محلية (GitHub غير متاح الآن).',totalOpens:'مرات فتح المحتوى',refresh:'تحديث',latest:'الأحدث',setToken:'لتفعيل الإحصائيات عبر GitHub أضف التوكن من قائمة النسخ الاحتياطي.',empty:'فارغ'},
+en:{title:'Geomathics',search:'Search subjects, files and videos',subjects:'Subjects',addSubject:'Add subject',editSubject:'Edit subject',name:'Subject name',desc:'Description (optional)',color:'Color',icon:'Icon',save:'Save',cancel:'Cancel',del:'Delete',edit:'Edit',delSubject:'Delete this subject and all its content (%n)?',delItem:'Delete this item?',addRes:'Add content',file:'File',video:'Video',link:'Link',note:'Note',resTitle:'Title',url:'URL',pick:'Choose a file',versions:'Versions',version:'Version',verLabel:'Version name (shown to student)',addVer:'Add version',chooseVer:'Choose which version to open',noSubjects:'No subjects yet. Add your first one to begin.',noSubjectsS:'No subjects yet.',noRes:'This subject has no content yet.',all:'All',back:'All subjects',admin:'Admin mode',student:'Student view',exp:'Export backup (JSON)',imp:'Import backup',imported:'Data imported',bad:'Invalid backup file',results:'Search results',none:'No matches',open:'Open',download:'Download',site:'Open on site',big:'File is too large (20 MB limit online)',items:'items',noPrev:'No preview for this type. Download the file to open it.',need:'Choose a file or enter a URL',ok:'Confirm',text:'Text',up:'Move up',dn:'Move down',close:'Close',saved:'Saved',vurl:'YouTube or Vimeo link, or upload a video file',backup:'Backup',pw:'Admin password',wrong:'Wrong password',unlock:'Unlock',ghHelp:'Create a fine-grained token with Contents: Read and write on this repository only. It is stored in this browser only. Leave it empty to disconnect.',owner:'Owner',repo:'Repository',branch:'Branch',token:'Token',ghok:'Saved to GitHub. Students will see it in about a minute.',nowrite:'You do not have permission to upload or edit online',stats:'Statistics',totalVisits:'Site opens',uniqueVisitors:'Unique visitors',onlineNow:'Online now',fileStats:'Content statistics',fileOpens:'opens',fileDownloads:'downloads',noFiles:'No content yet',loading:'Loading…',statsNote:'Stats are stored in GitHub and synced across all your devices.',lastUpd:'Last updated',cached:'Local copy (GitHub unavailable now).',totalOpens:'Content opens',refresh:'Refresh',latest:'Latest',setToken:'To enable GitHub-backed stats, set a token from the Backup menu.',empty:'Empty'}};
 const COL=['#f0b95b','#5fcfa4','#7aa7ff','#ef7d8e','#b490f0','#5fd0e6'];
 const ICO=['📘','🧮','🔎','🌍','💻','📈','📜','⚖️','🩺','📐'];
 const TI={file:'📄',video:'▶️',link:'🔗',note:'📝'};
@@ -147,89 +151,139 @@ const ghU=p=>`https://api.github.com/repos/${gh.o}/${gh.r}/contents/${p}`;
 async function ghGet(p){const r=await fetch(ghU(p)+'?ref='+gh.b+'&t='+Date.now(),{headers:ghH()});if(r.status===404)return null;if(!r.ok)throw new Error(await ghMsg(r));return r.json()}
 async function ghMsg(r){const j=await r.json().catch(()=>({}));return r.status+' '+(j.message||'')}
 async function ghPut(p,b64){const o=await ghGet(p).catch(()=>null);const r=await fetch(ghU(p),{method:'PUT',headers:ghH(),body:JSON.stringify({message:'update '+p,content:b64,branch:gh.b,...(o?{sha:o.sha}:{})})});if(!r.ok)throw new Error(await ghMsg(r))}
+/* جديد: PUT مع SHA صريح لتجنب الكتابة فوق تغييرات الآخرين */
+async function ghPutRaw(p,b64,sha){const body={message:'update '+p,content:b64,branch:gh.b};if(sha)body.sha=sha;const r=await fetch(ghU(p),{method:'PUT',headers:ghH(),body:JSON.stringify(body)});if(!r.ok){const err=new Error(await ghMsg(r));err.status=r.status;throw err}return r.json()}
 async function ghDel(p){const o=await ghGet(p);if(!o)return;await fetch(ghU(p),{method:'DELETE',headers:ghH(),body:JSON.stringify({message:'delete '+p,sha:o.sha,branch:gh.b})})}
 let ghQ=Promise.resolve();
 async function site(){try{let j=null;if(gh){const o=await ghGet('data.json');if(o)j=JSON.parse(decodeURIComponent(escape(atob(o.content.replace(/\n/g,'')))))}else{const r=await fetch('data.json?t='+Date.now());if(r.ok)j=await r.json()}
   if(j&&Array.isArray(j.subjects)){S={subjects:migrate(j.subjects)};render()}}catch(e){}}
 async function ghSync(){if(!gh)return site();try{const o=await ghGet('data.json');if(!o&&S.subjects.length>0){await ghPut('data.json',btoa(unescape(encodeURIComponent(JSON.stringify({subjects:S.subjects})))));}await site()}catch(e){toast('GitHub: '+(e.message||'error'),9000)}}
-/* ================= Analytics (dual public counters + local cache) ================= */
-function withTimeout(p,ms){return Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))])}
+/* ================================================================
+   الإحصائيات — الآن محفوظة في GitHub (ملف stats.json)
+   البنية: { opens, visitors, items: { itemId: { opens, downloads, versions: { verId: {opens, downloads} } } } }
+   ================================================================ */
+const STATS_FILE='stats.json';
+const LOCAL_STATS_KEY='sh_stats_local';
+
+function loadLocalStats(){
+  try{
+    const st=JSON.parse(localStorage.getItem(LOCAL_STATS_KEY));
+    if(st&&typeof st==='object'){st.items=st.items||{};return st}
+  }catch(e){}
+  return {opens:0,visitors:0,items:{}};
+}
+function saveLocalStats(st){
+  try{localStorage.setItem(LOCAL_STATS_KEY,JSON.stringify(st))}catch(e){}
+}
+
 const AN={
-  base:'https://api.counterapi.dev/v1/',
-  aba:'https://abacus.jasoncameron.dev/',
-  ns:'',_t:0,ready:false,
+  ready:false,
+  _queue:Promise.resolve(),
   init(){
     if(this.ready)return;
-    const seed=(location.host||'local')+location.pathname.replace(/[^/]*$/,'');
-    let h=0;for(let i=0;i<seed.length;i++)h=((h<<5)-h+seed.charCodeAt(i))|0;
-    this.ns='gm-'+Math.abs(h).toString(36);
     this.ready=true;
-    document.addEventListener('visibilitychange',()=>{if(!document.hidden)this.ping()});
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden)this._flush()});
   },
-  _bucket(off){
-    const d=new Date(Date.now()-(off||0)*60000);
-    return 'on-'+d.getUTCFullYear()+String(d.getUTCMonth()+1).padStart(2,'0')+String(d.getUTCDate()).padStart(2,'0')+String(d.getUTCHours()).padStart(2,'0')+String(d.getUTCMinutes()).padStart(2,'0');
-  },
-  async _svcUp(svc,key){
+
+  /* قراءة الملف كاملًا (data + sha) */
+  async _getStats(){
+    if(!gh)return null;
     try{
-      const url = svc==='aba'
-        ? this.aba+'hit/'+encodeURIComponent(this.ns)+'/'+encodeURIComponent(key)
-        : this.base+this.ns+'/'+encodeURIComponent(key)+'/up?t='+Date.now();
-      const r=await withTimeout(fetch(url,{cache:'no-store'}),5000);
-      if(!r||!r.ok)return null;
-      const j=await withTimeout(r.json(),3000).catch(()=>({}));
-      const v = j.value!==undefined?j.value:j.count;
-      return v!==undefined?+v:null;
-    }catch(e){return null}
+      const o=await ghGet(STATS_FILE);
+      if(!o)return {data:{opens:0,visitors:0,items:{}},sha:null};
+      const txt=decodeURIComponent(escape(atob(o.content.replace(/\n/g,''))));
+      const data=JSON.parse(txt);
+      data.items=data.items||{};
+      return {data,sha:o.sha};
+    }catch(e){console.warn('stats read failed',e);return null}
   },
-  async _svcGet(svc,key){
+
+  /* كتابة الملف (SHA صريح لتجنّب الكتابة فوق تغييرات الآخرين) */
+  async _putStats(data,sha){
+    if(!gh)return false;
     try{
-      const url = svc==='aba'
-        ? this.aba+'get/'+encodeURIComponent(this.ns)+'/'+encodeURIComponent(key)
-        : this.base+this.ns+'/'+encodeURIComponent(key)+'?t='+Date.now();
-      const r=await withTimeout(fetch(url,{cache:'no-store'}),5000);
-      if(!r||!r.ok)return null;
-      const j=await withTimeout(r.json(),3000).catch(()=>({}));
-      const v = j.value!==undefined?j.value:j.count;
-      return v!==undefined?+v:null;
-    }catch(e){return null}
+      const b64=btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+      await ghPutRaw(STATS_FILE,b64,sha);
+      return true;
+    }catch(e){console.warn('stats write failed',e);return false}
   },
-  async _up(key){
-    if(!this.ready)return null;
-    const [a,b]=await Promise.all([this._svcUp('counter',key),this._svcUp('aba',key)]);
-    const m=Math.max(a||0,b||0);
-    return (a==null&&b==null)?null:m;
+
+  /* زيادة عدّاد عام (opens / visitors) */
+  _increment(field){
+    const st=loadLocalStats();
+    st[field]=(st[field]||0)+1;
+    saveLocalStats(st);
+    if(!gh)return;
+    this._queue=this._queue.then(async()=>{
+      for(let a=0;a<3;a++){
+        const cur=await this._getStats();
+        if(!cur)return;
+        cur.data[field]=(cur.data[field]||0)+1;
+        if(await this._putStats(cur.data,cur.sha))return;
+        await new Promise(r=>setTimeout(r,200*(a+1)));
+      }
+    });
   },
-  async _get(key){
-    if(!this.ready)return null;
-    const [a,b]=await Promise.all([this._svcGet('counter',key),this._svcGet('aba',key)]);
-    if(a==null&&b==null)return null;
-    return Math.max(a||0,b||0);
+
+  /* زيادة عدّاد عنصر/نسخة */
+  _trackItem(itemId,verId,field){
+    const st=loadLocalStats();
+    st.items[itemId]=st.items[itemId]||{opens:0,downloads:0,versions:{}};
+    st.items[itemId][field]=(st.items[itemId][field]||0)+1;
+    if(verId){
+      st.items[itemId].versions=st.items[itemId].versions||{};
+      st.items[itemId].versions[verId]=st.items[itemId].versions[verId]||{opens:0,downloads:0};
+      st.items[itemId].versions[verId][field]=(st.items[itemId].versions[verId][field]||0)+1;
+    }
+    saveLocalStats(st);
+    if(!gh)return;
+    this._queue=this._queue.then(async()=>{
+      for(let a=0;a<3;a++){
+        const cur=await this._getStats();
+        if(!cur)return;
+        cur.data.items=cur.data.items||{};
+        cur.data.items[itemId]=cur.data.items[itemId]||{opens:0,downloads:0,versions:{}};
+        const it=cur.data.items[itemId];
+        it[field]=(it[field]||0)+1;
+        if(verId){
+          it.versions=it.versions||{};
+          it.versions[verId]=it.versions[verId]||{opens:0,downloads:0};
+          it.versions[verId][field]=(it.versions[verId][field]||0)+1;
+        }
+        if(await this._putStats(cur.data,cur.sha))return;
+        await new Promise(r=>setTimeout(r,200*(a+1)));
+      }
+    });
   },
+
   visit(){
     if(!this.ready)return;
-    try{if(!localStorage.getItem('sh_uv')){localStorage.setItem('sh_uv','1');this._up('visitors')}}catch(e){}
-    this._up('opens');
-    this.ping();
+    try{
+      if(!localStorage.getItem('sh_uv')){
+        localStorage.setItem('sh_uv','1');
+        this._increment('visitors');
+      }
+    }catch(e){}
+    this._increment('opens');
   },
-  ping(){
-    if(!this.ready)return;
-    clearTimeout(this._t);
-    if(!document.hidden)this._up(this._bucket(0));
-    this._t=setTimeout(()=>this.ping(),60000);
+  ping(){},
+  onlineNow(){return null},
+  trackOpen(id,verId){if(!this.ready)return;this._trackItem(id,verId,'opens')},
+  trackDownload(id,verId){if(!this.ready)return;this._trackItem(id,verId,'downloads')},
+
+  async totalStats(){
+    if(!gh){const st=loadLocalStats();return {opens:st.opens||0,visitors:st.visitors||0}};
+    const cur=await this._getStats();
+    if(!cur)return null;
+    return {opens:cur.data.opens||0,visitors:cur.data.visitors||0};
   },
-  async onlineNow(){
-    const keys=[this._bucket(0),this._bucket(1)];
-    const vals=await Promise.all(keys.map(k=>this._get(k)));
-    if(vals[0]==null&&vals[1]==null)return null;
-    return Math.round(((vals[0]||0)+(vals[1]||0))/2);
-  },
-  trackOpen(id){this._up('op-'+id)},
-  trackDownload(id){this._up('dl-'+id)},
   async itemStats(id){
-    const [o,d]=await Promise.all([this._get('op-'+id),this._get('dl-'+id)]);
-    return {opens:o,downloads:d};
-  }
+    if(!gh){const st=loadLocalStats();return st.items[id]||{opens:0,downloads:0,versions:{}}}
+    const cur=await this._getStats();
+    if(!cur)return null;
+    return (cur.data.items&&cur.data.items[id])||{opens:0,downloads:0,versions:{}};
+  },
+  _flush(){/* لا شيء: الزيادات تُكتب مباشرة */}
 };
 /* ================================================================ */
 let ref=null,S={subjects:[]},ui={admin:false,theme:'dark',lang:'ar',view:null,filter:'all',q:''};
@@ -238,7 +292,6 @@ const uid=()=>Math.random().toString(36).slice(2,10);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent};
 const verLabel=(v,i)=>(v&&v.label&&String(v.label).trim())?String(v.label).trim():(t('version')+' '+(i+1));
-/* migrate older 2-version items into a versions[] array */
 function migrate(subjects){
   for(const s of subjects||[]){
     for(const it of s.items||[]){
@@ -263,33 +316,13 @@ function clean(h){const d=new DOMParser().parseFromString(h,'text/html');const o
 const dataBlob=d=>{const [h,b]=d.split(','),m=h.match(/:(.*?);/)[1],bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:m})};
 const blobUrl=d=>{const [h,b]=d.split(','),m=h.match(/:(.*?);/)[1],bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);const url=URL.createObjectURL(new Blob([u],{type:m}));blobUrl.l.push(url);return url};blobUrl.l=[];
 const readFile=f=>new Promise((r,j)=>{const x=new FileReader();x.onload=()=>r(x.result);x.onerror=j;x.readAsDataURL(f)});
-/* ---- file details helpers (version info) ---- */
-const fmtSize=b=>{
-  if(b==null||isNaN(b))return '';
-  if(b<1024)return b+' B';
-  if(b<1048576)return (b/1024).toFixed(b<10240?1:0)+' KB';
-  if(b<1073741824)return (b/1048576).toFixed(b<10485760?1:0)+' MB';
-  return (b/1073741824).toFixed(1)+' GB';
-};
-const b64Bytes=d=>{
-  if(!d||typeof d!=='string'||d.slice(0,5)!=='data:')return null;
-  const b=d.split(',')[1]||'';
-  const pad=b.endsWith('==')?2:b.endsWith('=')?1:0;
-  return Math.max(0,Math.floor(b.length*3/4)-pad);
-};
-function verSize(v){
-  if(!v)return null;
-  if(typeof v.size==='number')return v.size;
-  return b64Bytes(v.data);
-}
+const fmtSize=b=>{if(b==null||isNaN(b))return '';if(b<1024)return b+' B';if(b<1048576)return (b/1024).toFixed(b<10240?1:0)+' KB';if(b<1073741824)return (b/1048576).toFixed(b<10485760?1:0)+' MB';return (b/1073741824).toFixed(1)+' GB'};
+const b64Bytes=d=>{if(!d||typeof d!=='string'||d.slice(0,5)!=='data:')return null;const b=d.split(',')[1]||'';const pad=b.endsWith('==')?2:b.endsWith('=')?1:0;return Math.max(0,Math.floor(b.length*3/4)-pad)};
+function verSize(v){if(!v)return null;if(typeof v.size==='number')return v.size;return b64Bytes(v.data)}
 function verInfo(v){
-  const name=v.fname||'';
-  const urlPath=(v.url||'').split('/').pop()||'';
-  const guess=name||urlPath;
-  const i=guess.lastIndexOf('.');
-  const ext=i>-1?guess.slice(i+1).toLowerCase():'';
-  const mime=(v.mime||'').toLowerCase();
-  let ic='📄';
+  const name=v.fname||'';const urlPath=(v.url||'').split('/').pop()||'';const guess=name||urlPath;
+  const i=guess.lastIndexOf('.');const ext=i>-1?guess.slice(i+1).toLowerCase():'';
+  const mime=(v.mime||'').toLowerCase();let ic='📄';
   if(mime.startsWith('image/')||['jpg','jpeg','png','gif','webp','svg','bmp'].includes(ext))ic='🖼️';
   else if(mime==='application/pdf'||ext==='pdf')ic='📕';
   else if(mime.includes('word')||['doc','docx','rtf'].includes(ext))ic='📝';
@@ -317,11 +350,7 @@ const findItem=id=>{for(const s of S.subjects){const it=s.items.find(i=>i.id===i
 function embed(u){let m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);if(m)return 'https://www.youtube.com/embed/'+m[1];m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/);return m?'https://player.vimeo.com/video/'+m[1]:null}
 function meta(it){
   let m;
-  if(it.type==='file'){
-    const vers=it.versions||[];
-    m=vers.length?vers[0].fname||'':it.fname||'';
-    if(vers.length>1) m+=' · '+vers.length+' '+t('versions');
-  }
+  if(it.type==='file'){const vers=it.versions||[];m=vers.length?vers[0].fname||'':it.fname||'';if(vers.length>1) m+=' · '+vers.length+' '+t('versions');}
   else if(it.type==='note') m=plain(it.html).slice(0,90);
   else if(it.type==='video'&&(it.data||it.asset)) m=it.fname||'';
   else m=(it.url||'').replace(/^https?:\/\//,'').slice(0,70);
@@ -356,11 +385,9 @@ function subForm(id){const s=sub(id)||{name:'',desc:'',color:COL[0],icon:ICO[0]}
 function itemForm(sid,id){
   const s=sub(sid);
   const it=s.items.find(i=>i.id===id)||{type:'file',title:'',url:'',html:''};
-  /* Initial versions array — migrated from old single/second fields if needed */
   let versions=[];
-  if(Array.isArray(it.versions)){
-    versions=JSON.parse(JSON.stringify(it.versions));
-  } else if(it.type==='file'){
+  if(Array.isArray(it.versions)){versions=JSON.parse(JSON.stringify(it.versions))}
+  else if(it.type==='file'){
     if(it.data||it.url) versions.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime,size:it.size});
     if(it.data2||it.url2) versions.push({id:uid(),label:'',data:it.data2,asset:it.asset2,url:it.url2,fname:it.fname2,mime:it.mime2,size:it.size2});
   }
@@ -396,9 +423,7 @@ function itemForm(sid,id){
   style="min-height:40px;padding:6px">
       </div>`;
     }).join('');
-    versEl.querySelectorAll('.verLabel').forEach(inp=>{
-      inp.oninput=e=>{const i=+e.target.closest('.verRow').dataset.i;versions[i].label=e.target.value};
-    });
+    versEl.querySelectorAll('.verLabel').forEach(inp=>{inp.oninput=e=>{const i=+e.target.closest('.verRow').dataset.i;versions[i].label=e.target.value}});
     versEl.querySelectorAll('.verFile').forEach(inp=>{
       inp.onchange=e=>{
         const row=e.target.closest('.verRow'),i=+row.dataset.i;
@@ -409,24 +434,11 @@ function itemForm(sid,id){
         else{nameEl.textContent=t('pick');nameEl.style.color='var(--mu)'}
       };
     });
-    versEl.querySelectorAll('.verDel').forEach(btn=>{
-      btn.onclick=e=>{
-        e.preventDefault();
-        const i=+btn.dataset.i;
-        versions.splice(i,1);
-        renderVers();
-      };
-    });
+    versEl.querySelectorAll('.verDel').forEach(btn=>{btn.onclick=e=>{e.preventDefault();const i=+btn.dataset.i;versions.splice(i,1);renderVers()}});
   }
   renderVers();
-  $('#addVer').onclick=e=>{
-    e.preventDefault();
-    versions.push({id:uid(),label:''});
-    renderVers();
-  };
-  const sync=()=>{
-    document.querySelectorAll('#f [data-for]').forEach(e=>e.hidden=!e.dataset.for.split(' ').includes(f.kind.value));
-  };
+  $('#addVer').onclick=e=>{e.preventDefault();versions.push({id:uid(),label:''});renderVers()};
+  const sync=()=>{document.querySelectorAll('#f [data-for]').forEach(e=>e.hidden=!e.dataset.for.split(' ').includes(f.kind.value))};
   f.kind.onchange=sync;sync();
   document.querySelectorAll('[data-fmt]').forEach(b=>{b.onmousedown=e=>e.preventDefault();b.onclick=()=>document.execCommand(b.dataset.fmt,false,b.dataset.v||null)});
   $('#f').onsubmit=async e=>{
@@ -435,49 +447,36 @@ function itemForm(sid,id){
     const o={id:it.id||uid(),type:ty,title:f.ttl.value.trim()};
     const fl=f.file?f.file.files[0]:null;
     const u=f.url?f.url.value.trim():'';
-    /* Track all assets currently owned by this item (for cleanup) */
     const oldAssets=new Set();
     if(it.asset) oldAssets.add(it.asset);
     if(it.asset2) oldAssets.add(it.asset2);
     if(Array.isArray(it.versions)) it.versions.forEach(v=>{if(v.asset) oldAssets.add(v.asset)});
-    if(ty==='note'){
-      o.html=clean($('#ed').innerHTML);
-      o.title=o.title||plain(o.html).slice(0,40)||t('note');
-    } else if(ty==='link'){
+    if(ty==='note'){o.html=clean($('#ed').innerHTML);o.title=o.title||plain(o.html).slice(0,40)||t('note')}
+    else if(ty==='link'){
       if(!u) return toast(t('need'));
       o.url=/^https?:\/\//i.test(u)?u:'https://'+u;
       o.title=o.title||o.url.replace(/^https?:\/\//,'');
     } else if(ty==='video'){
-      if(fl){
-        try{Object.assign(o,await uploadFile(fl))}catch(err){return toast(err.message)}
-        o.title=o.title||fl.name;
-      } else if(u){
-        o.url=/^https?:\/\//i.test(u)?u:'https://'+u;
-        o.title=o.title||o.url.replace(/^https?:\/\//,'');
-      } else if(it.type==='video'&&(it.data||it.url)){
-        Object.assign(o,{data:it.data,asset:it.asset,fname:it.fname,mime:it.mime,url:it.url});
-        o.title=o.title||it.title;
-      } else return toast(t('need'));
+      if(fl){try{Object.assign(o,await uploadFile(fl))}catch(err){return toast(err.message)}o.title=o.title||fl.name}
+      else if(u){o.url=/^https?:\/\//i.test(u)?u:'https://'+u;o.title=o.title||o.url.replace(/^https?:\/\//,'')}
+      else if(it.type==='video'&&(it.data||it.url)){Object.assign(o,{data:it.data,asset:it.asset,fname:it.fname,mime:it.mime,url:it.url});o.title=o.title||it.title}
+      else return toast(t('need'));
     } else if(ty==='file'){
       const processed=[];
       for(const v of versions){
         const nv={id:v.id||uid(),label:(v.label||'').trim()};
-        if(v.newFile){
-          try{Object.assign(nv,await uploadFile(v.newFile))}catch(err){return toast(err.message)}
-        } else if(v.data||v.url){
-          nv.data=v.data;nv.asset=v.asset;nv.url=v.url;nv.fname=v.fname;nv.mime=v.mime;nv.size=v.size;
-        } else continue;
+        if(v.newFile){try{Object.assign(nv,await uploadFile(v.newFile))}catch(err){return toast(err.message)}}
+        else if(v.data||v.url){nv.data=v.data;nv.asset=v.asset;nv.url=v.url;nv.fname=v.fname;nv.mime=v.mime;nv.size=v.size}
+        else continue;
         processed.push(nv);
       }
       if(!processed.length) return toast(t('need'));
       o.versions=processed;
-      /* Keep legacy primary fields in sync for backward compatibility */
       Object.assign(o,{url:processed[0].url,data:processed[0].data,asset:processed[0].asset,fname:processed[0].fname,mime:processed[0].mime,size:processed[0].size});
       if(!o.title) o.title=processed[0].fname||t('file');
     }
     const i=s.items.findIndex(x=>x.id===o.id);
     if(i>-1) s.items[i]=o; else s.items.push(o);
-    /* Delete any old asset that is no longer referenced by the new item */
     const newAssets=new Set();
     if(o.asset) newAssets.add(o.asset);
     if(Array.isArray(o.versions)) o.versions.forEach(v=>{if(v.asset) newAssets.add(v.asset)});
@@ -487,7 +486,6 @@ function itemForm(sid,id){
 }
 function viewer(id,verId){
   const [s,it]=findItem(id);if(!it)return;
-  /* Lazy migrate in case data wasn't migrated */
   if(it.type==='file'&&!Array.isArray(it.versions)){
     const vers=[];
     if(it.data||it.url) vers.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime,size:it.size});
@@ -495,7 +493,7 @@ function viewer(id,verId){
     if(vers.length) it.versions=vers;
   }
 
-  /* Multiple versions → detailed chooser with ALL details per version */
+  /* ==== Multiple versions → chooser with per-version stats ==== */
   if(it.type==='file'&&it.versions&&it.versions.length>1&&!verId){
     const cards=it.versions.map((v,i)=>{
       const info=verInfo(v);
@@ -513,6 +511,7 @@ function viewer(id,verId){
         <div class="verActs">
           <button class="btn pri" data-act="view" data-id="${id}" data-ver="${v.id}">${t('open')}</button>
           <button class="btn" data-act="dl" data-id="${id}" data-ver="${v.id}">⬇ ${t('download')}</button>
+          <span class="verStats" data-ver="${v.id}">👁 … · ⬇ …</span>
         </div>
       </div>`;
     }).join('');
@@ -520,6 +519,17 @@ function viewer(id,verId){
       <p style="margin:0;color:var(--mu);font-size:.9rem">${t('chooseVer')} · ${it.versions.length} ${t('versions')}</p>
       <div class="verList">${cards}</div>
       <div class="end"><button class="btn" data-act="close">${t('close')}</button></div>`);
+    /* async fill version stats */
+    AN.itemStats(id).then(st=>{
+      if(!st)return;
+      it.versions.forEach(v=>{
+        const el=document.querySelector(`.verStats[data-ver="${v.id}"]`);
+        if(el){
+          const vs=(st.versions&&st.versions[v.id])||{opens:0,downloads:0};
+          el.textContent=`👁 ${vs.opens||0} · ⬇ ${vs.downloads||0}`;
+        }
+      });
+    });
     return;
   }
 
@@ -533,7 +543,10 @@ function viewer(id,verId){
   const data=v?v.data:it.data;
   const url=v?v.url:it.url;
   const asset=v?v.asset:it.asset;
-  AN.trackOpen(it.id);
+
+  /* ✅ تتبع الفتح مع تمرير verId إن وُجد */
+  AN.trackOpen(it.id, v?v.id:undefined);
+
   let b='';
   if(it.type==='note') b=`<div class="note">${clean(it.html)}</div>`;
   else if(it.type==='video'){if(it.data||it.asset)b=`<video controls playsinline src="${it.asset?esc(it.url):blobUrl(it.data)}"></video>`;else{const em=embed(it.url);b=(em?`<iframe src="${em}" allowfullscreen allow="fullscreen;picture-in-picture"></iframe>`:`<video controls playsinline src="${esc(it.url)}"></video>`)+`<p><a class="btn" style="display:inline-grid;place-items:center;text-decoration:none" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${t('site')}</a></p>`}}
@@ -541,7 +554,6 @@ function viewer(id,verId){
   else if(mime==='application/pdf') b=`<iframe class="pdf" src="${asset?esc(url):blobUrl(data)}"></iframe>`;
   else b=`<p style="color:var(--mu)">${t('noPrev')}</p>`;
 
-  /* Details panel — shown for every file version */
   let details='';
   const multi=it.type==='file'&&it.versions&&it.versions.length>1;
   if(it.type==='file'&&v){
@@ -564,61 +576,54 @@ function viewer(id,verId){
 }
 function move(id,d){const [s]=findItem(id),i=s.items.findIndex(x=>x.id===id),j=i+d;if(j<0||j>=s.items.length)return;[s.items[i],s.items[j]]=[s.items[j],s.items[i]];save();render()}
 function backup(){dlg(`<h2>${t('backup')}</h2><button class="btn pri" data-act="exp">⬇ ${t('exp')}</button>${ui.admin?`<button class="btn" data-act="imp">⬆ ${t('imp')}</button>`:''}${ui.admin&&!ref?`<button class="btn" data-act="gh">GitHub</button>`:''}<button class="btn" data-act="close">${t('close')}</button>`)}
-/* ================= Stats dialog (admin only, cache-first) ================= */
+
+/* ================= Stats dialog (GitHub-backed) ================= */
 let _statsCtx=null;
 
 async function statsDlg(){
   const items=[];
-  S.subjects.forEach(s=>s.items.forEach(it=>{items.push({id:it.id,type:it.type,title:it.title,subject:s.icon+' '+s.name})}));
+  S.subjects.forEach(s=>s.items.forEach(it=>{
+    items.push({
+      id:it.id,
+      type:it.type,
+      title:it.title,
+      subject:s.icon+' '+s.name,
+      versions:(it.type==='file'&&Array.isArray(it.versions))
+        ? it.versions.map(v=>({id:v.id,label:v.label||''}))
+        : []
+    });
+  }));
   _statsCtx={items};
   dlg(`<h2>📊 ${t('stats')}</h2><div id="statsBody" style="display:grid;gap:12px"></div><div class="end"><button class="btn" data-act="statsRefresh">🔄 ${t('refresh')}</button><button class="btn pri" data-act="close">${t('close')}</button></div>`);
-  _statsRender(false);      /* فوري من الكاش — 0ms */
-  _statsFetch();            /* تحديث في الخلفية */
+  _statsRender(null);   /* فوري من النسخة المحلية */
+  _statsFetch();        /* تحديث من GitHub */
 }
 
 async function refreshStats(){
   if(!$('#dlg').open||!$('#statsBody'))return statsDlg();
-  _statsRender(false);
+  _statsRender(null);
   _statsFetch();
 }
 
-function _statsCache(){
-  try{return JSON.parse(localStorage.getItem('sh_stats_cache'))||{}}catch(e){return{}}
-}
-
-function _statsRender(isFresh,data){
+function _statsRender(data){
   if(!_statsCtx)return;
   const items=_statsCtx.items;
-  const cache=_statsCache();
-  const cMap={};if(Array.isArray(cache.stats))cache.stats.forEach(s=>cMap[s.id]=s);
+  const local=loadLocalStats();
+  const opens    = data?data.opens    : local.opens;
+  const visitors = data?data.visitors : local.visitors;
+  const itemMap  = (data&&data.items)?data.items : (local.items||{});
 
-  const opens    = data?data.opens    : null;
-  const visitors = data?data.visitors : null;
-  const online   = data?data.online   : null;
-  const fArr     = data?data.stats    : null;
-
-  const uOpens    = opens    !=null ? opens    : (cache.opens    ?? null);
-  const uVisitors = visitors !=null ? visitors : (cache.visitors ?? null);
-
-  const merged = items.map((f,i)=>{
-    const fr=(fArr&&fArr[i])||{};
-    const c =cMap[f.id]||{};
-    return {
-      opens:     fr.opens     !=null ? fr.opens     : (c.opens     ?? 0),
-      downloads: fr.downloads !=null ? fr.downloads : (c.downloads ?? 0)
-    };
+  const merged=items.map(f=>{
+    const it=itemMap[f.id]||{opens:0,downloads:0,versions:{}};
+    return { opens:it.opens||0, downloads:it.downloads||0, versions:it.versions||{} };
   });
-  const totalOpens = merged.reduce((s,x)=>s+x.opens,0);
-
-  const stampT = isFresh?new Date():(cache.t?new Date(cache.t):null);
-  const stamp = stampT ? ` · ${t('lastUpd')}: ${stampT.toLocaleString(ui.lang==='ar'?'ar-EG':'en-GB')}` : '';
-  const stale = !isFresh && cache.t;
+  const totalOpens=merged.reduce((s,x)=>s+x.opens,0);
 
   let html=`<div class="statGrid">
     <div class="statCard" style="background:color-mix(in srgb,var(--ac) 15%,var(--sf2))"><b>${totalOpens}</b><span>${t('totalOpens')}</span></div>
-    <div class="statCard"><b>${uVisitors??'—'}</b><span>${t('uniqueVisitors')}</span></div>
-    <div class="statCard"><b>${uOpens??'—'}</b><span>${t('totalVisits')}</span></div>
-    <div class="statCard"><b>${online??'—'}</b><span>${t('onlineNow')}</span></div>
+    <div class="statCard"><b>${visitors??'—'}</b><span>${t('uniqueVisitors')}</span></div>
+    <div class="statCard"><b>${opens??'—'}</b><span>${t('totalVisits')}</span></div>
+    <div class="statCard"><b>—</b><span>${t('onlineNow')}</span></div>
   </div>`;
 
   html+=`<h3 style="margin:4px 0 -2px;font-size:.95rem;font-weight:500;color:var(--mu)">${t('fileStats')}</h3>`;
@@ -631,47 +636,39 @@ function _statsRender(isFresh,data){
     sorted.forEach(({f,st})=>{
       const dl=f.type==='file'?`<span title="${t('fileDownloads')}">⬇ ${st.downloads}</span>`:'';
       html+=`<div class="statRow"><div class="tx"><b>${esc(f.title)}</b><span class="s">${esc(f.subject)}</span></div><div class="n"><span title="${t('fileOpens')}">👁 ${st.opens}</span>${dl}</div></div>`;
+      /* صفوف فرعية لكل نسخة (فقط للكتب متعددة النسخ) */
+      if(f.type==='file'&&f.versions&&f.versions.length>1){
+        f.versions.forEach((v,vi)=>{
+          const vs=st.versions[v.id]||{opens:0,downloads:0};
+          const label=v.label||(t('version')+' '+(vi+1));
+          html+=`<div class="statRow statSub">
+            <div class="tx"><b>↳ ${esc(label)}</b></div>
+            <div class="n"><span>👁 ${vs.opens||0}</span><span>⬇ ${vs.downloads||0}</span></div>
+          </div>`;
+        });
+      }
     });
     html+='</div>';
   }
 
-  html+=`<p style="margin:0;font-size:.75rem;color:var(--mu);text-align:center">${stale?('⚠️ '+t('cached')+stamp):(t('statsNote')+stamp)}</p>`;
+  html+=`<p style="margin:0;font-size:.75rem;color:var(--mu);text-align:center">${(!data&&local.t)?('⚠️ '+t('cached')):t('statsNote')}</p>`;
 
   const body=$('#statsBody');
   if(body)body.innerHTML=html;
 }
 
 async function _statsFetch(){
-  if(!_statsCtx)return;
-  const items=_statsCtx.items;
+  if(!_statsCtx||!gh)return;
   try{
-    const [opens,visitors,online,freshArr]=await Promise.all([
-      withTimeout(AN._get('opens'),6000),
-      withTimeout(AN._get('visitors'),6000),
-      withTimeout(AN.onlineNow(),6000),
-      Promise.all(items.map(f=>withTimeout(AN.itemStats(f.id),6000)))
-    ]);
-    const fresh={opens,visitors,online,stats:freshArr.map(x=>x||{opens:null,downloads:null})};
-
-    /* merge with old cache so we never overwrite good data with null */
-    const cache=_statsCache();
-    const cMap={};if(Array.isArray(cache.stats))cache.stats.forEach(s=>cMap[s.id]=s);
-    try{
-      localStorage.setItem('sh_stats_cache',JSON.stringify({
-        t:Date.now(),
-        opens:    opens    !=null?opens    :(cache.opens    ?? null),
-        visitors: visitors !=null?visitors :(cache.visitors ?? null),
-        stats: items.map((f,i)=>{
-          const fr=fresh.stats[i]||{}, c=cMap[f.id]||{};
-          return {id:f.id,
-            opens:     fr.opens     !=null?fr.opens     :(c.opens     ?? 0),
-            downloads: fr.downloads !=null?fr.downloads :(c.downloads ?? 0)};
-        })
-      }));
-    }catch(e){}
-
-    _statsRender(true,fresh);
-  }catch(e){}
+    const cur=await AN._getStats();
+    if(!cur)return;
+    const data={
+      opens:cur.data.opens||0,
+      visitors:cur.data.visitors||0,
+      items:cur.data.items||{}
+    };
+    _statsRender(data);
+  }catch(e){console.warn('stats fetch failed',e)}
 }
 /* ============================================================== */
 const A={
@@ -688,7 +685,6 @@ const A={
  lang(){ui.lang=ui.lang==='ar'?'en':'ar';prefs(1);apply();render()},
  asub(){subForm()},esub(id){subForm(id)},
  async dsub(id){const s=sub(id);if(await ask(t('delSubject').replace('%n',s.items.length))){
-    /* Clean up every asset under this subject */
     for(const it of s.items){
       const assets=new Set();
       if(it.asset) assets.add(it.asset);
@@ -732,12 +728,13 @@ const A={
     if(r) bl=await r.blob();
     else if(data) bl=new Blob([Uint8Array.from(atob(data.split(',')[1]),c=>c.charCodeAt(0))],{type:mime});
     if(!bl) return;
-    AN.trackDownload(id);
+    /* ✅ تتبع التنزيل مع تمرير verId */
+    AN.trackDownload(id, v?v.id:undefined);
     saveFile(fname||it.title,bl);
   },
  close(){$('#dlg').close()},
  backup(){backup()},
- stats(){statsDlg()},
+ stats(){AN._flush();statsDlg()},
  statsRefresh(){refreshStats()},
  exp(){saveFile('geomathics-backup-'+new Date().toISOString().slice(0,10)+'.json',new Blob([JSON.stringify({v:2,subjects:S.subjects})],{type:'application/json'}))},
  imp(){$('#imp').click()},
@@ -752,14 +749,11 @@ $('#imp').addEventListener('change',async e=>{
   try{
     const j=JSON.parse(await f.text());if(!Array.isArray(j.subjects))throw 0;
     const raw=j.subjects.map(s=>({id:s.id||uid(),name:String(s.name||''),desc:String(s.desc||''),color:COL.includes(s.color)?s.color:COL[0],icon:String(s.icon||ICO[0]),items:(s.items||[]).map(i=>({...i,id:i.id||uid(),title:String(i.title||''),html:i.html?clean(i.html):''}))}));
-    S.subjects=migrate(raw);
-    ui.view=null;
+    S.subjects=migrate(raw);ui.view=null;
     if(ref){const as=await claude.use('assets');
       for(const s of S.subjects)for(const i of s.items){
         if(Array.isArray(i.versions)){
-          for(const v of i.versions){
-            if(v.data&&as){const r=await as.upload(dataBlob(v.data));v.url=r.url;v.asset=r.id;delete v.data;}
-          }
+          for(const v of i.versions){if(v.data&&as){const r=await as.upload(dataBlob(v.data));v.url=r.url;v.asset=r.id;delete v.data}}
           if(i.versions[0]) Object.assign(i,{url:i.versions[0].url,data:i.versions[0].data,asset:i.versions[0].asset,fname:i.versions[0].fname,mime:i.versions[0].mime,size:i.versions[0].size});
         } else if(i.data&&as){const r=await as.upload(dataBlob(i.data));Object.assign(i,{url:r.url,asset:r.id});delete i.data;}
       }
