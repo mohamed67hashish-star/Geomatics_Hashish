@@ -151,7 +151,6 @@ const ghU=p=>`https://api.github.com/repos/${gh.o}/${gh.r}/contents/${p}`;
 async function ghGet(p){const r=await fetch(ghU(p)+'?ref='+gh.b+'&t='+Date.now(),{headers:ghH()});if(r.status===404)return null;if(!r.ok)throw new Error(await ghMsg(r));return r.json()}
 async function ghMsg(r){const j=await r.json().catch(()=>({}));return r.status+' '+(j.message||'')}
 async function ghPut(p,b64){const o=await ghGet(p).catch(()=>null);const r=await fetch(ghU(p),{method:'PUT',headers:ghH(),body:JSON.stringify({message:'update '+p,content:b64,branch:gh.b,...(o?{sha:o.sha}:{})})});if(!r.ok)throw new Error(await ghMsg(r))}
-/* جديد: PUT مع SHA صريح لتجنب الكتابة فوق تغييرات الآخرين */
 async function ghPutRaw(p,b64,sha){const body={message:'update '+p,content:b64,branch:gh.b};if(sha)body.sha=sha;const r=await fetch(ghU(p),{method:'PUT',headers:ghH(),body:JSON.stringify(body)});if(!r.ok){const err=new Error(await ghMsg(r));err.status=r.status;throw err}return r.json()}
 async function ghDel(p){const o=await ghGet(p);if(!o)return;await fetch(ghU(p),{method:'DELETE',headers:ghH(),body:JSON.stringify({message:'delete '+p,sha:o.sha,branch:gh.b})})}
 let ghQ=Promise.resolve();
@@ -159,8 +158,7 @@ async function site(){try{let j=null;if(gh){const o=await ghGet('data.json');if(
   if(j&&Array.isArray(j.subjects)){S={subjects:migrate(j.subjects)};render()}}catch(e){}}
 async function ghSync(){if(!gh)return site();try{const o=await ghGet('data.json');if(!o&&S.subjects.length>0){await ghPut('data.json',btoa(unescape(encodeURIComponent(JSON.stringify({subjects:S.subjects})))));}await site()}catch(e){toast('GitHub: '+(e.message||'error'),9000)}}
 /* ================================================================
-   الإحصائيات — الآن محفوظة في GitHub (ملف stats.json)
-   البنية: { opens, visitors, items: { itemId: { opens, downloads, versions: { verId: {opens, downloads} } } } }
+   الإحصائيات — GitHub-backed
    ================================================================ */
 const STATS_FILE='stats.json';
 const LOCAL_STATS_KEY='sh_stats_local';
@@ -184,8 +182,6 @@ const AN={
     this.ready=true;
     document.addEventListener('visibilitychange',()=>{if(!document.hidden)this._flush()});
   },
-
-  /* قراءة الملف كاملًا (data + sha) */
   async _getStats(){
     if(!gh)return null;
     try{
@@ -197,8 +193,6 @@ const AN={
       return {data,sha:o.sha};
     }catch(e){console.warn('stats read failed',e);return null}
   },
-
-  /* كتابة الملف (SHA صريح لتجنّب الكتابة فوق تغييرات الآخرين) */
   async _putStats(data,sha){
     if(!gh)return false;
     try{
@@ -207,8 +201,6 @@ const AN={
       return true;
     }catch(e){console.warn('stats write failed',e);return false}
   },
-
-  /* زيادة عدّاد عام (opens / visitors) */
   _increment(field){
     const st=loadLocalStats();
     st[field]=(st[field]||0)+1;
@@ -222,10 +214,8 @@ const AN={
         if(await this._putStats(cur.data,cur.sha))return;
         await new Promise(r=>setTimeout(r,200*(a+1)));
       }
-    });
+    }).catch(e=>console.warn(e));
   },
-
-  /* زيادة عدّاد عنصر/نسخة */
   _trackItem(itemId,verId,field){
     const st=loadLocalStats();
     st.items[itemId]=st.items[itemId]||{opens:0,downloads:0,versions:{}};
@@ -253,9 +243,8 @@ const AN={
         if(await this._putStats(cur.data,cur.sha))return;
         await new Promise(r=>setTimeout(r,200*(a+1)));
       }
-    });
+    }).catch(e=>console.warn(e));
   },
-
   visit(){
     if(!this.ready)return;
     try{
@@ -270,7 +259,6 @@ const AN={
   onlineNow(){return null},
   trackOpen(id,verId){if(!this.ready)return;this._trackItem(id,verId,'opens')},
   trackDownload(id,verId){if(!this.ready)return;this._trackItem(id,verId,'downloads')},
-
   async totalStats(){
     if(!gh){const st=loadLocalStats();return {opens:st.opens||0,visitors:st.visitors||0}};
     const cur=await this._getStats();
@@ -283,18 +271,19 @@ const AN={
     if(!cur)return null;
     return (cur.data.items&&cur.data.items[id])||{opens:0,downloads:0,versions:{}};
   },
-  _flush(){/* لا شيء: الزيادات تُكتب مباشرة */}
+  _flush(){}
 };
 /* ================================================================ */
 let ref=null,S={subjects:[]},ui={admin:false,theme:'dark',lang:'ar',view:null,filter:'all',q:''};
-const t=k=>L[ui.lang][k];
+const t=k=>(L[ui.lang]&&L[ui.lang][k])||L['ar'][k]||k;
 const uid=()=>Math.random().toString(36).slice(2,10);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent};
 const verLabel=(v,i)=>(v&&v.label&&String(v.label).trim())?String(v.label).trim():(t('version')+' '+(i+1));
 function migrate(subjects){
   for(const s of subjects||[]){
-    for(const it of s.items||[]){
+    if(!Array.isArray(s.items)) s.items=[];
+    for(const it of s.items){
       if(it.type==='file' && !Array.isArray(it.versions)){
         const vers=[];
         if(it.data||it.url) vers.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime,size:it.size});
@@ -310,7 +299,16 @@ async function load(){try{const d=await idb();return await new Promise((r,j)=>{c
 async function save(){if(!ref&&gh){ghQ=ghQ.then(()=>ghPut('data.json',btoa(unescape(encodeURIComponent(JSON.stringify({subjects:S.subjects}))))).then(()=>toast(t('ghok'))).catch(e=>toast('GitHub: '+(e.message||'error'),9000)));return}
   if(ref){try{await ref.set(JSON.parse(JSON.stringify({subjects:S.subjects})))}catch(e){toast(t('nowrite'))}return}
   try{const d=await idb();d.transaction('k','readwrite').objectStore('k').put(S,'s')}catch(e){try{localStorage.setItem('sh_s',JSON.stringify(S))}catch(e){toast('Storage full')}}}
-function prefs(w){try{if(w)localStorage.setItem('sh_p',JSON.stringify({theme:ui.theme,lang:ui.lang}));else Object.assign(ui,JSON.parse(localStorage.getItem('sh_p'))||{})}catch(e){}}
+function prefs(w){
+  try{
+    if(w) localStorage.setItem('sh_p',JSON.stringify({theme:ui.theme,lang:ui.lang}));
+    else {
+      const p=JSON.parse(localStorage.getItem('sh_p'))||{};
+      if(p.theme==='light'||p.theme==='dark') ui.theme=p.theme;
+      if(p.lang==='ar'||p.lang==='en') ui.lang=p.lang;
+    }
+  }catch(e){}
+}
 function toast(m,ms){const e=$('#toast');e.textContent=m;e.style.display='block';clearTimeout(toast.t);toast.t=setTimeout(()=>e.style.display='none',ms||2400)}
 function clean(h){const d=new DOMParser().parseFromString(h,'text/html');const ok=['B','I','U','STRONG','EM','UL','OL','LI','P','BR','H3','DIV','SPAN'];(function w(n){[...n.childNodes].forEach(c=>{if(c.nodeType===1){if(!ok.includes(c.tagName)){c.replaceWith(...c.childNodes);return w(n)}[...c.attributes].forEach(a=>c.removeAttribute(a.name));w(c)}else if(c.nodeType!==3)c.remove()})})(d.body);return d.body.innerHTML}
 const dataBlob=d=>{const [h,b]=d.split(','),m=h.match(/:(.*?);/)[1],bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:m})};
@@ -362,17 +360,22 @@ function rowH(it,s,ctl){const ic=it.mime&&it.mime.startsWith('image')?'🖼️':
   return `<div class="row k-${it.type}"><div class="ti">${ic}</div><div class="tx"><b>${esc(it.title)}</b><span>${s&&!ctl?`<span class="tag">${esc(s.icon+' '+s.name)}</span> `:''}${esc(meta(it))}</span></div><div class="ac">${main}${adm}</div></div>`}
 function cardH(s){const adm=ui.admin?`<div class="ca"><button class="btn" data-act="esub" data-id="${s.id}">✎ ${t('edit')}</button><button class="btn dg" data-act="dsub" data-id="${s.id}" aria-label="${t('del')}">🗑</button></div>`:'';
   return `<article class="card" style="--c:${s.color}"><button class="cm" data-act="osub" data-id="${s.id}"><span class="ic">${s.icon}</span><h3>${esc(s.name)}</h3>${s.desc?`<p>${esc(s.desc)}</p>`:''}<small>${s.items.length} ${t('items')}</small></button>${adm}</article>`}
-function render(){const m=$('#main'),q=ui.q.trim().toLowerCase();
+function render(){const m=$('#main');if(!m)return;const q=ui.q.trim().toLowerCase();
   if(q){const ss=S.subjects.filter(s=>(s.name+' '+s.desc).toLowerCase().includes(q));const is=[];S.subjects.forEach(s=>s.items.forEach(i=>{if((i.title+' '+meta(i)+' '+(i.type==='note'?plain(i.html):'')).toLowerCase().includes(q))is.push([s,i])}));
     m.innerHTML=`<div class="bar"><h2>${t('results')}</h2></div>`+(ss.length||is.length?(ss.length?`<div class="grid" style="margin-bottom:18px">${ss.map(cardH).join('')}</div>`:'')+`<div class="list">${is.map(([s,i])=>rowH(i,s,false)).join('')}</div>`:`<div class="empty">${t('none')}</div>`);return}
   const s=sub(ui.view);
   if(!s){ui.view=null;m.innerHTML=`<div class="bar"><h2>${t('subjects')}</h2>${ui.admin?`<button class="btn pri" data-act="asub">+ ${t('addSubject')}</button>`:''}</div>`+(S.subjects.length?`<div class="grid">${S.subjects.map(cardH).join('')}</div>`:`<div class="empty">${ui.admin?t('noSubjects'):t('noSubjectsS')}</div>`);return}
   const items=s.items.filter(i=>ui.filter==='all'||i.type===ui.filter);
   m.innerHTML=`<div class="bar"><button class="btn" data-act="home">${ui.lang==='ar'?'→':'←'} ${t('back')}</button><h2>${s.icon} ${esc(s.name)}</h2>${ui.admin?`<button class="btn pri" data-act="aitem">+ ${t('addRes')}</button>`:''}</div>${s.desc?`<p style="color:var(--mu);margin-top:-6px">${esc(s.desc)}</p>`:''}<div class="chips">${['all','file','video','link','note'].map(k=>`<button class="chip" data-act="flt" data-id="${k}" aria-pressed="${ui.filter===k}">${t(k)}</button>`).join('')}</div>`+(items.length?`<div class="list">${items.map(i=>rowH(i,s,ui.filter==='all')).join('')}</div>`:`<div class="empty">${t('noRes')}</div>`)}
-function apply(){const h=document.documentElement;h.lang=ui.lang;h.dir=ui.lang==='ar'?'rtl':'ltr';h.dataset.theme=ui.theme;
-  document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));document.querySelectorAll('[data-ph]').forEach(e=>e.placeholder=t(e.dataset.ph));
-  const b=$('#bMode');b.setAttribute('aria-pressed',ui.admin);b.textContent=ui.admin?'🛠 '+t('admin'):'👁 '+t('student');$('[data-act=lang]').textContent=ui.lang==='ar'?'EN':'ع';document.title=t('title');
-  const bs=$('#bStats');if(bs)bs.hidden=!ui.admin;}
+function apply(){
+  const h=document.documentElement;h.lang=ui.lang;h.dir=ui.lang==='ar'?'rtl':'ltr';h.dataset.theme=ui.theme;
+  document.querySelectorAll('[data-t]').forEach(e=>e.textContent=t(e.dataset.t));
+  document.querySelectorAll('[data-ph]').forEach(e=>e.placeholder=t(e.dataset.ph));
+  const b=$('#bMode');if(b){b.setAttribute('aria-pressed',ui.admin);b.textContent=ui.admin?'🛠 '+t('admin'):'👁 '+t('student');}
+  const langBtn=$('[data-act=lang]');if(langBtn)langBtn.textContent=ui.lang==='ar'?'EN':'ع';
+  document.title=t('title');
+  const bs=$('#bStats');if(bs)bs.hidden=!ui.admin;
+}
 const dlg=h=>{const d=$('#dlg');d.innerHTML='<div class="in">'+h+'</div>';if(!d.open)d.showModal()};
 $('#dlg').addEventListener('close',()=>{blobUrl.l.forEach(URL.revokeObjectURL);blobUrl.l=[];$('#dlg').innerHTML=''});
 document.querySelectorAll('dialog').forEach(d=>d.addEventListener('click',e=>{if(e.target===d)d.close()}));
@@ -519,9 +522,9 @@ function viewer(id,verId){
       <p style="margin:0;color:var(--mu);font-size:.9rem">${t('chooseVer')} · ${it.versions.length} ${t('versions')}</p>
       <div class="verList">${cards}</div>
       <div class="end"><button class="btn" data-act="close">${t('close')}</button></div>`);
-    /* async fill version stats */
-    AN.itemStats(id).then(st=>{
-      if(ui.admin){
+    
+    /* async fill version stats — للأدمن فقط */
+    if(ui.admin){
       AN.itemStats(id).then(st=>{
         if(!st)return;
         it.versions.forEach(v=>{
@@ -547,7 +550,6 @@ function viewer(id,verId){
   const url=v?v.url:it.url;
   const asset=v?v.asset:it.asset;
 
-  /* ✅ تتبع الفتح مع تمرير verId إن وُجد */
   AN.trackOpen(it.id, v?v.id:undefined);
 
   let b='';
@@ -580,7 +582,7 @@ function viewer(id,verId){
 function move(id,d){const [s]=findItem(id),i=s.items.findIndex(x=>x.id===id),j=i+d;if(j<0||j>=s.items.length)return;[s.items[i],s.items[j]]=[s.items[j],s.items[i]];save();render()}
 function backup(){dlg(`<h2>${t('backup')}</h2><button class="btn pri" data-act="exp">⬇ ${t('exp')}</button>${ui.admin?`<button class="btn" data-act="imp">⬆ ${t('imp')}</button>`:''}${ui.admin&&!ref?`<button class="btn" data-act="gh">GitHub</button>`:''}<button class="btn" data-act="close">${t('close')}</button>`)}
 
-/* ================= Stats dialog (GitHub-backed) ================= */
+/* ================= Stats dialog ================= */
 let _statsCtx=null;
 
 async function statsDlg(){
@@ -598,8 +600,8 @@ async function statsDlg(){
   }));
   _statsCtx={items};
   dlg(`<h2>📊 ${t('stats')}</h2><div id="statsBody" style="display:grid;gap:12px"></div><div class="end"><button class="btn" data-act="statsRefresh">🔄 ${t('refresh')}</button><button class="btn pri" data-act="close">${t('close')}</button></div>`);
-  _statsRender(null);   /* فوري من النسخة المحلية */
-  _statsFetch();        /* تحديث من GitHub */
+  _statsRender(null);
+  _statsFetch();
 }
 
 async function refreshStats(){
@@ -639,7 +641,6 @@ function _statsRender(data){
     sorted.forEach(({f,st})=>{
       const dl=f.type==='file'?`<span title="${t('fileDownloads')}">⬇ ${st.downloads}</span>`:'';
       html+=`<div class="statRow"><div class="tx"><b>${esc(f.title)}</b><span class="s">${esc(f.subject)}</span></div><div class="n"><span title="${t('fileOpens')}">👁 ${st.opens}</span>${dl}</div></div>`;
-      /* صفوف فرعية لكل نسخة (فقط للكتب متعددة النسخ) */
       if(f.type==='file'&&f.versions&&f.versions.length>1){
         f.versions.forEach((v,vi)=>{
           const vs=st.versions[v.id]||{opens:0,downloads:0};
@@ -731,7 +732,6 @@ const A={
     if(r) bl=await r.blob();
     else if(data) bl=new Blob([Uint8Array.from(atob(data.split(',')[1]),c=>c.charCodeAt(0))],{type:mime});
     if(!bl) return;
-    /* ✅ تتبع التنزيل مع تمرير verId */
     AN.trackDownload(id, v?v.id:undefined);
     saveFile(fname||it.title,bl);
   },
