@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>اختبار نظم المعلومات الجغرافية (GIS)</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--text:#14213d;--muted:#5b6b85;--accent:#2563eb;--ok:#15803d;--okbg:#dcfce7;--bad:#b91c1c;--badbg:#fee2e2;--line:#d5deec;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0a1228;--card:#111c38;--text:#e6edf8;--muted:#8fa3c4;--accent:#60a5fa;--ok:#86efac;--okbg:#12361f;--bad:#fca5a5;--badbg:#3d1618;--line:#22345c;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0a1228;--card:#111c38;--text:#e6edf8;--muted:#8fa3c4;--accent:#60a5fa;--ok:#86efac;--okbg:#12361f;--bad:#fca5a5;--badbg:#3d1618;--line:#22345c;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif;line-height:1.7}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+h1{font-size:1.3rem;text-align:center;color:var(--accent);margin:8px 0 4px}
+.sub{text-align:center;color:var(--muted);font-size:.85rem;margin-bottom:12px}
+.bar{position:sticky;top:env(safe-area-inset-top,0px);background:var(--bg);padding:8px 0;z-index:5;border-bottom:2px solid var(--accent);display:flex;justify-content:space-between;font-weight:600}
+.q{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+.n{color:var(--accent);font-weight:700;font-size:.9rem}
+.t{margin:4px 0 10px}
+.opts{display:flex;flex-direction:column;gap:8px}
+.tf{flex-direction:row}.tf button{flex:1}
+button.o{font:inherit;color:var(--text);background:transparent;border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;text-align:right;cursor:pointer}
+button.o:hover:not(:disabled){border-color:var(--accent)}
+button.o:disabled{cursor:default}
+button.o.ok{background:var(--okbg);border-color:var(--ok);color:var(--ok)}
+button.o.bad{background:var(--badbg);border-color:var(--bad);color:var(--bad)}
+.fb{margin-top:8px;font-weight:600;min-height:1.2em}
+.fb.ok{color:var(--ok)}.fb.bad{color:var(--bad)}
+.res{display:none;text-align:center;background:var(--card);border:2px solid var(--accent);border-radius:12px;padding:18px;margin:16px 0}
+.res b{font-size:1.6rem;color:var(--accent)}
+.rb{font:inherit;background:var(--accent);color:#fff;border:0;border-radius:10px;padding:10px 20px;margin-top:10px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>اختبار مقرر نظم المعلومات الجغرافية (GIS)</h1>
+<div class="sub">اختر إجابتك وستعرف فوراً هل هي صحيحة أم خاطئة</div>
+<div class="bar"><span id="prog">أُجيب: 0 / 20</span><span id="tm">⏱ 10:00</span><span id="score">الدرجة: 0</span></div>
+<div id="list"></div>
+<div class="res" id="res"><div>النتيجة النهائية</div><b id="final"></b><div id="msg"></div><button class="rb" id="again">إعادة الاختبار</button></div>
+</div>
+<script>
+var TF=["صح","خطأ"];
+var Q=[
+["قواعد البيانات هي تركيب من البيانات يسمح بإعداد واستدعاء المعطيات إلى العديد من المستخدمين.",TF,0],
+["قواعد البيانات هي إعادة تمثيل تقليدي للخريطة لأماكن خاصة لظواهر مادية ملموسة أو مجردة قابلة لأن تحدد موقعها في الحيز المكاني.",TF,1],
+["إذا كان السرطان سبب للوفاة هل تزداد أهمية هذا السبب بالقرب من مركز إشعاعي؟ يمكن الإجابة عن هذا السؤال باستخدام نظم المعلومات الجغرافية من خلال سؤال أين.....",TF,1],
+["ينقسم مصطلح نظم المعلومات الجغرافية إلى ثلاثة أقسام.",TF,1],
+["تعد نظم المعلومات الجغرافية مرصودة لبحث الإنسان على الأرض ويتمثل المجال الرئيس لها في التحليل المكاني.",TF,0],
+["تستطيع نظم المعلومات الجغرافية معالجة كافة الإشكاليات الجغرافية من خلال الإجابة عن أسئلة الأساس الأربعة.",TF,1],
+["لوضع تعريف موحد لنظم المعلومات الجغرافية لابد من الدمج بين احتياجات .......... للخرائط، و............. لنظم المعلومات الجغرافية.",["المنتجين - المستخدمين","لا توجد إجابة صحيحة","المستخدمين - المنتجين"],0],
+["تدرجت الجغرافيا من مرحلة التحليل الكمي والدراسات الإقليمية إلى مرحلة الوصف.",TF,1],
+["نظم المعلومات الجغرافية أداة تستخدم قدرات الحاسب الآلي للإجابة عن الأسئلة ذات السياق الجغرافي.... يمثل هذا التعريف تعريف المدرسة الفرنسية....",TF,1],
+["التقنيات المستخدمة في المعالجة المعلوماتية للمعطيات الجغرافية كان هدفها الأول إحلال الإنسان محل الآلة في الإنتاج الكارتوجرافي.",TF,1],
+["لوضع تعريف موحد لنظم المعلومات الجغرافية لابد من الدمج بين احتياجات المستخدمين للخرائط والمنتجين لنظم المعلومات الجغرافية.",TF,1],
+["يتمثل الكيان المادي لمكونات نظم المعلومات الجغرافية في عدة برامج مثل MapInfo، Géoconcept، Idrisi، Alliance، Bently، Apic، Arc/View، Arc/Info، Arc-GIS ...الخ",TF,1],
+["تقوم نظم المعلومات الجغرافية كتطبيق يدعم جميع فروع علم الجغرافيا في رسم وإنتاج خرائط رقمية تخدم الأبحاث الجغرافية، وهي بذلك تنتقل بالخرائط من الأسلوب اليدوي إلى الأسلوب الرقمي......",TF,1],
+["تدرجت الجغرافيا من مرحلة الوصف والدراسات الإقليمية مروراً بمرحلة التحليل الكمي لعناصر المكان وعناصره إلى مرحلة الحوسبة.",TF,0],
+["تقوم نظم المعلومات الجغرافية كتطبيق يدعم متخذي القرار في مجال خدمي معين، أو تقديم حلول ذكية لقضايا جغرافية معينة.",TF,0],
+["مفهوم نظم المعلومات الجغرافية يستقر كأداة لكن يختلف التعريف من جغرافي إلى آخر.",TF,1],
+["تعد نظم المعلومات الجغرافية من وجهة نظر المدرسة الأمريكية أداة تستخدم قدرات ............ للإجابة على الأسئلة ذات السياق الجغرافي.",["الحاسب الآلي","علم المساحة","الإنسان"],0],
+["لكي نتمكن من وضع تعريف لنظم المعلومات الجغرافية يمكن تقسيم هذا المصطلح العلمي إلى ...................",["قسمين","أربعة أقسام","ثلاثة أقسام"],0],
+["يتمثل الهدف النهائي لنظم المعلومات الجغرافية في المساعدة على زيادة إنتاج الخرائط.",TF,1],
+["بناء على اعتبار أن نظم المعلومات الجغرافية تهتم في الأساس بالمعلومات المكانية باختلاف أنواعها، كما أنها تدعم مجالات شديدة التشعب والاندماج في فروع علمية ومجالات تطبيقية عديدة؛ لذلك فإنه من الأحرى أن نصنفها كعلم مستقل يسمى علم المعلومات المكانية.... يشير هذا التعريف إلى أن نظم المعلومات الجغرافية علم وليست أداة.",TF,0]
+];
+var done,right,list=document.getElementById("list"),TOTAL=600,left=TOTAL,tid=null;
+function build(){
+ list.innerHTML="";done=0;right=0;clearInterval(tid);tid=null;left=TOTAL;showT();
+ document.getElementById("res").style.display="none";upd();
+ Q.forEach(function(q,i){
+  var d=document.createElement("div");d.className="q";
+  d.innerHTML='<div class="n">سؤال '+(i+1)+'</div><div class="t"></div><div class="opts'+(q[1].length==2?' tf':'')+'"></div><div class="fb"></div>';
+  d.querySelector(".t").textContent=q[0];
+  var box=d.querySelector(".opts"),fb=d.querySelector(".fb"),bs=[];
+  q[1].forEach(function(o,j){
+   var b=document.createElement("button");b.className="o";b.textContent=o;
+   b.onclick=function(){
+    startTimer();bs.forEach(function(x){x.disabled=true});
+    bs[q[2]].classList.add("ok");
+    if(j==q[2]){right++;fb.className="fb ok";fb.textContent="✅ إجابة صحيحة"}
+    else{b.classList.add("bad");fb.className="fb bad";fb.textContent="❌ إجابة خاطئة، الصحيحة: "+q[1][q[2]]}
+    done++;upd();
+    if(done==Q.length)finish();
+   };
+   bs.push(b);box.appendChild(b);
+  });
+  list.appendChild(d);
+ });
+}
+function upd(){
+ document.getElementById("prog").textContent="أُجيب: "+done+" / "+Q.length;
+ document.getElementById("score").textContent="الدرجة: "+(right*0.25)+" / "+(Q.length*0.25);
+}
+function fmt(){var m=Math.floor(left/60),s=left%60;return m+":"+(s<10?"0":"")+s}
+function showT(){var e=document.getElementById("tm");e.textContent="⏱ "+fmt();e.style.color=left<=60?"var(--bad)":""}
+function startTimer(){if(tid)return;tid=setInterval(function(){left--;showT();if(left<=0)timeUp()},1000)}
+function timeUp(){clearInterval(tid);tid=null;list.querySelectorAll("button.o").forEach(function(b){b.disabled=true});finish();var m=document.getElementById("msg");m.textContent="⏰ انتهى الوقت. "+m.textContent}
+function finish(){
+ clearInterval(tid);tid=null;var r=document.getElementById("res");r.style.display="block";
+ document.getElementById("final").textContent=right+" / "+Q.length;
+ document.getElementById("msg").textContent=right>=18?"ممتاز! 🎉":right>=14?"جيد جداً 👏":right>=10?"جيد، راجع الأخطاء":"تحتاج إلى مراجعة المقرر";
+ r.scrollIntoView({behavior:"smooth"});
+}
+document.getElementById("again").onclick=function(){build();window.scrollTo(0,0)};
+build();
+</script>
+</body>
+</html>
