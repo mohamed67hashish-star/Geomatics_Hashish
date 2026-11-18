@@ -511,7 +511,7 @@ function viewer(id,verId){
         <div class="verActs">
           <button class="btn pri" data-act="view" data-id="${id}" data-ver="${v.id}">${t('open')}</button>
           <button class="btn" data-act="dl" data-id="${id}" data-ver="${v.id}">⬇ ${t('download')}</button>
-          <span class="verStats" data-ver="${v.id}">👁 … · ⬇ …</span>
+          ${ui.admin?`<span class="verStats" data-ver="${v.id}">👁 … · ⬇ …</span>`:''}
         </div>
       </div>`;
     }).join('');
@@ -521,15 +521,18 @@ function viewer(id,verId){
       <div class="end"><button class="btn" data-act="close">${t('close')}</button></div>`);
     /* async fill version stats */
     AN.itemStats(id).then(st=>{
-      if(!st)return;
-      it.versions.forEach(v=>{
-        const el=document.querySelector(`.verStats[data-ver="${v.id}"]`);
-        if(el){
-          const vs=(st.versions&&st.versions[v.id])||{opens:0,downloads:0};
-          el.textContent=`👁 ${vs.opens||0} · ⬇ ${vs.downloads||0}`;
-        }
+      if(ui.admin){
+      AN.itemStats(id).then(st=>{
+        if(!st)return;
+        it.versions.forEach(v=>{
+          const el=document.querySelector(`.verStats[data-ver="${v.id}"]`);
+          if(el){
+            const vs=(st.versions&&st.versions[v.id])||{opens:0,downloads:0};
+            el.textContent=`👁 ${vs.opens||0} · ⬇ ${vs.downloads||0}`;
+          }
+        });
       });
-    });
+    }
     return;
   }
 
