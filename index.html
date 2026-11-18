@@ -400,7 +400,7 @@ const A={
   $('#f').elements.pw.focus();
   $('#f').onsubmit=async e=>{e.preventDefault();const v=e.target.elements.pw.value;
     const h=[...new Uint8Array(await crypto.subtle.digest('SHA-256',new TextEncoder().encode(v)))].map(x=>x.toString(16).padStart(2,'0')).join('');
-    if(h==='008f0e26b16c9eca57c47dd00bc975dac14b9d9450395fffbf0a318a0a64c6f0'){ui.admin=true;$('#dlg').close();apply();render()}else{toast(t('wrong'));e.target.elements.pw.value=''}}},
+    if(h==='6fccda01b6c00055a9447929eb5ee224cc12af7b23d41cca4c84068b066ddc14'){ui.admin=true;$('#dlg').close();apply();render()}else{toast(t('wrong'));e.target.elements.pw.value=''}}},
  theme(){ui.theme=ui.theme==='dark'?'light':'dark';prefs(1);apply()},
  lang(){ui.lang=ui.lang==='ar'?'en':'ar';prefs(1);apply();render()},
  asub(){subForm()},esub(id){subForm(id)},
