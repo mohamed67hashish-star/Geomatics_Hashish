@@ -250,7 +250,9 @@ function itemForm(sid,id){
         </div>
         <label style="display:grid;gap:4px;font-size:.8rem;color:var(--mu);cursor:pointer">
           <span class="verName" style="color:${color};overflow-wrap:anywhere">${esc(display)}</span>
-          <input type="file" class="verFile" accept="*/*" style="min-height:40px;padding:6px">
+          <input type="file" class="verFile"
+  accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip,.rar,.7z,.txt,.csv,.rtf,.jpg,.jpeg,.png,.gif,.webp,.mp4,.mov,.avi,.mkv,.mp3,.wav,.ogg,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/zip,application/octet-stream"
+  style="min-height:40px;padding:6px">
       </div>`;
     }).join('');
     versEl.querySelectorAll('.verLabel').forEach(inp=>{
