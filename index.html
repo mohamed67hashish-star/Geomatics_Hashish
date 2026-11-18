@@ -105,6 +105,16 @@ header h1{color:var(--ac)}
 .statRow span.s{color:var(--mu);font-size:.78rem}
 .statRow .n{display:flex;gap:14px;font-variant-numeric:tabular-nums;font-size:.9rem;white-space:nowrap;color:var(--tx)}
 @media(max-width:430px){.statGrid{grid-template-columns:1fr 1fr}.statGrid .statCard:last-child{grid-column:1/-1}}
+/* ---- version cards (viewer) ---- */
+.verList{display:grid;gap:10px}
+.verCard{background:var(--bg);border:1px solid var(--ln);border-radius:12px;padding:12px 14px;display:grid;gap:10px}
+.verHead{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.verIco{font-size:1.25rem;line-height:1}
+.verName{font-weight:500;overflow-wrap:anywhere;flex:1 1 auto;min-width:0}
+.verTag{font-size:.72rem;padding:2px 8px;border-radius:99px;background:var(--sf2);color:var(--mu);white-space:nowrap;border:1px solid var(--ln)}
+.verTag.pri{background:color-mix(in srgb,var(--ac) 20%,transparent);color:var(--ac);border-color:transparent}
+.verMeta{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--mu);align-items:center}
+.verActs{display:flex;gap:6px;flex-wrap:wrap}
 </style>
 </head>
 <body>
@@ -126,8 +136,8 @@ header h1{color:var(--ac)}
 <div id="toast" role="status"></div>
 <script>
 const $=s=>document.querySelector(s);
-const L={ar:{title:'Geomathics',search:'ابحث في المواد والملفات والفيديوهات',subjects:'المواد',addSubject:'إضافة مادة',editSubject:'تعديل المادة',name:'اسم المادة',desc:'وصف (اختياري)',color:'اللون',icon:'الأيقونة',save:'حفظ',cancel:'إلغاء',del:'حذف',edit:'تعديل',delSubject:'حذف المادة وكل محتوياتها (%n)؟',delItem:'حذف هذا العنصر؟',addRes:'إضافة محتوى',file:'ملف',video:'فيديو',link:'رابط',note:'ملاحظة',resTitle:'العنوان',url:'الرابط',pick:'اختر ملفًا',versions:'النسخ',version:'نسخة',verLabel:'اسم النسخة (يظهر للطالب)',addVer:'إضافة نسخة',chooseVer:'اختر النسخة التي تريد فتحها',noSubjects:'لا توجد مواد بعد. أضف أول مادة للبدء.',noSubjectsS:'لا توجد مواد بعد.',noRes:'لا يوجد محتوى في هذه المادة.',all:'الكل',back:'كل المواد',admin:'وضع المشرف',student:'عرض الطالب',exp:'تصدير نسخة احتياطية (JSON)',imp:'استيراد نسخة احتياطية',imported:'تم استيراد البيانات',bad:'الملف غير صالح',results:'نتائج البحث',none:'لا توجد نتائج مطابقة',open:'فتح',download:'تنزيل',site:'فتح في الموقع',big:'الملف كبير جدًا (الحد 20 إلى 25 ميجابايت أونلاين)',items:'عنصر',noPrev:'لا توجد معاينة لهذا النوع. نزّل الملف لفتحه.',need:'اختر ملفًا أو أدخل رابطًا',ok:'تأكيد',text:'النص',up:'تحريك لأعلى',dn:'تحريك لأسفل',close:'إغلاق',saved:'تم الحفظ',vurl:'رابط يوتيوب أو فيميو، أو ارفع ملف فيديو',backup:'النسخ الاحتياطي',pw:'كلمة مرور المشرف',wrong:'كلمة المرور غير صحيحة',unlock:'دخول',ghHelp:'أنشئ Fine-grained token بصلاحية Contents: Read and write على هذا المستودع فقط. يُحفظ في هذا المتصفح فقط. اتركه فارغًا لفصل الربط.',owner:'اسم الحساب (Owner)',repo:'اسم المستودع (Repository)',branch:'الفرع (Branch)',token:'التوكن (Token)',ghok:'تم الحفظ على GitHub، سيظهر للطلاب خلال دقيقة تقريبًا',nowrite:'لا تملك صلاحية الرفع أو التعديل أونلاين',stats:'الإحصائيات',totalVisits:'مرات فتح الموقع',uniqueVisitors:'زوار الموقع',onlineNow:'متصل الآن',fileStats:'إحصائيات المحتوى',fileOpens:'مرة فتح',fileDownloads:'مرة تنزيل',noFiles:'لا يوجد محتوى بعد',loading:'جارٍ التحميل…',statsNote:'إحصائيات تقريبية عبر خدمتي عدّ خارجيتين (counterapi.dev + abacus).',lastUpd:'آخر تحديث',cached:'بيانات محفوظة من آخر قراءة (الخدمة غير متاحة الآن).'},
-en:{title:'Geomathics',search:'Search subjects, files and videos',subjects:'Subjects',addSubject:'Add subject',editSubject:'Edit subject',name:'Subject name',desc:'Description (optional)',color:'Color',icon:'Icon',save:'Save',cancel:'Cancel',del:'Delete',edit:'Edit',delSubject:'Delete this subject and all its content (%n)?',delItem:'Delete this item?',addRes:'Add content',file:'File',video:'Video',link:'Link',note:'Note',resTitle:'Title',url:'URL',pick:'Choose a file',versions:'Versions',version:'Version',verLabel:'Version name (shown to student)',addVer:'Add version',chooseVer:'Choose which version to open',noSubjects:'No subjects yet. Add your first one to begin.',noSubjectsS:'No subjects yet.',noRes:'This subject has no content yet.',all:'All',back:'All subjects',admin:'Admin mode',student:'Student view',exp:'Export backup (JSON)',imp:'Import backup',imported:'Data imported',bad:'Invalid backup file',results:'Search results',none:'No matches',open:'Open',download:'Download',site:'Open on site',big:'File is too large (20 MB limit online)',items:'items',noPrev:'No preview for this type. Download the file to open it.',need:'Choose a file or enter a URL',ok:'Confirm',text:'Text',up:'Move up',dn:'Move down',close:'Close',saved:'Saved',vurl:'YouTube or Vimeo link, or upload a video file',backup:'Backup',pw:'Admin password',wrong:'Wrong password',unlock:'Unlock',ghHelp:'Create a fine-grained token with Contents: Read and write on this repository only. It is stored in this browser only. Leave it empty to disconnect.',owner:'Owner',repo:'Repository',branch:'Branch',token:'Token',ghok:'Saved to GitHub. Students will see it in about a minute.',nowrite:'You do not have permission to upload or edit online',stats:'Statistics',totalVisits:'Site opens',uniqueVisitors:'Unique visitors',onlineNow:'Online now',fileStats:'Content statistics',fileOpens:'opens',fileDownloads:'downloads',noFiles:'No content yet',loading:'Loading…',statsNote:'Approximate stats via two external counter services (counterapi.dev + abacus).',lastUpd:'Last updated',cached:'Cached from last reading (service unavailable now).'}};
+const L={ar:{title:'Geomathics',search:'ابحث في المواد والملفات والفيديوهات',subjects:'المواد',addSubject:'إضافة مادة',editSubject:'تعديل المادة',name:'اسم المادة',desc:'وصف (اختياري)',color:'اللون',icon:'الأيقونة',save:'حفظ',cancel:'إلغاء',del:'حذف',edit:'تعديل',delSubject:'حذف المادة وكل محتوياتها (%n)؟',delItem:'حذف هذا العنصر؟',addRes:'إضافة محتوى',file:'ملف',video:'فيديو',link:'رابط',note:'ملاحظة',resTitle:'العنوان',url:'الرابط',pick:'اختر ملفًا',versions:'النسخ',version:'نسخة',verLabel:'اسم النسخة (يظهر للطالب)',addVer:'إضافة نسخة',chooseVer:'اختر النسخة التي تريد فتحها',noSubjects:'لا توجد مواد بعد. أضف أول مادة للبدء.',noSubjectsS:'لا توجد مواد بعد.',noRes:'لا يوجد محتوى في هذه المادة.',all:'الكل',back:'كل المواد',admin:'وضع المشرف',student:'عرض الطالب',exp:'تصدير نسخة احتياطية (JSON)',imp:'استيراد نسخة احتياطية',imported:'تم استيراد البيانات',bad:'الملف غير صالح',results:'نتائج البحث',none:'لا توجد نتائج مطابقة',open:'فتح',download:'تنزيل',site:'فتح في الموقع',big:'الملف كبير جدًا (الحد 20 إلى 25 ميجابايت أونلاين)',items:'عنصر',noPrev:'لا توجد معاينة لهذا النوع. نزّل الملف لفتحه.',need:'اختر ملفًا أو أدخل رابطًا',ok:'تأكيد',text:'النص',up:'تحريك لأعلى',dn:'تحريك لأسفل',close:'إغلاق',saved:'تم الحفظ',vurl:'رابط يوتيوب أو فيميو، أو ارفع ملف فيديو',backup:'النسخ الاحتياطي',pw:'كلمة مرور المشرف',wrong:'كلمة المرور غير صحيحة',unlock:'دخول',ghHelp:'أنشئ Fine-grained token بصلاحية Contents: Read and write على هذا المستودع فقط. يُحفظ في هذا المتصفح فقط. اتركه فارغًا لفصل الربط.',owner:'اسم الحساب (Owner)',repo:'اسم المستودع (Repository)',branch:'الفرع (Branch)',token:'التوكن (Token)',ghok:'تم الحفظ على GitHub، سيظهر للطلاب خلال دقيقة تقريبًا',nowrite:'لا تملك صلاحية الرفع أو التعديل أونلاين',stats:'الإحصائيات',totalVisits:'مرات فتح الموقع',uniqueVisitors:'زوار الموقع',onlineNow:'متصل الآن',fileStats:'إحصائيات المحتوى',fileOpens:'مرة فتح',fileDownloads:'مرة تنزيل',noFiles:'لا يوجد محتوى بعد',loading:'جارٍ التحميل…',statsNote:'إحصائيات تقريبية عبر خدمتي عدّ خارجيتين (counterapi.dev + abacus).',lastUpd:'آخر تحديث',cached:'بيانات محفوظة من آخر قراءة (الخدمة غير متاحة الآن).',totalOpens:'مرات فتح المحتوى',refresh:'تحديث',latest:'الأحدث'},
+en:{title:'Geomathics',search:'Search subjects, files and videos',subjects:'Subjects',addSubject:'Add subject',editSubject:'Edit subject',name:'Subject name',desc:'Description (optional)',color:'Color',icon:'Icon',save:'Save',cancel:'Cancel',del:'Delete',edit:'Edit',delSubject:'Delete this subject and all its content (%n)?',delItem:'Delete this item?',addRes:'Add content',file:'File',video:'Video',link:'Link',note:'Note',resTitle:'Title',url:'URL',pick:'Choose a file',versions:'Versions',version:'Version',verLabel:'Version name (shown to student)',addVer:'Add version',chooseVer:'Choose which version to open',noSubjects:'No subjects yet. Add your first one to begin.',noSubjectsS:'No subjects yet.',noRes:'This subject has no content yet.',all:'All',back:'All subjects',admin:'Admin mode',student:'Student view',exp:'Export backup (JSON)',imp:'Import backup',imported:'Data imported',bad:'Invalid backup file',results:'Search results',none:'No matches',open:'Open',download:'Download',site:'Open on site',big:'File is too large (20 MB limit online)',items:'items',noPrev:'No preview for this type. Download the file to open it.',need:'Choose a file or enter a URL',ok:'Confirm',text:'Text',up:'Move up',dn:'Move down',close:'Close',saved:'Saved',vurl:'YouTube or Vimeo link, or upload a video file',backup:'Backup',pw:'Admin password',wrong:'Wrong password',unlock:'Unlock',ghHelp:'Create a fine-grained token with Contents: Read and write on this repository only. It is stored in this browser only. Leave it empty to disconnect.',owner:'Owner',repo:'Repository',branch:'Branch',token:'Token',ghok:'Saved to GitHub. Students will see it in about a minute.',nowrite:'You do not have permission to upload or edit online',stats:'Statistics',totalVisits:'Site opens',uniqueVisitors:'Unique visitors',onlineNow:'Online now',fileStats:'Content statistics',fileOpens:'opens',fileDownloads:'downloads',noFiles:'No content yet',loading:'Loading…',statsNote:'Approximate stats via two external counter services (counterapi.dev + abacus).',lastUpd:'Last updated',cached:'Cached from last reading (service unavailable now).',totalOpens:'Content opens',refresh:'Refresh',latest:'Latest'}};
 const COL=['#f0b95b','#5fcfa4','#7aa7ff','#ef7d8e','#b490f0','#5fd0e6'];
 const ICO=['📘','🧮','🔎','🌍','💻','📈','📜','⚖️','🩺','📐'];
 const TI={file:'📄',video:'▶️',link:'🔗',note:'📝'};
@@ -143,6 +153,7 @@ async function site(){try{let j=null;if(gh){const o=await ghGet('data.json');if(
   if(j&&Array.isArray(j.subjects)){S={subjects:migrate(j.subjects)};render()}}catch(e){}}
 async function ghSync(){if(!gh)return site();try{const o=await ghGet('data.json');if(!o&&S.subjects.length>0){await ghPut('data.json',btoa(unescape(encodeURIComponent(JSON.stringify({subjects:S.subjects})))));}await site()}catch(e){toast('GitHub: '+(e.message||'error'),9000)}}
 /* ================= Analytics (dual public counters + local cache) ================= */
+function withTimeout(p,ms){return Promise.race([p,new Promise(r=>setTimeout(()=>r(null),ms))])}
 const AN={
   base:'https://api.counterapi.dev/v1/',
   aba:'https://abacus.jasoncameron.dev/',
@@ -164,9 +175,9 @@ const AN={
       const url = svc==='aba'
         ? this.aba+'hit/'+encodeURIComponent(this.ns)+'/'+encodeURIComponent(key)
         : this.base+this.ns+'/'+encodeURIComponent(key)+'/up?t='+Date.now();
-      const r=await fetch(url,{cache:'no-store'});
-      if(!r.ok)return null;
-      const j=await r.json().catch(()=>({}));
+      const r=await withTimeout(fetch(url,{cache:'no-store'}),5000);
+      if(!r||!r.ok)return null;
+      const j=await withTimeout(r.json(),3000).catch(()=>({}));
       const v = j.value!==undefined?j.value:j.count;
       return v!==undefined?+v:null;
     }catch(e){return null}
@@ -176,9 +187,9 @@ const AN={
       const url = svc==='aba'
         ? this.aba+'get/'+encodeURIComponent(this.ns)+'/'+encodeURIComponent(key)
         : this.base+this.ns+'/'+encodeURIComponent(key)+'?t='+Date.now();
-      const r=await fetch(url,{cache:'no-store'});
-      if(!r.ok)return null;
-      const j=await r.json().catch(()=>({}));
+      const r=await withTimeout(fetch(url,{cache:'no-store'}),5000);
+      if(!r||!r.ok)return null;
+      const j=await withTimeout(r.json(),3000).catch(()=>({}));
       const v = j.value!==undefined?j.value:j.count;
       return v!==undefined?+v:null;
     }catch(e){return null}
@@ -197,17 +208,10 @@ const AN={
   },
   visit(){
     if(!this.ready)return;
-    // تسجيل الزائر الفريد مرة واحدة فقط لكل متصفح
-    try{
-      if(!localStorage.getItem('sh_uv')){
-        localStorage.setItem('sh_uv','1');
-        this._up('visitors');
-      }
-    }catch(e){}
+    try{if(!localStorage.getItem('sh_uv')){localStorage.setItem('sh_uv','1');this._up('visitors')}}catch(e){}
     this._up('opens');
     this.ping();
   },
-
   ping(){
     if(!this.ready)return;
     clearTimeout(this._t);
@@ -240,8 +244,8 @@ function migrate(subjects){
     for(const it of s.items||[]){
       if(it.type==='file' && !Array.isArray(it.versions)){
         const vers=[];
-        if(it.data||it.url) vers.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime});
-        if(it.data2||it.url2) vers.push({id:uid(),label:'',data:it.data2,asset:it.asset2,url:it.url2,fname:it.fname2,mime:it.mime2});
+        if(it.data||it.url) vers.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime,size:it.size});
+        if(it.data2||it.url2) vers.push({id:uid(),label:'',data:it.data2,asset:it.asset2,url:it.url2,fname:it.fname2,mime:it.mime2,size:it.size2});
         if(vers.length) it.versions=vers;
       }
     }
@@ -259,12 +263,49 @@ function clean(h){const d=new DOMParser().parseFromString(h,'text/html');const o
 const dataBlob=d=>{const [h,b]=d.split(','),m=h.match(/:(.*?);/)[1],bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return new Blob([u],{type:m})};
 const blobUrl=d=>{const [h,b]=d.split(','),m=h.match(/:(.*?);/)[1],bin=atob(b),u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);const url=URL.createObjectURL(new Blob([u],{type:m}));blobUrl.l.push(url);return url};blobUrl.l=[];
 const readFile=f=>new Promise((r,j)=>{const x=new FileReader();x.onload=()=>r(x.result);x.onerror=j;x.readAsDataURL(f)});
+/* ---- file details helpers (version info) ---- */
+const fmtSize=b=>{
+  if(b==null||isNaN(b))return '';
+  if(b<1024)return b+' B';
+  if(b<1048576)return (b/1024).toFixed(b<10240?1:0)+' KB';
+  if(b<1073741824)return (b/1048576).toFixed(b<10485760?1:0)+' MB';
+  return (b/1073741824).toFixed(1)+' GB';
+};
+const b64Bytes=d=>{
+  if(!d||typeof d!=='string'||d.slice(0,5)!=='data:')return null;
+  const b=d.split(',')[1]||'';
+  const pad=b.endsWith('==')?2:b.endsWith('=')?1:0;
+  return Math.max(0,Math.floor(b.length*3/4)-pad);
+};
+function verSize(v){
+  if(!v)return null;
+  if(typeof v.size==='number')return v.size;
+  return b64Bytes(v.data);
+}
+function verInfo(v){
+  const name=v.fname||'';
+  const urlPath=(v.url||'').split('/').pop()||'';
+  const guess=name||urlPath;
+  const i=guess.lastIndexOf('.');
+  const ext=i>-1?guess.slice(i+1).toLowerCase():'';
+  const mime=(v.mime||'').toLowerCase();
+  let ic='📄';
+  if(mime.startsWith('image/')||['jpg','jpeg','png','gif','webp','svg','bmp'].includes(ext))ic='🖼️';
+  else if(mime==='application/pdf'||ext==='pdf')ic='📕';
+  else if(mime.includes('word')||['doc','docx','rtf'].includes(ext))ic='📝';
+  else if(mime.includes('sheet')||mime.includes('excel')||['xls','xlsx','csv'].includes(ext))ic='📊';
+  else if(mime.includes('presentation')||mime.includes('powerpoint')||['ppt','pptx'].includes(ext))ic='📽️';
+  else if(mime.includes('zip')||mime.includes('rar')||mime.includes('7z')||['zip','rar','7z','tar','gz'].includes(ext))ic='🗜️';
+  else if(mime.startsWith('video/')||['mp4','mov','avi','mkv','webm'].includes(ext))ic='🎬';
+  else if(mime.startsWith('audio/')||['mp3','wav','ogg','m4a'].includes(ext))ic='🎵';
+  return {ic,ext:ext?ext.toUpperCase():'',size:verSize(v)};
+}
 async function saveFile(name,blob){let d=null;try{d=await claude.use('downloads')}catch(e){}
   if(d){try{await d.save({filename:name,data:blob});return}catch(e){if(e&&e.code==='declined')return}}
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click()}
 async function uploadFile(fl){
   if(fl.size>(ref?20e6:gh?25e6:30e6)) throw new Error(t('big'));
-  const o={fname:fl.name,mime:fl.type||'application/octet-stream'};
+  const o={fname:fl.name,mime:fl.type||'application/octet-stream',size:fl.size};
   if(ref){const as=await claude.use('assets');if(!as)throw new Error(t('nowrite'));const r=await as.upload(fl);o.url=r.url;o.asset=r.id}
   else if(gh){const pth='files/'+uid()+'-'+fl.name.replace(/[^\w.\-]+/g,'_');await ghPut(pth,(await readFile(fl)).split(',')[1]);o.url=pth;o.asset=pth}
   else{o.data=await readFile(fl)}
@@ -320,8 +361,8 @@ function itemForm(sid,id){
   if(Array.isArray(it.versions)){
     versions=JSON.parse(JSON.stringify(it.versions));
   } else if(it.type==='file'){
-    if(it.data||it.url) versions.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime});
-    if(it.data2||it.url2) versions.push({id:uid(),label:'',data:it.data2,asset:it.asset2,url:it.url2,fname:it.fname2,mime:it.mime2});
+    if(it.data||it.url) versions.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime,size:it.size});
+    if(it.data2||it.url2) versions.push({id:uid(),label:'',data:it.data2,asset:it.asset2,url:it.url2,fname:it.fname2,mime:it.mime2,size:it.size2});
   }
   dlg(`<h2>${t(id?'edit':'addRes')}</h2><form id="f" style="display:grid;gap:12px">
     <label>${t('addRes')}<select name="kind">${['file','video','link','note'].map(k=>`<option value="${k}" ${k===it.type?'selected':''}>${TI[k]} ${t(k)}</option>`).join('')}</select></label>
@@ -424,14 +465,14 @@ function itemForm(sid,id){
         if(v.newFile){
           try{Object.assign(nv,await uploadFile(v.newFile))}catch(err){return toast(err.message)}
         } else if(v.data||v.url){
-          nv.data=v.data;nv.asset=v.asset;nv.url=v.url;nv.fname=v.fname;nv.mime=v.mime;
+          nv.data=v.data;nv.asset=v.asset;nv.url=v.url;nv.fname=v.fname;nv.mime=v.mime;nv.size=v.size;
         } else continue;
         processed.push(nv);
       }
       if(!processed.length) return toast(t('need'));
       o.versions=processed;
       /* Keep legacy primary fields in sync for backward compatibility */
-      Object.assign(o,{url:processed[0].url,data:processed[0].data,asset:processed[0].asset,fname:processed[0].fname,mime:processed[0].mime});
+      Object.assign(o,{url:processed[0].url,data:processed[0].data,asset:processed[0].asset,fname:processed[0].fname,mime:processed[0].mime,size:processed[0].size});
       if(!o.title) o.title=processed[0].fname||t('file');
     }
     const i=s.items.findIndex(x=>x.id===o.id);
@@ -449,25 +490,39 @@ function viewer(id,verId){
   /* Lazy migrate in case data wasn't migrated */
   if(it.type==='file'&&!Array.isArray(it.versions)){
     const vers=[];
-    if(it.data||it.url) vers.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime});
-    if(it.data2||it.url2) vers.push({id:uid(),label:'',data:it.data2,asset:it.asset2,url:it.url2,fname:it.fname2,mime:it.mime2});
+    if(it.data||it.url) vers.push({id:uid(),label:'',data:it.data,asset:it.asset,url:it.url,fname:it.fname,mime:it.mime,size:it.size});
+    if(it.data2||it.url2) vers.push({id:uid(),label:'',data:it.data2,asset:it.asset2,url:it.url2,fname:it.fname2,mime:it.mime2,size:it.size2});
     if(vers.length) it.versions=vers;
   }
-  /* Multiple versions → show chooser */
+
+  /* Multiple versions → detailed chooser with ALL details per version */
   if(it.type==='file'&&it.versions&&it.versions.length>1&&!verId){
+    const cards=it.versions.map((v,i)=>{
+      const info=verInfo(v);
+      return `<div class="verCard">
+        <div class="verHead">
+          <span class="verIco">${info.ic}</span>
+          <span class="verName">${esc(verLabel(v,i))}</span>
+          ${i===0?`<span class="verTag pri">${t('latest')}</span>`:''}
+          ${info.ext?`<span class="verTag">${esc(info.ext)}</span>`:''}
+        </div>
+        <div class="verMeta">
+          ${v.fname?`<span>📄 ${esc(v.fname)}</span>`:''}
+          ${info.size!=null?`<span>💾 ${fmtSize(info.size)}</span>`:''}
+        </div>
+        <div class="verActs">
+          <button class="btn pri" data-act="view" data-id="${id}" data-ver="${v.id}">${t('open')}</button>
+          <button class="btn" data-act="dl" data-id="${id}" data-ver="${v.id}">⬇ ${t('download')}</button>
+        </div>
+      </div>`;
+    }).join('');
     dlg(`<h2>${esc(it.title)}</h2>
-      <p style="margin:0;color:var(--mu)">${t('chooseVer')}</p>
-      <div style="display:grid;gap:8px">
-        ${it.versions.map((v,i)=>`
-          <button class="btn" data-act="view" data-id="${id}" data-ver="${v.id}" style="display:block;width:100%;text-align:start;padding:12px 14px;border:1px solid var(--ln);border-radius:12px;min-height:0;line-height:1.4">
-            <span style="display:block;color:var(--tx);font-weight:500">📄 ${esc(verLabel(v,i))}</span>
-            ${v.fname?`<span style="display:block;font-size:.8rem;color:var(--mu);margin-top:2px;overflow-wrap:anywhere">${esc(v.fname)}</span>`:''}
-          </button>
-        `).join('')}
-        <button class="btn" data-act="close" style="border-radius:12px;min-height:44px">${t('cancel')}</button>
-      </div>`);
+      <p style="margin:0;color:var(--mu);font-size:.9rem">${t('chooseVer')} · ${it.versions.length} ${t('versions')}</p>
+      <div class="verList">${cards}</div>
+      <div class="end"><button class="btn" data-act="close">${t('close')}</button></div>`);
     return;
   }
+
   /* Resolve version-specific data */
   let v=null;
   if(it.type==='file'&&it.versions){
@@ -485,78 +540,138 @@ function viewer(id,verId){
   else if(mime&&mime.startsWith('image')) b=`<img alt="${esc(it.title)}" src="${asset?esc(url):blobUrl(data)}">`;
   else if(mime==='application/pdf') b=`<iframe class="pdf" src="${asset?esc(url):blobUrl(data)}"></iframe>`;
   else b=`<p style="color:var(--mu)">${t('noPrev')}</p>`;
-  const verTag=v&&it.versions&&it.versions.length>1?' · '+esc(verLabel(v,it.versions.indexOf(v))):'';
+
+  /* Details panel — shown for every file version */
+  let details='';
+  const multi=it.type==='file'&&it.versions&&it.versions.length>1;
+  if(it.type==='file'&&v){
+    const info=verInfo(v);
+    details=`<div class="verMeta" style="margin:-4px 0 4px">
+      ${multi?`<span class="verTag pri">${esc(verLabel(v,it.versions.indexOf(v)))}</span>`:''}
+      ${v.fname?`<span>📄 ${esc(v.fname)}</span>`:''}
+      ${info.ext?`<span>🏷️ ${esc(info.ext)}</span>`:''}
+      ${info.size!=null?`<span>💾 ${fmtSize(info.size)}</span>`:''}
+      ${multi?`<span>📚 ${it.versions.length} ${t('versions')}</span>`:''}
+    </div>`;
+  }
+
   const dlVer=verId||(it.versions&&it.versions[0]?it.versions[0].id:'');
-  dlg(`<h2>${esc(it.title)}${verTag}</h2><div class="vw">${b}</div><div class="end">${it.type==='file'?`<button class="btn" data-act="dl" data-id="${id}" data-ver="${dlVer}">⬇ ${t('download')}</button>`:''}<button class="btn pri" data-act="close">${t('close')}</button></div>`);
+  dlg(`<h2>${esc(it.title)}</h2>${details}<div class="vw">${b}</div><div class="end">
+    ${multi?`<button class="btn" data-act="view" data-id="${id}">🗂 ${t('versions')}</button>`:''}
+    ${it.type==='file'?`<button class="btn" data-act="dl" data-id="${id}" data-ver="${dlVer}">⬇ ${t('download')}</button>`:''}
+    <button class="btn pri" data-act="close">${t('close')}</button>
+  </div>`);
 }
 function move(id,d){const [s]=findItem(id),i=s.items.findIndex(x=>x.id===id),j=i+d;if(j<0||j>=s.items.length)return;[s.items[i],s.items[j]]=[s.items[j],s.items[i]];save();render()}
 function backup(){dlg(`<h2>${t('backup')}</h2><button class="btn pri" data-act="exp">⬇ ${t('exp')}</button>${ui.admin?`<button class="btn" data-act="imp">⬆ ${t('imp')}</button>`:''}${ui.admin&&!ref?`<button class="btn" data-act="gh">GitHub</button>`:''}<button class="btn" data-act="close">${t('close')}</button>`)}
-/* ================= Stats dialog (admin only) ================= */
-async function statsDlg(){
-  dlg(`<h2>📊 ${t('stats')}</h2><div id="statsBody" style="display:grid;gap:12px"><p style="margin:0;color:var(--mu);text-align:center;padding:20px">${t('loading')}</p></div><div class="end"><button class="btn pri" data-act="close">${t('close')}</button></div>`);
+/* ================= Stats dialog (admin only, cache-first) ================= */
+let _statsCtx=null;
 
+async function statsDlg(){
   const items=[];
   S.subjects.forEach(s=>s.items.forEach(it=>{items.push({id:it.id,type:it.type,title:it.title,subject:s.icon+' '+s.name})}));
+  _statsCtx={items};
+  dlg(`<h2>📊 ${t('stats')}</h2><div id="statsBody" style="display:grid;gap:12px"></div><div class="end"><button class="btn" data-act="statsRefresh">🔄 ${t('refresh')}</button><button class="btn pri" data-act="close">${t('close')}</button></div>`);
+  _statsRender(false);      /* فوري من الكاش — 0ms */
+  _statsFetch();            /* تحديث في الخلفية */
+}
 
-  const [opens,visitors,online,freshStats]=await Promise.all([
-    AN._get('opens'),
-    AN._get('visitors'),
-    AN.onlineNow(),
-    Promise.all(items.map(f=>AN.itemStats(f.id)))
-  ]);
+async function refreshStats(){
+  if(!$('#dlg').open||!$('#statsBody'))return statsDlg();
+  _statsRender(false);
+  _statsFetch();
+}
 
-  /* load cache */
-  let cache={};try{cache=JSON.parse(localStorage.getItem('sh_stats_cache'))||{}}catch(e){}
+function _statsCache(){
+  try{return JSON.parse(localStorage.getItem('sh_stats_cache'))||{}}catch(e){return{}}
+}
+
+function _statsRender(isFresh,data){
+  if(!_statsCtx)return;
+  const items=_statsCtx.items;
+  const cache=_statsCache();
   const cMap={};if(Array.isArray(cache.stats))cache.stats.forEach(s=>cMap[s.id]=s);
 
-  /* merge: fresh if available, else cached */
-  const useOpens    = opens    != null ? opens    : (cache.opens    ?? null);
-  const useVisitors = visitors != null ? visitors : (cache.visitors ?? null);
-  const useOnline   = online; // real-time only, no cache
-  const mergedStats = items.map((f,i)=>{
-    const fr=freshStats[i]||{};
+  const opens    = data?data.opens    : null;
+  const visitors = data?data.visitors : null;
+  const online   = data?data.online   : null;
+  const fArr     = data?data.stats    : null;
+
+  const uOpens    = opens    !=null ? opens    : (cache.opens    ?? null);
+  const uVisitors = visitors !=null ? visitors : (cache.visitors ?? null);
+
+  const merged = items.map((f,i)=>{
+    const fr=(fArr&&fArr[i])||{};
     const c =cMap[f.id]||{};
     return {
-      opens:     fr.opens     != null ? fr.opens     : (c.opens     ?? 0),
-      downloads: fr.downloads != null ? fr.downloads : (c.downloads ?? 0)
+      opens:     fr.opens     !=null ? fr.opens     : (c.opens     ?? 0),
+      downloads: fr.downloads !=null ? fr.downloads : (c.downloads ?? 0)
     };
   });
+  const totalOpens = merged.reduce((s,x)=>s+x.opens,0);
 
-  /* persist merged cache */
-  try{
-    localStorage.setItem('sh_stats_cache',JSON.stringify({
-      t:Date.now(),
-      opens:useOpens, visitors:useVisitors,
-      stats: items.map((f,i)=>({id:f.id,...mergedStats[i]}))
-    }));
-  }catch(e){}
-
-  const isStale = (opens==null && visitors==null);
-  const stampT  = cache.t ? new Date(cache.t) : (isStale?null:new Date());
-  const stamp   = stampT ? ` · ${t('lastUpd')}: ${stampT.toLocaleString(ui.lang==='ar'?'ar-EG':'en-GB')}` : '';
+  const stampT = isFresh?new Date():(cache.t?new Date(cache.t):null);
+  const stamp = stampT ? ` · ${t('lastUpd')}: ${stampT.toLocaleString(ui.lang==='ar'?'ar-EG':'en-GB')}` : '';
+  const stale = !isFresh && cache.t;
 
   let html=`<div class="statGrid">
-    <div class="statCard"><b>${useVisitors??'—'}</b><span>${t('uniqueVisitors')}</span></div>
-    <div class="statCard"><b>${useOpens??'—'}</b><span>${t('totalVisits')}</span></div>
-    <div class="statCard"><b>${useOnline??'—'}</b><span>${t('onlineNow')}</span></div>
-  </div><h3 style="margin:4px 0 -2px;font-size:.95rem;font-weight:500;color:var(--mu)">${t('fileStats')}</h3>`;
+    <div class="statCard" style="background:color-mix(in srgb,var(--ac) 15%,var(--sf2))"><b>${totalOpens}</b><span>${t('totalOpens')}</span></div>
+    <div class="statCard"><b>${uVisitors??'—'}</b><span>${t('uniqueVisitors')}</span></div>
+    <div class="statCard"><b>${uOpens??'—'}</b><span>${t('totalVisits')}</span></div>
+    <div class="statCard"><b>${online??'—'}</b><span>${t('onlineNow')}</span></div>
+  </div>`;
+
+  html+=`<h3 style="margin:4px 0 -2px;font-size:.95rem;font-weight:500;color:var(--mu)">${t('fileStats')}</h3>`;
 
   if(!items.length){
     html+=`<p style="margin:0;color:var(--mu);text-align:center;padding:20px">${t('noFiles')}</p>`;
   } else {
+    const sorted=items.map((f,i)=>({f,st:merged[i]})).sort((a,b)=>b.st.opens-a.st.opens);
     html+='<div>';
-    items.forEach((f,i)=>{
-      const st=mergedStats[i];
+    sorted.forEach(({f,st})=>{
       const dl=f.type==='file'?`<span title="${t('fileDownloads')}">⬇ ${st.downloads}</span>`:'';
       html+=`<div class="statRow"><div class="tx"><b>${esc(f.title)}</b><span class="s">${esc(f.subject)}</span></div><div class="n"><span title="${t('fileOpens')}">👁 ${st.opens}</span>${dl}</div></div>`;
     });
     html+='</div>';
   }
 
-  html+=`<p style="margin:0;font-size:.75rem;color:var(--mu);text-align:center">${isStale?('⚠️ '+t('cached')+stamp):(t('statsNote')+stamp)}</p>`;
+  html+=`<p style="margin:0;font-size:.75rem;color:var(--mu);text-align:center">${stale?('⚠️ '+t('cached')+stamp):(t('statsNote')+stamp)}</p>`;
 
-  const d=$('#dlg');
-  if(d.open&&d.querySelector('#statsBody'))d.querySelector('#statsBody').outerHTML=html;
+  const body=$('#statsBody');
+  if(body)body.innerHTML=html;
+}
+
+async function _statsFetch(){
+  if(!_statsCtx)return;
+  const items=_statsCtx.items;
+  try{
+    const [opens,visitors,online,freshArr]=await Promise.all([
+      withTimeout(AN._get('opens'),6000),
+      withTimeout(AN._get('visitors'),6000),
+      withTimeout(AN.onlineNow(),6000),
+      Promise.all(items.map(f=>withTimeout(AN.itemStats(f.id),6000)))
+    ]);
+    const fresh={opens,visitors,online,stats:freshArr.map(x=>x||{opens:null,downloads:null})};
+
+    /* merge with old cache so we never overwrite good data with null */
+    const cache=_statsCache();
+    const cMap={};if(Array.isArray(cache.stats))cache.stats.forEach(s=>cMap[s.id]=s);
+    try{
+      localStorage.setItem('sh_stats_cache',JSON.stringify({
+        t:Date.now(),
+        opens:    opens    !=null?opens    :(cache.opens    ?? null),
+        visitors: visitors !=null?visitors :(cache.visitors ?? null),
+        stats: items.map((f,i)=>{
+          const fr=fresh.stats[i]||{}, c=cMap[f.id]||{};
+          return {id:f.id,
+            opens:     fr.opens     !=null?fr.opens     :(c.opens     ?? 0),
+            downloads: fr.downloads !=null?fr.downloads :(c.downloads ?? 0)};
+        })
+      }));
+    }catch(e){}
+
+    _statsRender(true,fresh);
+  }catch(e){}
 }
 /* ============================================================== */
 const A={
@@ -623,6 +738,7 @@ const A={
  close(){$('#dlg').close()},
  backup(){backup()},
  stats(){statsDlg()},
+ statsRefresh(){refreshStats()},
  exp(){saveFile('geomathics-backup-'+new Date().toISOString().slice(0,10)+'.json',new Blob([JSON.stringify({v:2,subjects:S.subjects})],{type:'application/json'}))},
  imp(){$('#imp').click()},
  gh(){const m=location.hostname.match(/^(.+)\.github\.io$/),g=gh||{o:m?m[1]:'',r:m?location.pathname.split('/')[1]||m[1]+'.github.io':'',b:'main',t:''};
@@ -644,7 +760,7 @@ $('#imp').addEventListener('change',async e=>{
           for(const v of i.versions){
             if(v.data&&as){const r=await as.upload(dataBlob(v.data));v.url=r.url;v.asset=r.id;delete v.data;}
           }
-          if(i.versions[0]) Object.assign(i,{url:i.versions[0].url,data:i.versions[0].data,asset:i.versions[0].asset,fname:i.versions[0].fname,mime:i.versions[0].mime});
+          if(i.versions[0]) Object.assign(i,{url:i.versions[0].url,data:i.versions[0].data,asset:i.versions[0].asset,fname:i.versions[0].fname,mime:i.versions[0].mime,size:i.versions[0].size});
         } else if(i.data&&as){const r=await as.upload(dataBlob(i.data));Object.assign(i,{url:r.url,asset:r.id});delete i.data;}
       }
     }
