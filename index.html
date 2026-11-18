@@ -7,11 +7,8 @@
 <title>Geomathics</title>
 <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-/* primitives */
 :root{--g-950:#121417;--g-900:#181b1f;--g-850:#1f2328;--g-800:#2a2f36;--g-300:#b3b9c3;--g-200:#d9dce1;--sage-300:#93bba8;--sage-700:#3d7660;--rose-400:#e58a96;--rose-700:#b4233f;
-/* semantic */
 --bg:var(--g-950);--sf:var(--g-900);--sf2:var(--g-850);--ln:var(--g-800);--tx:var(--g-200);--mu:#8d94a0;--ac:var(--sage-300);--ai:#0f1a15;--dg:var(--rose-400);
-/* scale */
 --r:12px;--s1:8px;--s2:16px;--s3:24px;--s4:40px;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:dark}
 :root[data-theme=light]{--bg:#f6f7f8;--sf:#fff;--sf2:#eef0f2;--ln:#e1e4e8;--tx:#1d2127;--mu:#5d6572;--ac:var(--sage-700);--ai:#fff;--dg:var(--rose-700);color-scheme:light}
@@ -82,7 +79,6 @@ fieldset{border:0;padding:0;margin:0}legend{font-size:.88rem;color:var(--mu);mar
 #toast{position:fixed;inset-inline:0;bottom:calc(16px + env(safe-area-inset-bottom,0px));margin:auto;width:max-content;max-width:90vw;background:var(--tx);color:var(--bg);padding:10px 18px;border-radius:99px;z-index:50;display:none}
 @media(prefers-reduced-motion:no-preference){dialog[open]{animation:pop .16s ease-out}@keyframes pop{from{opacity:0}}}
 @media(min-width:760px){#q{order:0;flex:0 1 360px}header{padding:12px var(--s3)}main{padding-top:var(--s4)}}
-/* colorize: color carries meaning (content type, subject) */
 :root{--k-file:#7fa8f5;--k-video:#f0907f;--k-link:#62cfa6;--k-note:#e8c670}
 :root[data-theme=light]{--k-file:#3f6fd8;--k-video:#d4553f;--k-link:#1f9c74;--k-note:#b88a14}
 .k-file{--k:var(--k-file)}.k-video{--k:var(--k-video)}.k-link{--k:var(--k-link)}.k-note{--k:var(--k-note)}
@@ -116,10 +112,10 @@ header h1{color:var(--ac)}
 <div id="toast" role="status"></div>
 <script>
 const $=s=>document.querySelector(s);
-const L={ar:{title:'Geomathics',search:'ابحث في المواد والملفات والفيديوهات',subjects:'المواد',addSubject:'إضافة مادة',editSubject:'تعديل المادة',name:'اسم المادة',desc:'وصف (اختياري)',color:'اللون',icon:'الأيقونة',save:'حفظ',cancel:'إلغاء',del:'حذف',edit:'تعديل',delSubject:'حذف المادة وكل محتوياتها (%n)؟',delItem:'حذف هذا العنصر؟',addRes:'إضافة محتوى',file:'ملف',video:'فيديو',link:'رابط',note:'ملاحظة',resTitle:'العنوان',url:'الرابط',pick:'اختر ملفًا',noSubjects:'لا توجد مواد بعد. أضف أول مادة للبدء.',noSubjectsS:'لا توجد مواد بعد.',noRes:'لا يوجد محتوى في هذه المادة.',all:'الكل',back:'كل المواد',admin:'وضع المشرف',student:'عرض الطالب',exp:'تصدير نسخة احتياطية (JSON)',imp:'استيراد نسخة احتياطية',imported:'تم استيراد البيانات',bad:'الملف غير صالح',results:'نتائج البحث',none:'لا توجد نتائج مطابقة',open:'فتح',download:'تنزيل',site:'فتح في الموقع',big:'الملف كبير جدًا (الحد 20 إلى 25 ميجابايت أونلاين)',items:'عنصر',noPrev:'لا توجد معاينة لهذا النوع. نزّل الملف لفتحه.',need:'اختر ملفًا أو أدخل رابطًا',ok:'تأكيد',text:'النص',up:'تحريك لأعلى',dn:'تحريك لأسفل',close:'إغلاق',saved:'تم الحفظ',vurl:'رابط يوتيوب أو فيميو، أو ارفع ملف فيديو',backup:'النسخ الاحتياطي',pw:'كلمة مرور المشرف',wrong:'كلمة المرور غير صحيحة',unlock:'دخول',ghHelp:'أنشئ Fine-grained token بصلاحية Contents: Read and write على هذا المستودع فقط. يُحفظ في هذا المتصفح فقط. اتركه فارغًا لفصل الربط.',owner:'اسم الحساب (Owner)',repo:'اسم المستودع (Repository)',branch:'الفرع (Branch)',token:'التوكن (Token)',ghok:'تم الحفظ على GitHub، سيظهر للطلاب خلال دقيقة تقريبًا',nowrite:'لا تملك صلاحية الرفع أو التعديل أونلاين'},
-en:{title:'Geomathics',search:'Search subjects, files and videos',subjects:'Subjects',addSubject:'Add subject',editSubject:'Edit subject',name:'Subject name',desc:'Description (optional)',color:'Color',icon:'Icon',save:'Save',cancel:'Cancel',del:'Delete',edit:'Edit',delSubject:'Delete this subject and all its content (%n)?',delItem:'Delete this item?',addRes:'Add content',file:'File',video:'Video',link:'Link',note:'Note',resTitle:'Title',url:'URL',pick:'Choose a file',noSubjects:'No subjects yet. Add your first one to begin.',noSubjectsS:'No subjects yet.',noRes:'This subject has no content yet.',all:'All',back:'All subjects',admin:'Admin mode',student:'Student view',exp:'Export backup (JSON)',imp:'Import backup',imported:'Data imported',bad:'Invalid backup file',results:'Search results',none:'No matches',open:'Open',download:'Download',site:'Open on site',big:'File is too large (20 MB limit online)',items:'items',noPrev:'No preview for this type. Download the file to open it.',need:'Choose a file or enter a URL',ok:'Confirm',text:'Text',up:'Move up',dn:'Move down',close:'Close',saved:'Saved',vurl:'YouTube or Vimeo link, or upload a video file',backup:'Backup',pw:'Admin password',wrong:'Wrong password',unlock:'Unlock',ghHelp:'Create a fine-grained token with Contents: Read and write on this repository only. It is stored in this browser only. Leave it empty to disconnect.',owner:'Owner',repo:'Repository',branch:'Branch',token:'Token',ghok:'Saved to GitHub. Students will see it in about a minute.',nowrite:'You do not have permission to upload or edit online'}};
+const L={ar:{title:'Geomathics',search:'ابحث في المواد والملفات والفيديوهات',subjects:'المواد',addSubject:'إضافة مادة',editSubject:'تعديل المادة',name:'اسم المادة',desc:'وصف (اختياري)',color:'اللون',icon:'الأيقونة',save:'حفظ',cancel:'إلغاء',del:'حذف',edit:'تعديل',delSubject:'حذف المادة وكل محتوياتها (%n)؟',delItem:'حذف هذا العنصر؟',addRes:'إضافة محتوى',file:'ملف',video:'فيديو',link:'رابط',note:'ملاحظة',resTitle:'العنوان',url:'الرابط',pick:'اختر ملفًا',pick2:'النسخة المعادة تصميمها (اختياري)',chooseVer:'اختر النسخة التي تريد فتحها',verOrig:'النسخة الأصلية',verNew:'النسخة المعادة تصميمها',twoVer:'نسختان',noSubjects:'لا توجد مواد بعد. أضف أول مادة للبدء.',noSubjectsS:'لا توجد مواد بعد.',noRes:'لا يوجد محتوى في هذه المادة.',all:'الكل',back:'كل المواد',admin:'وضع المشرف',student:'عرض الطالب',exp:'تصدير نسخة احتياطية (JSON)',imp:'استيراد نسخة احتياطية',imported:'تم استيراد البيانات',bad:'الملف غير صالح',results:'نتائج البحث',none:'لا توجد نتائج مطابقة',open:'فتح',download:'تنزيل',site:'فتح في الموقع',big:'الملف كبير جدًا (الحد 20 إلى 25 ميجابايت أونلاين)',items:'عنصر',noPrev:'لا توجد معاينة لهذا النوع. نزّل الملف لفتحه.',need:'اختر ملفًا أو أدخل رابطًا',ok:'تأكيد',text:'النص',up:'تحريك لأعلى',dn:'تحريك لأسفل',close:'إغلاق',saved:'تم الحفظ',vurl:'رابط يوتيوب أو فيميو، أو ارفع ملف فيديو',backup:'النسخ الاحتياطي',pw:'كلمة مرور المشرف',wrong:'كلمة المرور غير صحيحة',unlock:'دخول',ghHelp:'أنشئ Fine-grained token بصلاحية Contents: Read and write على هذا المستودع فقط. يُحفظ في هذا المتصفح فقط. اتركه فارغًا لفصل الربط.',owner:'اسم الحساب (Owner)',repo:'اسم المستودع (Repository)',branch:'الفرع (Branch)',token:'التوكن (Token)',ghok:'تم الحفظ على GitHub، سيظهر للطلاب خلال دقيقة تقريبًا',nowrite:'لا تملك صلاحية الرفع أو التعديل أونلاين'},
+en:{title:'Geomathics',search:'Search subjects, files and videos',subjects:'Subjects',addSubject:'Add subject',editSubject:'Edit subject',name:'Subject name',desc:'Description (optional)',color:'Color',icon:'Icon',save:'Save',cancel:'Cancel',del:'Delete',edit:'Edit',delSubject:'Delete this subject and all its content (%n)?',delItem:'Delete this item?',addRes:'Add content',file:'File',video:'Video',link:'Link',note:'Note',resTitle:'Title',url:'URL',pick:'Choose a file',pick2:'Redesigned version (optional)',chooseVer:'Choose which version to open',verOrig:'Original version',verNew:'Redesigned version',twoVer:'2 versions',noSubjects:'No subjects yet. Add your first one to begin.',noSubjectsS:'No subjects yet.',noRes:'This subject has no content yet.',all:'All',back:'All subjects',admin:'Admin mode',student:'Student view',exp:'Export backup (JSON)',imp:'Import backup',imported:'Data imported',bad:'Invalid backup file',results:'Search results',none:'No matches',open:'Open',download:'Download',site:'Open on site',big:'File is too large (20 MB limit online)',items:'items',noPrev:'No preview for this type. Download the file to open it.',need:'Choose a file or enter a URL',ok:'Confirm',text:'Text',up:'Move up',dn:'Move down',close:'Close',saved:'Saved',vurl:'YouTube or Vimeo link, or upload a video file',backup:'Backup',pw:'Admin password',wrong:'Wrong password',unlock:'Unlock',ghHelp:'Create a fine-grained token with Contents: Read and write on this repository only. It is stored in this browser only. Leave it empty to disconnect.',owner:'Owner',repo:'Repository',branch:'Branch',token:'Token',ghok:'Saved to GitHub. Students will see it in about a minute.',nowrite:'You do not have permission to upload or edit online'}};
 const COL=['#f0b95b','#5fcfa4','#7aa7ff','#ef7d8e','#b490f0','#5fd0e6'];
-const ICO=['📘','🧮','🧪','🌍','💻','🎨','📜','⚖️','🩺','📐'];
+const ICO=['📘','🧮','🔎','🌍','💻','📈','📜','⚖️','🩺','📐'];
 const TI={file:'📄',video:'▶️',link:'🔗',note:'📝'};
 let gh=null;try{gh=JSON.parse(localStorage.getItem('sh_gh'))}catch(e){}
 const ghH=()=>({Authorization:'Bearer '+gh.t,Accept:'application/vnd.github+json'});
@@ -131,15 +127,12 @@ async function ghDel(p){const o=await ghGet(p);if(!o)return;await fetch(ghU(p),{
 let ghQ=Promise.resolve();
 async function site(){try{let j=null;if(gh){const o=await ghGet('data.json');if(o)j=JSON.parse(decodeURIComponent(escape(atob(o.content.replace(/\n/g,'')))))}else{const r=await fetch('data.json?t='+Date.now());if(r.ok)j=await r.json()}
   if(j&&Array.isArray(j.subjects)){S={subjects:j.subjects};render()}}catch(e){}}
-/* ghSync: after saving the GitHub token, if the remote data.json is still empty,
-   push the current local subjects so the admin doesn't lose anything they added before linking. */
 async function ghSync(){if(!gh)return site();try{const o=await ghGet('data.json');if(!o&&S.subjects.length>0){await ghPut('data.json',btoa(unescape(encodeURIComponent(JSON.stringify({subjects:S.subjects})))));}await site()}catch(e){toast('GitHub: '+(e.message||'error'),9000)}}
 let ref=null,S={subjects:[]},ui={admin:false,theme:'dark',lang:'ar',view:null,filter:'all',q:''};
 const t=k=>L[ui.lang][k];
 const uid=()=>Math.random().toString(36).slice(2,10);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const plain=h=>{const d=document.createElement('div');d.innerHTML=h;return d.textContent};
-/* storage: settings in localStorage, data in IndexedDB (fits large files), localStorage fallback */
 const idb=()=>new Promise((res,rej)=>{const r=indexedDB.open('studyhub',1);r.onupgradeneeded=()=>r.result.createObjectStore('k');r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error)});
 async function load(){try{const d=await idb();return await new Promise((r,j)=>{const q=d.transaction('k').objectStore('k').get('s');q.onsuccess=()=>r(q.result);q.onerror=()=>j()})}catch(e){try{return JSON.parse(localStorage.getItem('sh_s'))}catch(e){return null}}}
 async function save(){if(!ref&&gh){ghQ=ghQ.then(()=>ghPut('data.json',btoa(unescape(encodeURIComponent(JSON.stringify({subjects:S.subjects}))))).then(()=>toast(t('ghok'))).catch(e=>toast('GitHub: '+(e.message||'error'),9000)));return}
@@ -158,7 +151,15 @@ const sub=id=>S.subjects.find(s=>s.id===id);
 const findItem=id=>{for(const s of S.subjects){const it=s.items.find(i=>i.id===id);if(it)return [s,it]}return []};
 function embed(u){let m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/);if(m)return 'https://www.youtube.com/embed/'+m[1];m=u.match(/vimeo\.com\/(?:video\/)?(\d+)/);return m?'https://player.vimeo.com/video/'+m[1]:null}
 /* views */
-function meta(it){return it.type==='file'?it.fname||'':it.type==='note'?plain(it.html).slice(0,90):it.type==='video'&&(it.data||it.asset)?it.fname||'':(it.url||'').replace(/^https?:\/\//,'').slice(0,70)}
+function meta(it){
+  let m;
+  if(it.type==='file') m=it.fname||'';
+  else if(it.type==='note') m=plain(it.html).slice(0,90);
+  else if(it.type==='video'&&(it.data||it.asset)) m=it.fname||'';
+  else m=(it.url||'').replace(/^https?:\/\//,'').slice(0,70);
+  if(it.type==='file'&&(it.data2||it.url2)) m+=' · ✨ '+t('twoVer');
+  return m;
+}
 function rowH(it,s,ctl){const ic=it.mime&&it.mime.startsWith('image')?'🖼️':it.mime==='application/pdf'?'📕':TI[it.type];
   const main=it.type==='link'?`<a class="btn" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer" style="display:grid;place-items:center;text-decoration:none">${t('open')}</a>`:`<button class="btn" data-act="view" data-id="${it.id}">${t('open')}</button>`;
   const adm=ui.admin&&ctl?`<button class="btn" data-act="up" data-id="${it.id}" aria-label="${t('up')}">↑</button><button class="btn" data-act="dn" data-id="${it.id}" aria-label="${t('dn')}">↓</button><button class="btn" data-act="eitem" data-id="${it.id}" aria-label="${t('edit')}">✎</button><button class="btn dg" data-act="ditem" data-id="${it.id}" aria-label="${t('del')}">🗑</button>`:'';
@@ -185,25 +186,104 @@ function subForm(id){const s=sub(id)||{name:'',desc:'',color:COL[0],icon:ICO[0]}
   dlg(`<h2>${t(id?'editSubject':'addSubject')}</h2><form id="f" style="display:grid;gap:12px"><label>${t('name')}<input name="name" required value="${esc(s.name)}"></label><label>${t('desc')}<textarea name="desc" rows="2">${esc(s.desc)}</textarea></label><fieldset><legend>${t('color')}</legend><div class="sw">${COL.map(c=>`<label><input type="radio" name="color" value="${c}" ${c===s.color?'checked':''}><i style="background:${c}"></i></label>`).join('')}</div></fieldset><fieldset><legend>${t('icon')}</legend><div class="sw">${ICO.map(c=>`<label><input type="radio" name="icon" value="${c}" ${c===s.icon?'checked':''}><i>${c}</i></label>`).join('')}</div></fieldset>${foot.replace('%c',t('cancel')).replace('%s',t('save'))}</form>`);
   $('#f').onsubmit=e=>{e.preventDefault();const f=e.target.elements,o={name:f.name.value.trim(),desc:f.desc.value.trim(),color:f.color.value,icon:f.icon.value};if(!o.name)return;
     if(id)Object.assign(s,o);else S.subjects.push({id:uid(),items:[],...o});save();$('#dlg').close();render()}}
-function itemForm(sid,id){const s=sub(sid),it=s.items.find(i=>i.id===id)||{type:'file',title:'',url:'',html:''};
-  dlg(`<h2>${t(id?'edit':'addRes')}</h2><form id="f" style="display:grid;gap:12px"><label>${t('addRes')}<select name="kind">${['file','video','link','note'].map(k=>`<option value="${k}" ${k===it.type?'selected':''}>${TI[k]} ${t(k)}</option>`).join('')}</select></label><label>${t('resTitle')}<input name="ttl" value="${esc(it.title)}"></label><label data-for="video link">${t('url')}<input name="url" type="text" inputmode="url" dir="ltr" placeholder="${it.type==='video'||!id?esc(t('vurl')):'https://'}" value="${esc(it.url||'')}"></label><label data-for="file video">${t('pick')}${it.fname?` (${esc(it.fname)})`:''}<input name="file" type="file" accept="${'${a}'}"></label><div data-for="note" style="display:grid;gap:6px"><div class="tb"><button type="button" class="btn" data-fmt="bold"><b>B</b></button><button type="button" class="btn" data-fmt="italic"><i>I</i></button><button type="button" class="btn" data-fmt="insertUnorderedList">•</button><button type="button" class="btn" data-fmt="formatBlock" data-v="h3">H</button></div><div class="ed note" id="ed" contenteditable="true" aria-label="${t('text')}">${clean(it.html||'')}</div></div>${foot.replace('%c',t('cancel')).replace('%s',t('save'))}</form>`);
-  const f=$('#f').elements,sync=()=>{document.querySelectorAll('#f [data-for]').forEach(e=>e.hidden=!e.dataset.for.split(' ').includes(f.kind.value));f.file.accept=f.kind.value==='video'?'video/*':'.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,image/*'};f.kind.onchange=sync;sync();
+function itemForm(sid,id){
+  const s=sub(sid),it=s.items.find(i=>i.id===id)||{type:'file',title:'',url:'',html:''};
+  dlg(`<h2>${t(id?'edit':'addRes')}</h2><form id="f" style="display:grid;gap:12px">
+    <label>${t('addRes')}<select name="kind">${['file','video','link','note'].map(k=>`<option value="${k}" ${k===it.type?'selected':''}>${TI[k]} ${t(k)}</option>`).join('')}</select></label>
+    <label>${t('resTitle')}<input name="ttl" value="${esc(it.title)}"></label>
+    <label data-for="video link">${t('url')}<input name="url" type="text" inputmode="url" dir="ltr" placeholder="${it.type==='video'||!id?esc(t('vurl')):'https://'}" value="${esc(it.url||'')}"></label>
+    <label data-for="file video">${t('pick')}${it.fname?` (${esc(it.fname)})`:''}<input name="file" type="file" accept="${'${a}'}"></label>
+    <label data-for="file" style="border-top:1px dashed var(--ln);padding-top:12px">
+      ${t('pick2')}${it.fname2?` (${esc(it.fname2)}) <button type="button" class="btn dg" style="min-height:0;padding:2px 8px;font-size:.8rem" id="rmv2">${t('del')}</button>`:''}
+      <input name="file2" type="file" accept="${'${a}'}">
+    </label>
+    <div data-for="note" style="display:grid;gap:6px"><div class="tb"><button type="button" class="btn" data-fmt="bold"><b>B</b></button><button type="button" class="btn" data-fmt="italic"><i>I</i></button><button type="button" class="btn" data-fmt="insertUnorderedList">•</button><button type="button" class="btn" data-fmt="formatBlock" data-v="h3">H</button></div><div class="ed note" id="ed" contenteditable="true" aria-label="${t('text')}">${clean(it.html||'')}</div></div>
+    ${foot.replace('%c',t('cancel')).replace('%s',t('save'))}
+  </form>`);
+  const f=$('#f').elements;
+  const sync=()=>{
+    document.querySelectorAll('#f [data-for]').forEach(e=>e.hidden=!e.dataset.for.split(' ').includes(f.kind.value));
+    const acc=f.kind.value==='video'?'video/*':'.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,image/*';
+    f.file.accept=acc;
+    if(f.file2)f.file2.accept=acc;
+  };
+  f.kind.onchange=sync;sync();
   document.querySelectorAll('[data-fmt]').forEach(b=>{b.onmousedown=e=>e.preventDefault();b.onclick=()=>document.execCommand(b.dataset.fmt,false,b.dataset.v||null)});
-  $('#f').onsubmit=async e=>{e.preventDefault();const ty=f.kind.value,o={id:it.id||uid(),type:ty,title:f.ttl.value.trim()};const fl=f.file.files[0];
+  let rmV2=false;
+  const rmv2Btn=$('#rmv2');
+  if(rmv2Btn){
+    rmv2Btn.onclick=e=>{e.preventDefault();rmV2=true;rmv2Btn.textContent='✓';rmv2Btn.disabled=true};
+  }
+  $('#f').onsubmit=async e=>{
+    e.preventDefault();
+    const ty=f.kind.value,o={id:it.id||uid(),type:ty,title:f.ttl.value.trim()};
+    const fl=f.file.files[0];
+    const fl2=f.file2?f.file2.files[0]:null;
     if(ty==='note'){o.html=clean($('#ed').innerHTML);o.title=o.title||plain(o.html).slice(0,40)||t('note')}
     else if(ty==='link'){let u=f.url.value.trim();if(!u)return toast(t('need'));if(!/^https?:\/\//i.test(u))u='https://'+u;o.url=u;o.title=o.title||u.replace(/^https?:\/\//,'')}
-    else{const u=ty==='video'?f.url.value.trim():'';if(fl){if(fl.size>(ref?20e6:gh?25e6:30e6))return toast(t('big'));if(ref){const as=await claude.use('assets');if(!as)return toast(t('nowrite'));try{const r=await as.upload(fl);Object.assign(o,{url:r.url,asset:r.id,fname:fl.name,mime:fl.type||'application/octet-stream'})}catch(x){return toast(t('nowrite'))}}else if(gh){const pth='files/'+uid()+'-'+fl.name.replace(/[^\w.\-]+/g,'_');try{await ghPut(pth,(await readFile(fl)).split(',')[1]);Object.assign(o,{url:pth,asset:pth,fname:fl.name,mime:fl.type||'application/octet-stream'})}catch(x){return toast('GitHub: '+(x.message||'error'),9000)}}else Object.assign(o,{data:await readFile(fl),fname:fl.name,mime:fl.type||'application/octet-stream'});o.title=o.title||fl.name}
+    else{
+      const u=ty==='video'?f.url.value.trim():'';
+      if(fl){
+        if(fl.size>(ref?20e6:gh?25e6:30e6))return toast(t('big'));
+        if(ref){const as=await claude.use('assets');if(!as)return toast(t('nowrite'));try{const r=await as.upload(fl);Object.assign(o,{url:r.url,asset:r.id,fname:fl.name,mime:fl.type||'application/octet-stream'})}catch(x){return toast(t('nowrite'))}}
+        else if(gh){const pth='files/'+uid()+'-'+fl.name.replace(/[^\w.\-]+/g,'_');try{await ghPut(pth,(await readFile(fl)).split(',')[1]);Object.assign(o,{url:pth,asset:pth,fname:fl.name,mime:fl.type||'application/octet-stream'})}catch(x){return toast('GitHub: '+(x.message||'error'),9000)}}
+        else Object.assign(o,{data:await readFile(fl),fname:fl.name,mime:fl.type||'application/octet-stream'});
+        o.title=o.title||fl.name
+      }
       else if(u){o.url=/^https?:\/\//i.test(u)?u:'https://'+u;o.title=o.title||o.url.replace(/^https?:\/\//,'')}
       else if(it.type===ty&&(it.data||it.url)){Object.assign(o,{data:it.data,asset:it.asset,fname:it.fname,mime:it.mime,url:it.url});o.title=o.title||it.title}
-      else return toast(t('need'))}
-    const i=s.items.findIndex(x=>x.id===o.id);if(i>-1)s.items[i]=o;else s.items.push(o);save();$('#dlg').close();render()}}
-function viewer(id){const [s,it]=findItem(id);if(!it)return;let b='';
+      else return toast(t('need'));
+      /* Second (redesigned) version — only for file type */
+      if(ty==='file'){
+        if(fl2){
+          if(fl2.size>(ref?20e6:gh?25e6:30e6))return toast(t('big'));
+          if(ref){const as=await claude.use('assets');if(!as)return toast(t('nowrite'));try{const r=await as.upload(fl2);Object.assign(o,{url2:r.url,asset2:r.id,fname2:fl2.name,mime2:fl2.type||'application/octet-stream'})}catch(x){return toast(t('nowrite'))}}
+          else if(gh){const pth='files/'+uid()+'-'+fl2.name.replace(/[^\w.\-]+/g,'_');try{await ghPut(pth,(await readFile(fl2)).split(',')[1]);Object.assign(o,{url2:pth,asset2:pth,fname2:fl2.name,mime2:fl2.type||'application/octet-stream'})}catch(x){return toast('GitHub: '+(x.message||'error'),9000)}}
+          else Object.assign(o,{data2:await readFile(fl2),fname2:fl2.name,mime2:fl2.type||'application/octet-stream'});
+        }
+        else if(rmV2&&it.fname2){
+          if(it.asset2){if(gh)ghDel(it.asset2).catch(()=>{});else if(typeof claude!=='undefined')claude.use('assets').then(a=>a&&a.delete(it.asset2)).catch(()=>{})}
+        }
+        else if(it.fname2){Object.assign(o,{data2:it.data2,asset2:it.asset2,fname2:it.fname2,mime2:it.mime2,url2:it.url2})}
+      }
+    }
+    const i=s.items.findIndex(x=>x.id===o.id);
+    if(i>-1)s.items[i]=o;else s.items.push(o);
+    save();$('#dlg').close();render()
+  }
+}
+function viewer(id,ver){
+  const [s,it]=findItem(id);if(!it)return;
+  /* If file has two versions and no version chosen yet, show chooser */
+  if(it.type==='file'&&(it.data2||it.url2)&&!ver){
+    dlg(`<h2>${esc(it.title)}</h2><p style="margin:0;color:var(--mu)">${t('chooseVer')}</p>
+      <div style="display:grid;gap:8px">
+        <button class="btn" data-act="view" data-id="${id}" data-ver="orig" style="padding:14px 16px;border-color:var(--ln);border-radius:12px;display:block;width:100%;text-align:start;min-height:0;line-height:1.4">
+          <span style="display:block;color:var(--tx);font-weight:500">📄 ${t('verOrig')}</span>
+          ${it.fname?`<span style="display:block;font-size:.8rem;color:var(--mu);margin-top:2px;overflow-wrap:anywhere">${esc(it.fname)}</span>`:''}
+        </button>
+        <button class="btn" data-act="view" data-id="${id}" data-ver="new" style="padding:14px 16px;border-color:var(--ac);border-radius:12px;display:block;width:100%;text-align:start;min-height:0;line-height:1.4">
+          <span style="display:block;color:var(--ac);font-weight:500">✨ ${t('verNew')}</span>
+          ${it.fname2?`<span style="display:block;font-size:.8rem;color:var(--mu);margin-top:2px;overflow-wrap:anywhere">${esc(it.fname2)}</span>`:''}
+        </button>
+        <button class="btn" data-act="close" style="border-radius:12px;min-height:44px">${t('cancel')}</button>
+      </div>`);
+    return;
+  }
+  const useNew=ver==='new'&&(it.data2||it.url2);
+  const mime=useNew?(it.mime2||it.mime):it.mime;
+  const data=useNew?it.data2:it.data;
+  const url=useNew?it.url2:it.url;
+  const asset=useNew?it.asset2:it.asset;
+  let b='';
   if(it.type==='note')b=`<div class="note">${clean(it.html)}</div>`;
   else if(it.type==='video'){if(it.data||it.asset)b=`<video controls playsinline src="${it.asset?esc(it.url):blobUrl(it.data)}"></video>`;else{const em=embed(it.url);b=(em?`<iframe src="${em}" allowfullscreen allow="fullscreen;picture-in-picture"></iframe>`:`<video controls playsinline src="${esc(it.url)}"></video>`)+`<p><a class="btn" style="display:inline-grid;place-items:center;text-decoration:none" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${t('site')}</a></p>`}}
-  else if(it.mime&&it.mime.startsWith('image'))b=`<img alt="${esc(it.title)}" src="${it.asset?esc(it.url):blobUrl(it.data)}">`;
-  else if(it.mime==='application/pdf')b=`<iframe class="pdf" src="${it.asset?esc(it.url):blobUrl(it.data)}"></iframe>`;
+  else if(mime&&mime.startsWith('image'))b=`<img alt="${esc(it.title)}" src="${asset?esc(url):blobUrl(data)}">`;
+  else if(mime==='application/pdf')b=`<iframe class="pdf" src="${asset?esc(url):blobUrl(data)}"></iframe>`;
   else b=`<p style="color:var(--mu)">${t('noPrev')}</p>`;
-  dlg(`<h2>${esc(it.title)}</h2><div class="vw">${b}</div><div class="end">${it.type==='file'?`<button class="btn" data-act="dl" data-id="${id}">⬇ ${t('download')}</button>`:''}<button class="btn pri" data-act="close">${t('close')}</button></div>`)}
+  const verLabel=useNew?' ✨':'';
+  dlg(`<h2>${esc(it.title)}${verLabel}</h2><div class="vw">${b}</div><div class="end">${it.type==='file'?`<button class="btn" data-act="dl" data-id="${id}" data-ver="${ver||'orig'}">⬇ ${t('download')}</button>`:''}<button class="btn pri" data-act="close">${t('close')}</button></div>`)
+}
 function move(id,d){const [s]=findItem(id),i=s.items.findIndex(x=>x.id===id),j=i+d;if(j<0||j>=s.items.length)return;[s.items[i],s.items[j]]=[s.items[j],s.items[i]];save();render()}
 function backup(){dlg(`<h2>${t('backup')}</h2><button class="btn pri" data-act="exp">⬇ ${t('exp')}</button>${ui.admin?`<button class="btn" data-act="imp">⬆ ${t('imp')}</button>`:''}${ui.admin&&!ref?`<button class="btn" data-act="gh">GitHub</button>`:''}<button class="btn" data-act="close">${t('close')}</button>`)}
 /* actions */
@@ -223,10 +303,10 @@ const A={
  async dsub(id){const s=sub(id);if(await ask(t('delSubject').replace('%n',s.items.length))){S.subjects=S.subjects.filter(x=>x.id!==id);if(ui.view===id)ui.view=null;save();render()}},
  aitem(){itemForm(ui.view)},
  eitem(id){itemForm(findItem(id)[0].id,id)},
- async ditem(id){if(await ask(t('delItem'))){const [s,it]=findItem(id);if(it&&it.asset){if(gh)ghDel(it.asset).catch(()=>{});else if(typeof claude!=='undefined')claude.use('assets').then(a=>a&&a.delete(it.asset)).catch(()=>{})}s.items=s.items.filter(i=>i.id!==id);save();render()}},
+ async ditem(id){if(await ask(t('delItem'))){const [s,it]=findItem(id);if(it){if(it.asset){if(gh)ghDel(it.asset).catch(()=>{});else if(typeof claude!=='undefined')claude.use('assets').then(a=>a&&a.delete(it.asset)).catch(()=>{})}if(it.asset2){if(gh)ghDel(it.asset2).catch(()=>{});else if(typeof claude!=='undefined')claude.use('assets').then(a=>a&&a.delete(it.asset2)).catch(()=>{})}}s.items=s.items.filter(i=>i.id!==id);save();render()}},
  up(id){move(id,-1)},dn(id){move(id,1)},
- view(id){viewer(id)},
- async dl(id){const [,it]=findItem(id);const r=await fetch(it.data||it.url).catch(()=>null);const bl=r?await r.blob():new Blob([Uint8Array.from(atob(it.data.split(',')[1]),c=>c.charCodeAt(0))],{type:it.mime});saveFile(it.fname||it.title,bl)},
+ view(id,ver){viewer(id,ver)},
+ async dl(id,ver){const [,it]=findItem(id);const useNew=ver==='new'&&(it.data2||it.url2);const data=useNew?it.data2:it.data;const url=useNew?it.url2:it.url;const fname=useNew?it.fname2:it.fname;const mime=useNew?(it.mime2||it.mime):it.mime;const src=data||url;if(!src)return;const r=await fetch(src).catch(()=>null);const bl=r?await r.blob():new Blob([Uint8Array.from(atob(data.split(',')[1]),c=>c.charCodeAt(0))],{type:mime});saveFile(fname||it.title,bl)},
  close(){$('#dlg').close()},
  backup(){backup()},
  exp(){saveFile('geomathics-backup-'+new Date().toISOString().slice(0,10)+'.json',new Blob([JSON.stringify({v:1,subjects:S.subjects})],{type:'application/json'}))},
@@ -235,18 +315,14 @@ const A={
   dlg(`<h2>GitHub</h2><p style="margin:0;color:var(--mu);font-size:.9rem">${t('ghHelp')}</p><form id="f" style="display:grid;gap:12px"><label>${t('owner')}<input name="o" dir="ltr" required value="${esc(g.o)}"></label><label>${t('repo')}<input name="r" dir="ltr" required value="${esc(g.r)}"></label><label>${t('branch')}<input name="b" dir="ltr" required value="${esc(g.b)}"></label><label>${t('token')}<input name="t" type="password" dir="ltr" autocomplete="off" value="${esc(g.t)}"></label><div class="end"><button type="button" class="btn" data-act="close">${t('cancel')}</button><button class="btn pri">${t('save')}</button></div></form>`);
   $('#f').onsubmit=e=>{e.preventDefault();const f=e.target.elements,v={o:f.o.value.trim(),r:f.r.value.trim(),b:f.b.value.trim(),t:f.t.value.trim()};try{if(v.t){localStorage.setItem('sh_gh',JSON.stringify(v));gh=v}else{localStorage.removeItem('sh_gh');gh=null}}catch(x){}$('#dlg').close();ghSync();if(v.t)(async()=>{try{const r=await fetch(`https://api.github.com/repos/${v.o}/${v.r}`,{headers:{Authorization:'Bearer '+v.t,Accept:'application/vnd.github+json'}});const j=await r.json().catch(()=>({}));toast(r.ok?'GitHub OK: '+v.o+'/'+v.r:'GitHub '+r.status+': '+(j.message||''),9000)}catch(x){toast('Network error',6000)}})()}}
 };
-document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&A[b.dataset.act])A[b.dataset.act](b.dataset.id)});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b&&A[b.dataset.act])A[b.dataset.act](b.dataset.id,b.dataset.ver)});
 $('#q').addEventListener('input',e=>{ui.q=e.target.value;render()});
 $('#imp').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;
-  try{const j=JSON.parse(await f.text());if(!Array.isArray(j.subjects))throw 0;S.subjects=j.subjects.map(s=>({id:s.id||uid(),name:String(s.name||''),desc:String(s.desc||''),color:COL.includes(s.color)?s.color:COL[0],icon:String(s.icon||ICO[0]),items:(s.items||[]).map(i=>({...i,id:i.id||uid(),title:String(i.title||''),html:i.html?clean(i.html):''}))}));ui.view=null;if(ref){const as=await claude.use('assets');for(const s of S.subjects)for(const i of s.items)if(i.data&&as){const r=await as.upload(dataBlob(i.data));Object.assign(i,{url:r.url,asset:r.id});delete i.data}}await save();$('#dlg').close();render();toast(t('imported'))}catch(x){toast(t('bad'))}});
+  try{const j=JSON.parse(await f.text());if(!Array.isArray(j.subjects))throw 0;S.subjects=j.subjects.map(s=>({id:s.id||uid(),name:String(s.name||''),desc:String(s.desc||''),color:COL.includes(s.color)?s.color:COL[0],icon:String(s.icon||ICO[0]),items:(s.items||[]).map(i=>({...i,id:i.id||uid(),title:String(i.title||''),html:i.html?clean(i.html):''}))}));ui.view=null;if(ref){const as=await claude.use('assets');for(const s of S.subjects)for(const i of s.items){if(i.data&&as){const r=await as.upload(dataBlob(i.data));Object.assign(i,{url:r.url,asset:r.id});delete i.data}if(i.data2&&as){const r=await as.upload(dataBlob(i.data2));Object.assign(i,{url2:r.url,asset2:r.id});delete i.data2}}}await save();$('#dlg').close();render();toast(t('imported'))}catch(x){toast(t('bad'))}});
 (async()=>{prefs();const d=await load();
   S=d&&Array.isArray(d.subjects)?d:{subjects:[{id:uid(),name:'ابدأ من هنا · Start here',desc:'',color:COL[2],icon:'📘',items:[{id:uid(),type:'note',title:'Welcome · مرحبًا',html:'<p>Switch to Admin mode to add subjects, files, videos, links and notes. · فعّل وضع المشرف لإضافة المواد والملفات والفيديوهات والروابط والملاحظات.</p>'}]}]};
   apply();render();connect()})();
-async function connect(){
-  /* GitHub Pages: read data.json from the site root for every visitor.
-     The admin writes it back through the GitHub API once a token is set. */
-  await site();
-}
+async function connect(){await site()}
 </script>
 </body>
 </html>
