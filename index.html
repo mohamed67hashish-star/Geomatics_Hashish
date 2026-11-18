@@ -250,8 +250,7 @@ function itemForm(sid,id){
         </div>
         <label style="display:grid;gap:4px;font-size:.8rem;color:var(--mu);cursor:pointer">
           <span class="verName" style="color:${color};overflow-wrap:anywhere">${esc(display)}</span>
-          <input type="file" class="verFile" style="min-height:40px;padding:6px">
-        </label>
+          <input type="file" class="verFile" accept="*/*" style="min-height:40px;padding:6px">
       </div>`;
     }).join('');
     versEl.querySelectorAll('.verLabel').forEach(inp=>{
