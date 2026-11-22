@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>الامتحان التفاعلي - مشكلات جغرافية معاصرة</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Tajawal & Cairo -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        navy: {
+                            deep: 'rgb(11, 19, 43)',
+                            card: '#131f42',
+                            border: '#1e3a8a',
+                            hover: '#1c2d5e'
+                        },
+                        sky: {
+                            light: '#93c5fd',
+                            bright: '#60a5fa',
+                            glow: '#3b82f6'
+                        }
+                    },
+                    fontFamily: {
+                        cairo: ['Cairo', 'sans-serif'],
+                        tajawal: ['Tajawal', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            background-color: rgb(11, 19, 43) !important;
+            color: #f1f5f9;
+            font-family: 'Tajawal', 'Cairo', sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Scrollbar custom styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgb(11, 19, 43);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e3a8a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #3b82f6;
+        }
+
+        /* Glow & card subtle effects */
+        .card-shadow {
+            box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(30, 58, 138, 0.5);
+        }
+
+        .badge-pulse {
+            animation: pulse-subtle 2s infinite;
+        }
+
+        @keyframes pulse-subtle {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.85; }
+        }
+
+        .option-btn {
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            border-color: #60a5fa;
+            background-color: #1c2d5e;
+        }
+
+        .option-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="bg-[rgb(11,19,43)] text-slate-100 min-h-screen pb-24 selection:bg-sky-500 selection:text-white">
+
+    <!-- Top Sticky Header & Progress Bar -->
+    <header class="sticky top-0 z-40 bg-[rgb(11,19,43)]/95 backdrop-blur-md border-b border-navy-border shadow-lg">
+        <div class="max-w-5xl mx-auto px-4 py-3">
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+                <!-- Course Title & Info -->
+                <div class="flex items-center space-x-3 space-x-reverse">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-sky-500 flex items-center justify-center text-white font-bold text-xl shadow-md shrink-0">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h1 class="text-base sm:text-lg font-bold text-sky-bright leading-tight">اختبار مشكلات جغرافية معاصرة</h1>
+                        <p class="text-xs text-sky-light/80 font-medium"></p>
+                    </div>
+                </div>
+
+                <!-- Live Score & Progress Stats -->
+                <div class="flex items-center justify-between sm:justify-end gap-3 bg-navy-card/80 p-2 sm:px-4 sm:py-2 rounded-xl border border-navy-border text-xs sm:text-sm">
+                    <div class="flex items-center gap-1.5 px-2 py-1 bg-blue-950/60 rounded-lg">
+                        <i class="fa-solid fa-[#60a5fa] fa-star text-amber-400"></i>
+                        <span class="text-gray-300">الدرجة:</span>
+                        <span id="scoreDisplay" class="font-bold text-sky-bright text-base">0</span>
+                        <span class="text-gray-400">/ <span id="maxScoreDisplay">65</span></span>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 px-2 py-1 bg-blue-950/60 rounded-lg">
+                        <i class="fa-solid fa-chart-line text-emerald-400"></i>
+                        <span class="text-gray-300">النسبة:</span>
+                        <span id="percentDisplay" class="font-bold text-emerald-400">0%</span>
+                    </div>
+
+                    <div class="flex items-center gap-1.5 px-2 py-1 bg-blue-950/60 rounded-lg">
+                        <i class="fa-solid fa-check-double text-sky-bright"></i>
+                        <span class="text-gray-300">المُجاب:</span>
+                        <span id="answeredDisplay" class="font-bold text-white">0</span>
+                        <span class="text-gray-400">/ 65</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Global Progress Bar -->
+            <div class="w-full bg-slate-900 rounded-full h-2 mt-3 overflow-hidden border border-navy-border/50">
+                <div id="progressBar" class="bg-gradient-to-r from-blue-500 via-sky-400 to-emerald-400 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="flex items-center gap-2 mt-3 overflow-x-auto pb-1 text-xs sm:text-sm scrollbar-none">
+                <button onclick="filterQuestions('all')" id="btn-filter-all" class="filter-tab px-3 py-1.5 rounded-lg font-medium whitespace-nowrap bg-sky-bright text-slate-950 font-bold shadow">
+                    الكل (65)
+                </button>
+                <button onclick="filterQuestions('tf')" id="btn-filter-tf" class="filter-tab px-3 py-1.5 rounded-lg font-medium whitespace-nowrap bg-navy-card text-sky-light hover:bg-navy-hover border border-navy-border">
+                    صح وخطأ (25)
+                </button>
+                <button onclick="filterQuestions('mcq')" id="btn-filter-mcq" class="filter-tab px-3 py-1.5 rounded-lg font-medium whitespace-nowrap bg-navy-card text-sky-light hover:bg-navy-hover border border-navy-border">
+                    اختيار من متعدد (25)
+                </button>
+                <button onclick="filterQuestions('essay')" id="btn-filter-essay" class="filter-tab px-3 py-1.5 rounded-lg font-medium whitespace-nowrap bg-navy-card text-sky-light hover:bg-navy-hover border border-navy-border">
+                    أسئلة مقالية وتدريبات (15)
+                </button>
+                <button onclick="filterQuestions('starred')" id="btn-filter-starred" class="filter-tab px-3 py-1.5 rounded-lg font-medium whitespace-nowrap bg-navy-card text-amber-300 hover:bg-navy-hover border border-amber-500/40">
+                    <i class="fa-solid fa-star text-amber-400 ml-1"></i> تدريبات الكتاب ومواضع الأسئلة
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-4xl mx-auto px-4 py-6">
+
+        <!-- Welcome & Instructions Banner -->
+        <div class="bg-gradient-to-r from-navy-card via-blue-950 to-navy-card rounded-2xl p-5 border border-navy-border card-shadow mb-8 relative overflow-hidden">
+            <div class="absolute -left-10 -bottom-10 w-40 h-40 bg-sky-bright/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="flex items-start gap-4">
+                <div class="p-3 bg-sky-bright/10 rounded-xl border border-sky-bright/20 text-sky-bright hidden sm:block">
+                    <i class="fa-solid fa-file-pen text-3xl"></i>
+                </div>
+                <div>
+                    
+                    <p class="text-sm text-slate-300 leading-relaxed mb-3">
+                       
+                    </p>
+                    <div class="flex flex-wrap gap-2 text-xs">
+                        <span class="px-2.5 py-1 bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 rounded-md"><i class="fa-solid fa-check ml-1"></i> تصحيح فوري </span>
+                        <span class="px-2.5 py-1 bg-amber-500/20 text-amber-300 border border-amber-500/30 rounded-md"><i class="fa-solid fa-bookmark ml-1"></i> Eng/Hashish </span>
+                        <span class="px-2.5 py-1 bg-purple-500/20 text-purple-300 border border-purple-500/30 rounded-md"><i class="fa-solid fa-floppy-disk ml-1"></i> حفظ التقدّم تلقائياً</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Questions Feed -->
+        <div id="questionsContainer" class="space-y-6">
+            <!-- Questions rendered via JavaScript -->
+        </div>
+
+        <!-- Bottom Actions Bar -->
+        <div class="mt-10 p-5 bg-navy-card rounded-2xl border border-navy-border card-shadow text-center flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="text-right">
+                <h3 class="text-lg font-bold text-sky-bright">جاهز لإنهاء الاختبار؟</h3>
+                <p class="text-xs text-slate-400">اضغط لعرض التقرير التقييمي الشامل وقائمة الأسئلة التي تحتاج مراجعة.</p>
+            </div>
+            <div class="flex items-center gap-3 w-full sm:w-auto">
+                <button onclick="resetExamConfirm()" class="w-1/2 sm:w-auto px-4 py-2.5 rounded-xl border border-rose-500/40 text-rose-300 hover:bg-rose-500/10 font-medium text-sm transition-colors">
+                    <i class="fa-solid fa-rotate-right ml-1"></i> إعادة الامتحان
+                </button>
+                <button onclick="finishExam()" class="w-1/2 sm:w-auto px-6 py-2.5 rounded-xl bg-gradient-to-r from-sky-bright to-blue-600 text-slate-950 font-extrabold text-sm shadow-lg hover:brightness-110 transition-all">
+                    <i class="fa-solid fa-flag-checkered ml-1"></i> يا رب تكوني معديه 85 :)
+                </button>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Final Report Modal Container -->
+    <div id="reportModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-navy-card border border-navy-border rounded-3xl max-w-2xl w-full p-6 text-slate-100 card-shadow my-8 relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeReportModal()" class="absolute top-4 left-4 text-slate-400 hover:text-white text-xl p-2">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+
+            <div class="text-center mb-6">
+                <div class="w-16 h-16 rounded-full bg-sky-bright/20 border border-sky-bright flex items-center justify-center mx-auto mb-3 text-sky-bright text-2xl">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <h2 class="text-2xl font-black text-sky-bright mb-1">التقرير النهائي للأداء</h2>
+                <p class="text-xs text-sky-light/80">اختبار مادة "مشكلات جغرافية معاصرة - الخصخصة في مصر"</p>
+            </div>
+
+            <!-- Score Summary Cards -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+                <div class="bg-navy-deep p-3 rounded-xl border border-navy-border text-center">
+                    <span class="text-xs text-slate-400 block mb-1">الدرجة الكلية</span>
+                    <span id="modalFinalScore" class="text-xl font-black text-sky-bright">0/65</span>
+                </div>
+                <div class="bg-navy-deep p-3 rounded-xl border border-navy-border text-center">
+                    <span class="text-xs text-slate-400 block mb-1">النسبة المئوية</span>
+                    <span id="modalFinalPercent" class="text-xl font-black text-emerald-400">0%</span>
+                </div>
+                <div class="bg-navy-deep p-3 rounded-xl border border-navy-border text-center">
+                    <span class="text-xs text-slate-400 block mb-1">التقدير العامة</span>
+                    <span id="modalGrade" class="text-base font-bold text-amber-300">-</span>
+                </div>
+                <div class="bg-navy-deep p-3 rounded-xl border border-navy-border text-center">
+                    <span class="text-xs text-slate-400 block mb-1">الأسئلة المُجابة</span>
+                    <span id="modalAnswered" class="text-xl font-black text-purple-300">0/65</span>
+                </div>
+            </div>
+
+            <!-- Breakdown by Section -->
+            <div class="space-y-3 mb-6 bg-navy-deep/60 p-4 rounded-xl border border-navy-border">
+                <h4 class="text-sm font-bold text-sky-bright mb-2">تفاصيل الأداء حسب الأقسام:</h4>
+
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span>قسم الصواب والخطأ (25 سؤال):</span>
+                        <span id="stat-tf" class="font-bold text-sky-light">0/25</span>
+                    </div>
+                    <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
+                        <div id="bar-tf" class="bg-sky-bright h-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span>قسم الاختيار من متعدد (25 سؤال):</span>
+                        <span id="stat-mcq" class="font-bold text-sky-light">0/25</span>
+                    </div>
+                    <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
+                        <div id="bar-mcq" class="bg-emerald-400 h-full" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div>
+                    <div class="flex justify-between text-xs mb-1">
+                        <span>قسم الأسئلة المقالية والتدريبات (15 سؤال):</span>
+                        <span id="stat-essay" class="font-bold text-sky-light">0/15</span>
+                    </div>
+                    <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden">
+                        <div id="bar-essay" class="bg-purple-400 h-full" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review Wrong Questions Section -->
+            <div id="wrongQuestionsSection" class="mb-6 hidden">
+                <h4 class="text-sm font-bold text-rose-400 mb-2">
+                    <i class="fa-solid fa-triangle-exclamation ml-1"></i> الأسئلة التي تحتاج مراجعة وتصويب:
+                </h4>
+                <div id="wrongQuestionsList" class="space-y-2 max-h-48 overflow-y-auto p-2 bg-navy-deep rounded-xl border border-rose-500/20 text-xs">
+                    <!-- Populated dynamically -->
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3">
+                <button onclick="closeReportModal()" class="px-5 py-2 rounded-xl bg-navy-hover text-sky-light text-sm font-semibold border border-navy-border">
+                    متابعة الامتحان
+                </button>
+                <button onclick="resetExamConfirm()" class="px-5 py-2 rounded-xl bg-sky-bright text-slate-950 text-sm font-extrabold shadow hover:brightness-110">
+                    إعادة الامتحان بالكامل
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Confirm Reset Custom Dialog -->
+    <div id="resetDialog" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+        <div class="bg-navy-card border border-navy-border rounded-2xl max-w-sm w-full p-5 text-center text-slate-100 card-shadow">
+            <div class="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 flex items-center justify-center mx-auto mb-3 text-xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h3 class="text-base font-bold text-sky-bright mb-2">إعادة الامتحان من البداية؟</h3>
+            <p class="text-xs text-slate-300 mb-5">سيؤدي هذا إلى تصفير درجاتك ومسح كافة الإجابات المسجلة.</p>
+            <div class="flex gap-2">
+                <button onclick="closeResetDialog()" class="w-1/2 py-2 rounded-xl bg-navy-deep text-slate-300 text-xs font-semibold border border-navy-border">إلغاء</button>
+                <button onclick="confirmResetExam()" class="w-1/2 py-2 rounded-xl bg-rose-600 text-white text-xs font-bold shadow hover:bg-rose-500">نعم، إعادة الضبط</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application JavaScript Engine -->
+    <script>
+        // Data Structure for all 65 questions strictly as specified
+        const questionsData = [
+            // SECTION 1: TRUE / FALSE (25 Questions)
+            {
+                id: 1,
+                type: 'tf',
+                badge: 'خلاصة هامة للامتحان',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'الخصخصة هي هدف في حد ذاتها تسعى الدولة لتحقيقه، وتعني إلغاء وظيفة الدولة الاقتصادية ومسؤولياتها الاجتماعية.',
+                correct: false,
+                explanation: 'خطأ — الخصخصة وسيلة لزيادة كفاءة الأداء للاقتصاد الوطني وليست هدفاً في حد ذاتها، كما أنها لا تعني إطلاقاً إلغاء وظيفة الدولة الاقتصادية ومسؤولياتها الاجتماعية (الفصل الأول ص 3).'
+            },
+            {
+                id: 2,
+                type: 'tf',
+                badge: 'نقطة جوهرية',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'ترجع الجذور الفكرية لفكرة إشراك القطاع الخاص في الإنتاج إلى العلامة ابن خلدون في مقدمته عام 1377م، بينما بدأت الموجة الحديثة للخصخصة في عهد مارجريت تاتشر ببريطانيا (1979-1982م).',
+                correct: true,
+                explanation: 'صحيح — تحدث ابن خلدون عن نمط الإنتاج الخاص منذ أكثر من 600 عام (1377م)، بينما بدأت الموجة الحديثة في عهد تاتشر في بريطانيا (1979-1982م) في إطار الفكر الكلاسيكي الجديد (ص 2).'
+            },
+            {
+                id: 3,
+                type: 'tf',
+                badge: 'إحصائيات عالمية',
+                badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+                question: 'ارتفع عدد الدول التي طبقت برامج وعمليات الخصخصة في العالم من 12 دولة عام 1988م إلى أكثر من 80 دولة عام 1995م.',
+                correct: true,
+                explanation: 'صحيح — بناءً على تقرير منظمة التعاون الاقتصادي والتنمية (OECD)، تزايد عدد الدول المطبقة للخصخصة من 12 دولة عام 1988 إلى أكثر من 80 دولة عام 1995م (ص 4).'
+            },
+            {
+                id: 4,
+                type: 'tf',
+                badge: 'تطور الاقتصاد المصري - هام جداً',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'مر الاقتصاد المصري منذ عام 1952م وحتى عام 2006م بـ 6 مراحل أساسية، وتميزت المرحلة الثالثة (1967-1973م) بارتفاع الإنفاق العسكري من 5.5% عام 1962م ليصل إلى 20% من الناتج المحلي عام 1973م.',
+                correct: true,
+                explanation: 'صحيح — مرحلة اقتصاد الحرب (1967-1973م) تميزت بتوجيه الموارد للاستعداد لتحرير الأرض وارتفع الإنفاق العسكري من 5.5% عام 1962م إلى 10% عام 1967م ثم إلى 20% عام 1973م (ص 5).'
+            },
+            {
+                id: 5,
+                type: 'tf',
+                badge: '🔥 موضع سؤال مؤكد',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'وفقاً لقانون قطاع الأعمال العام رقم (203) لسنة 1991م، إذا زادت نسبة بيع أسهم الملكية للقطاع الخاص عن 49% يظل المشروع تابعاً لقطاع الأعمال العام.',
+                correct: false,
+                explanation: 'خطأ — ينص القانون 203 لسنة 1991م على أنه إذا زادت نسبة بيع الأسهم للقطاع الخاص عن 49% خرج المشروع من دائرة قطاع الأعمال العام إلى دائرة القطاع الخاص الخاضع للقانون 159 لسنة 1981م أو القانون 8 لسنة 1997م (ص 5).'
+            },
+            {
+                id: 6,
+                type: 'tf',
+                badge: 'أرقام ومؤشرات',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'عرضت الحكومة المصرية للبيع 290 شركة من شركات القطاع العام منذ يونيو 1991م وحتى مارس 2006م، منها 163 شركة خاسرة أو متعثرة، وقدرت قيمتها بـ 90 مليار جنيه بينما بلغت ديونها 71 مليار جنيه.',
+                correct: true,
+                explanation: 'صحيح — تم عرض 290 شركة منها 163 شركة خاسرة أو طاقاتها معطلة وثمنها 90 مليار جنيه وهي مدينة بـ 71 مليار جنيه (منها 20 مليار ديون بنوك مستحقة) (ص 5).'
+            },
+            {
+                id: 7,
+                type: 'tf',
+                badge: 'نسب وأرقام',
+                badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+                question: 'خرج من تحت مظلة قانون قطاع الأعمال العام حتى يونيو 2006م نحو 154 شركة تمثل 48.9% من إجمالي شركات قطاع الأعمال العام البالغة 315 شركة.',
+                correct: true,
+                explanation: 'صحيح — تم خصخصة 154 شركة من أصل 315 شركة تتبع 10 شركات قابضة بنسبة 48.9% (ص 7).'
+            },
+            {
+                id: 8,
+                type: 'tf',
+                badge: 'مقارنات وترتيب',
+                badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                question: 'احتلت الشركة القابضة للصناعات المعدنية المرتبة الأولى في عدد الشركات المباعة بنحو 54 شركة (35.1%)، بينما جاءت القابضة للأدوية والكيماويات في المرتبة الأخيرة بنسبة 1.2% (شركتان فقط).',
+                correct: true,
+                explanation: 'صحيح — الجدول رقم (1) ص 8: المعدنية 54 شركة (35.1%) في المركز الأول، والأدوية والكيماويات شركتان فقط (1.2%) في المرتبة الأخيرة.'
+            },
+            {
+                id: 9,
+                type: 'tf',
+                badge: 'مراحل الحصيلة',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'شهدت الفترة من 2001/2000م وحتى 2004/2003م طفرة قوية في برنامج الخصخصة المصري، بينما شهدت الفترة 2005/2004م وحتى 2006/2005م تباطؤاً شديداً.',
+                correct: false,
+                explanation: 'خطأ — العكس هو الصحيح: الفترة (2000/2001 - 2003/2004) شهدت تباطؤاً (22 شركة بـ 3.5 مليار جنيه)، بينما شهدت الفترة (2004/2005 - 2005/2006) طفرة قوية ببيع 37 شركة بحصيلة 21.3 مليار جنيه تمثل 52.8% من إيرادات البرنامج (ص 9).'
+            },
+            {
+                id: 10,
+                type: 'tf',
+                badge: 'أساليب البيع',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'يأتي أسلوب البيع لاتحاد العاملين المساهمين في المرتبة الأولى من حيث عدد الشركات المباعة (33 شركة بنسبة 21.5%)، يليه أسلوب التصفية في المرتبة الثانية (32 شركة بنسبة 20.8%).',
+                correct: true,
+                explanation: 'صحيح — أسلوب اتحاد العاملين 33 شركة (21.5%) ثم التصفية 32 شركة (20.8%) ثم المستثمر الرئيسي 25 شركة (16.2%) (جدول 3 ص 9-10).'
+            },
+            {
+                id: 11,
+                type: 'tf',
+                badge: 'أساليب البيع',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'توقف أسلوب التصفية وبيع الأصول في برنامج الخصخصة المصري منذ عام 2003م، كما توقف بيع حصص الأقلية منذ عام 1998م باستثناء شريحة من الشركة الشرقية للدخان في يوليو 2005م.',
+                correct: true,
+                explanation: 'صحيح — توقف أسلوب التصفية وبيع الأصول منذ 2003م، كما توقف بيع حصص الأقلية بعد 1998م باستثناء الشرقية للدخان في 2005م (ص 10).'
+            },
+            {
+                id: 12,
+                type: 'tf',
+                badge: 'الترتيب القطاعي',
+                badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                question: 'استحوذ القطاع الصناعي على المرتبة الأولى بين القطاعات المباعة بنحو 99 شركة تمثل 64.3% من إجمالي الشركات المباعة، وجاءت صناعة مواد البناء والحراريات في المرتبة الأولى صناعياً (29 شركة بنسبة 29.3%).',
+                correct: true,
+                explanation: 'صحيح — القطاع الصناعي هو الأول بـ 99 شركة (64.3%)، وداخله تصدرت مواد البناء والحراريات بـ 29 شركة (29.3%) تليها الغذائية 25 شركة (25.2%) (ص 10-11).'
+            },
+            {
+                id: 13,
+                type: 'tf',
+                badge: '📌 نقاط محورية للامتحان',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'استأثرت محافظتا القاهرة والإسكندرية بأكثر من سبعة أعشار عمليات البيع بالجمهورية (112 شركة بنسبة 72.7%)، وجاءت محافظات الوجه البحري في المرتبة الثالثة (27 شركة بنسبة 17.5%) ثم الوجه القبلي رابعاً (11 شركة بنسبة 7.1%).',
+                correct: true,
+                explanation: 'صحيح — القاهرة 78 شركة (50.6%) والإسكندرية 34 شركة (22.2%) بمجموع 112 شركة (72.7%)، يليهما الوجه البحري 27 شركة (17.5%) ثم الوجه القبلي 11 شركة (7.1%) والقناة 4 شركات (2.6%) (الجزء الثاني ص 1-2).'
+            },
+            {
+                id: 14,
+                type: 'tf',
+                badge: '🔥 موضع سؤال امتحان هام',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'تم تقييم الشركات الصناعية السبع محل الدراسة التطبيقية وبيعها بقيمتها السوقية الحقيقية كاملة دون أي نقصان.',
+                correct: false,
+                explanation: 'خطأ — بيعت الشركات السبع بـ 1.15 مليار جنيه (بمتوسط 164.4 مليون للشركة) في حين أن قيمتها الفعلية 3.1 مليار جنيه، أي بيعت بنسبة تتراوح بين 30% إلى 45% (وفي الملخص 35% إلى 45%) فقط من قيمتها الحقيقية (الجزء الثاني ص 4).'
+            },
+            {
+                id: 15,
+                type: 'tf',
+                badge: 'الدراسة التطبيقية - ملكية',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'آلت ملكية 4 شركات من الشركات السبع محل الدراسة التطبيقية (بنسبة 57.1%) لمستثمرين أجانب وعرب، بينما آلت 3 شركات لمستثمرين مصريين.',
+                correct: true,
+                explanation: 'صحيح — آلت ملكية (مصر للزيوت والصابون، سيكلام، ومصر للزجاج) لمستثمرين مصريين، بينما آلت ملكية (شبين الكوم، كابو، الدلتا للطوب الرملي، والعربية للغزل) لمستثمرين عرب وأجانب (الجزء الثاني ص 4).'
+            },
+            {
+                id: 16,
+                type: 'tf',
+                badge: 'الدراسة التطبيقية - إنتاج وأرباح',
+                badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+                question: 'رغم ارتفاع قيمة إنتاج كل من شركة مصر شبين الكوم للغزل والنسيج وشركة الدلتا للطوب الرملي بعد الخصخصة، إلا أنهما حققتا خسائر مالية في عام 2006م بلغت 23 مليون جنيه و5 ملايين جنيه على التوالي.',
+                correct: true,
+                explanation: 'صحيح — خسرت شبين الكوم 23 مليون جنيه (مقابل 9 ملايين ربح قبل الخصخصة)، وخسرت الدلتا للطوب الرملي 5 ملايين جنيه (مقابل 4 ملايين ربح قبل الخصخصة) في عام 2006م (الجزء الثاني ص 5-6).'
+            },
+            {
+                id: 17,
+                type: 'tf',
+                badge: 'الدراسة التطبيقية - عمالة',
+                badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                question: 'انخفض إجمالي عدد العاملين بالشركات السبع محل الدراسة من 22793 عاملاً قبل البيع إلى 18032 عاملاً بعد البيع بنسبة استغناء بلغت 20.9% (4761 عاملاً مسرحاً).',
+                correct: true,
+                explanation: 'صحيح — تم تسريح 4761 عاملاً عبر المعاش المبكر بتعويضات تراوحت بين 45 إلى 55 ألف جنيه للعامل (الجزء الثاني ص 6-7).'
+            },
+            {
+                id: 18,
+                type: 'tf',
+                badge: 'حالة استثنائية هامة',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'سجلت الشركة العربية للغزل والنسيج الارتفاع الوحيد في عدد العاملين بعد خصخصتها بنسبة زيادة بلغت 124.6% (بزيادة 1377 عاملاً).',
+                correct: true,
+                explanation: 'صحيح — ارتفعت العمالة بالعربية للغزل والنسيج من 5600 إلى 6977 عاملاً وهي الشركة الوحيدة التي سجلت زيادة (جدول 8 الجزء الثاني ص 7).'
+            },
+            {
+                id: 19,
+                type: 'tf',
+                badge: 'توزيع العمالة المسرحة',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'استحوذت فئة الإداريين والماليين والتسويق وفئة العمال معاً على 82.9% من جملة العمالة المسرحة بالشركات السبع، بينما لم تتجاوز نسبة عمال الخدمات المسرحين 0.4%.',
+                correct: true,
+                explanation: 'صحيح — جدول 9 الجزء الثاني ص 7-8: الإداريون والماليون (42.9%) + العمال (40.0%) = 82.9%، عمال الإنتاج (16.7%)، والخدمات 20 عاملاً فقط (0.4%).'
+            },
+            {
+                id: 20,
+                type: 'tf',
+                badge: '🔥 موضع سؤال امتحان',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'في مقابل ارتفاع متوسط أجور العمالة بالشركات محل الدراسة بعد الخصخصة، التزمت الشركات بتوفير كافة أوجه الرعاية الصحية والتأمين الاجتماعي للعاملين.',
+                correct: false,
+                explanation: 'خطأ — تنصلت الشركات من توفير الرعاية الصحية والتأمين الاجتماعي للعاملين بسبب ارتفاع تكاليفها، مما دفع العمال للتهديد بالإضراب ودخول صراعات مع المستثمرين (الجزء الثاني ص 9).'
+            },
+            {
+                id: 21,
+                type: 'tf',
+                badge: 'حصة السوق والتصدير',
+                badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+                question: 'ارتفعت حصة السوق الخارجي (التصدير) من إنتاج الشركات السبع بعد الخصخصة من 15.5% عام 1995م إلى 20.7% عام 2006م، بينما انخفضت حصة السوق الداخلي من 84.5% إلى 79.3%.',
+                correct: true,
+                explanation: 'صحيح — ارتفعت قيمة التصدير من 227,712 ألف جنيه (15.5%) إلى 406,297 ألف جنيه (20.7%) عام 2006م (جدول 12 الجزء الثاني ص 9-10).'
+            },
+            {
+                id: 22,
+                type: 'tf',
+                badge: 'مقياس النجاح الحقيقي',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'يقاس النجاح الحقيقي لبرنامج الإصلاح الاقتصادي والخصخصة بمجرد حصر عدد الشركات التي تم بيعها وتوسيع قاعدة الملكية الخاصة.',
+                correct: false,
+                explanation: 'خطأ — لا يقاس النجاح بمجرد حصر الشركات المباعة، بل بتنسيق وتحسين المناخ الكلي، زيادة النمو، تحقيق العدالة الاجتماعية، واستقرار الأسعار والموازين (الجزء الثاني ص 12).'
+            },
+            {
+                id: 23,
+                type: 'tf',
+                badge: 'مساهمة القطاع الخاص',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'ارتفع نصيب القطاع الخاص في الناتج المحلي عام 2002/2001م ليصل إلى 99% في قطاع الزراعة (أعلى نسبة مساهمة)، و21% في قطاع البترول (أقل نسبة مساهمة).',
+                correct: true,
+                explanation: 'صحيح — الزراعة 99% (أعلى)، التجارة 96%، الصناعة 89%، النقل 84%، التشييد 59%، التمويل 33%، البترول 21% (أقل) (الجزء الثاني ص 12).'
+            },
+            {
+                id: 24,
+                type: 'tf',
+                badge: 'المؤشرات الكلية',
+                badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                question: 'انخفض معدل التضخم في مصر من 21.1% عام 1992/91م إلى 2.7% عام 2002/2001م، كما ارتفع عدد المصانع المنتجة في المدن الجديدة من 209 مصانع إلى 2932 مصنعاً.',
+                correct: true,
+                explanation: 'صحيح — وفق جدول المؤشرات الاقتصادية الكلية (13) الجزء الثاني ص 13: التضخم هبط لـ 2.7% والمصانع المنتجة زادت بنسبة 1302%.'
+            },
+            {
+                id: 25,
+                type: 'tf',
+                badge: '🔥 سؤال شبه مؤكد في الامتحان',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'تم توريد النسبة الأكبر من حصيلة بيع الشركات البالغة 40.4 مليار جنيه إلى وزارة المالية بنسبة 47% (19 مليار جنيه)، بينما استُخدمت نسبة 53% في إعادة الهيكلة وسداد ديون البنوك وتعويضات المعاش المبكر.',
+                correct: true,
+                explanation: 'صحيح — 19 مليار (47%) للمالية، 12.5 مليار (31.1%) مديونيات بنوك، 7.3 مليار (18%) معاش مبكر، و1.6 مليار (4%) إصلاح فني وإداري (الجزء الثاني ص 14).'
+            },
+
+            // SECTION 2: MULTIPLE CHOICE (25 Questions)
+            {
+                id: 26,
+                type: 'mcq',
+                badge: '⭐ تدريب عام (4) بالملف',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'أدت سياسة الخصخصة إلى:',
+                options: [
+                    'تغير أيديولوجية النظام الاقتصادي والاجتماعي بالدولة.',
+                    'النمو الاقتصادي ومعالجة الديون.',
+                    'كل ما سبق.',
+                    'لا شيء مما سبق.'
+                ],
+                correct: 2,
+                explanation: 'الإجابة الأدق: (ج) كل ما سبق — كما ورد نصاً في التدريب العام رقم 4 بالكتاب (الجزء الثاني ص 11).'
+            },
+            {
+                id: 27,
+                type: 'mcq',
+                badge: '⭐ تدريب عام (4) بالملف',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'معظم الاستثمارات الأجنبية بعد الخصخصة كانت في دائرة:',
+                options: [
+                    'إنشاء مصانع ومرافق جديدة.',
+                    'شراء استثمارات قائمة بالفعل.',
+                    'كل ما سبق.',
+                    'لا شيء مما سبق.'
+                ],
+                correct: 1,
+                explanation: 'الإجابة الأدق: (ب) شراء استثمارات قائمة بالفعل — كما ورد نصاً في التدريب العام رقم 4 بالملف (الجزء الثاني ص 11).'
+            },
+            {
+                id: 28,
+                type: 'mcq',
+                badge: '⭐ تدريب عام (4) بالملف',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'تتضمن سياسة الخصخصة عدداً من العناصر:',
+                options: [
+                    'تغيير أسلوب تشغيل وإدارة المشروعات العامة.',
+                    'نقل ملكية القطاع العام للقطاع الخاص.',
+                    'إعادة هيكلة الاقتصاد الوطني لنمط الاقتصاد الحر.',
+                    'كل ما سبق.'
+                ],
+                correct: 3,
+                explanation: 'الإجابة الأدق: (د) كل ما سبق — تشمل تغيير إدارة المشروعات، نقل الملكية، زيادة دور القطاع الخاص، وإعادة هيكلة الاقتصاد (الجزء الثاني ص 11).'
+            },
+            {
+                id: 29,
+                type: 'mcq',
+                badge: '⭐ تدريب عام (4) بالملف',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'عُرفت الخصخصة في مؤتمر الأمم المتحدة للتجارة والتنمية (الأونكتاد) على أنها:',
+                options: [
+                    'جزء من عمليات الإصلاحات الهيكلية في البنية الاقتصادية.',
+                    'التخلي عن الأنشطة التي يمكن للقطاع الخاص القيام بها.',
+                    'كل ما سبق.',
+                    'لا شيء مما سبق.'
+                ],
+                correct: 2,
+                explanation: 'الإجابة الأدق: (ج) كل ما سبق — تعريف الأونكتاد يتضمن التخلي عن الأنشطة وإعادة تحديد دور الدولة ضمن الإصلاح الهيكلي (الفصل الأول ص 3 والجزء الثاني ص 11).'
+            },
+            {
+                id: 30,
+                type: 'mcq',
+                badge: 'مقدمة الكتاب - أسباب الخصخصة',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'برزت الخصخصة كأحد الحلول المطروحة لعلاج الخلل في الهياكل الاقتصادية نتيجة لـ:',
+                options: [
+                    'الركود الاقتصادي العالمي وتفشي التضخم الركودي (Stagflation).',
+                    'بروز ظاهرة العجز في الموازنات المالية وتراكم الديون الخارجية.',
+                    'تضافر الدول المتقدمة ووضع مواصفات الجودة (ISO) كشروط للتصدير.',
+                    'كل ما سبق (وتُعد علاج الخلل الهيكلي ورفع الكفاءة جوهرها).'
+                ],
+                correct: 3,
+                explanation: 'الإجابة الأدق: (د) كل ما سبق — تجمعت الأسباب الاقتصادية العالمية والمحلية والشروط الدولية لتبرز الخصخصة كحل للهياكل المعتلة (ص 2).'
+            },
+            {
+                id: 31,
+                type: 'mcq',
+                badge: 'مفاهيم الخصخصة',
+                badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+                question: 'المفهوم الذي يرى أن الخصخصة "علاقة تعاقدية بين الدولة والقطاع الخاص بإدخال الخبرة الإدارية في أنشطة المنشآت العامة دون نقل الملكية" يأخذ شكل:',
+                options: [
+                    'عقود الإدارة فقط.',
+                    'عقود الإيجار والامتياز فقط.',
+                    'بيع الأسهم في البورصة.',
+                    'عقود الإدارة والإيجار والامتياز معاً.'
+                ],
+                correct: 3,
+                explanation: 'الإجابة الأدق: (د) عقود الإدارة والإيجار والامتياز معاً — وهو المفهوم الثاني من المفاهيم الأربعة للخصخصة (الفصل الأول ص 2).'
+            },
+            {
+                id: 32,
+                type: 'mcq',
+                badge: 'مراحل الاقتصاد المصري',
+                badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                question: 'المرحلة التي شهدت إصدار القانون رقم (43) لسنة 1974م الخاص باستثمار رأس المال العربي والأجنبي والمناطق الحرة وتحقيق معدل نمو 9.8% ارتبط بالقطاعات الخدمية هي:',
+                options: [
+                    'المرحلة الثانية (1960 - 1966م).',
+                    'المرحلة الثالثة (1967 - 1973م).',
+                    'المرحلة الرابعة: الانفتاح الاقتصادي (1974 - 1982م).',
+                    'المرحلة الخامسة (1983 - 1990م).'
+                ],
+                correct: 2,
+                explanation: 'الإجابة الأدق: (ج) المرحلة الرابعة (1974 - 1982م) — مرحلة الانفتاح الاقتصادي وإصدار القانون 43 لسنة 1974م (ص 5).'
+            },
+            {
+                id: 33,
+                type: 'mcq',
+                badge: '🔥 موضع سؤال مؤكد - قانون 203',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'عند بيع أكثر من 49% من أسهم شركة قطاع أعمال عام للقطاع الخاص بموجب القانون 203 لسنة 1991م، فإن الشركة تنتقل للخضوع إلى:',
+                options: [
+                    'قانون الشركات المساهمة رقم (159) لسنة 1981م.',
+                    'قانون ضمانات وحوافز الاستثمار رقم (8) لسنة 1997م.',
+                    'أي من القانونين (159 لسنة 1981م أو 8 لسنة 1997م) كشركة قطاع خاص.',
+                    'قانون الهيئات العامة.'
+                ],
+                correct: 2,
+                explanation: 'الإجابة الأدق: (ج) أي من القانونين (159 لسنة 1981م أو 8 لسنة 1997م) بحسب طبيعة تنظيم الشركة المساهمة الخاصة (ص 5).'
+            },
+            {
+                id: 34,
+                type: 'mcq',
+                badge: 'متطلبات الخصخصة',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'يقترن تحرير النظامين النقدي والمالي لنجاح الخصخصة بأربع دعامات أساسية تشمل:',
+                options: [
+                    'تحرير سعر الفائدة وزيادة استقلالية البنك المركزي.',
+                    'تطوير سوق الأوراق المالية وإصلاح النظام الضريبي.',
+                    'تطبيق ضريبة المبيعات وترشيد الدعم فقط.',
+                    '(أ) و (ب) معاً.'
+                ],
+                correct: 3,
+                explanation: 'الإجابة الأدق: (د) (أ) و (ب) معاً — الدعامات الأربع هي: تحرير سعر الفائدة، استقلالية البنك المركزي، تطوير سوق المال، وإصلاح النظام الضريبي (ص 6).'
+            },
+            {
+                id: 35,
+                type: 'mcq',
+                badge: '🔥 هام جداً - معايير اختيار الأسلوب',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'إذا كانت الشركة "قليلة الربحية أو خاسرة ولكنها تمتلك إمكانات وقدرات واعدة"، فإن الأسلوب الأنسب لخصخصتها هو:',
+                options: [
+                    'الطرح للبيع من خلال بورصة الأوراق المالية.',
+                    'البيع من خلال مستثمر رئيسي.',
+                    'البيع لاتحاد العاملين المساهمين.',
+                    'التصفية وبيع الأصول في مزاد علني.'
+                ],
+                correct: 1,
+                explanation: 'الإجابة الأدق: (ب) البيع من خلال مستثمر رئيسي — وفق معايير الاختيار الرسمية في الفصل الثالث ص 7.'
+            },
+            {
+                id: 36,
+                type: 'mcq',
+                badge: 'معايير اختيار الأسلوب',
+                badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+                question: 'الشركة التي تُدرج في خطة الخصخصة للطرح للبيع من خلال بورصة الأوراق المالية هي الشركة التي:',
+                options: [
+                    'تحقق أرباحاً صافية قابلة للتوزيع ومستقرة خلال الأعوام الثلاثة الأخيرة.',
+                    'تكون صغيرة الحجم ويغلب عليها عنصر العمل.',
+                    'تؤكد الدراسات عدم جدوى إصلاحها.',
+                    'تعاني من خسائر متراكمة دون إمكانات واعدة.'
+                ],
+                correct: 0,
+                explanation: 'الإجابة الأدق: (أ) تحقيق أرباح صافية قابلة للتوزيع ومستقرة خلال السنوات الثلاث الأخيرة (ص 7).'
+            },
+            {
+                id: 37,
+                type: 'mcq',
+                badge: 'إجمالي حصيلة البيع',
+                badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                question: 'استحوذت مرحلة الطفرة القوية (2005/2004م - 2006/2005م) على أكثر من نصف إجمالي إيرادات برنامج الخصخصة المصري حتى 2006م، حيث بلغت حصيلتها:',
+                options: [
+                    '4.7 مليار جنيه بنسبة 11.6%.',
+                    '3.5 مليار جنيه بنسبة 8.7%.',
+                    '21.3 مليار جنيه بنسبة 52.8% من إجمالي الإيرادات.',
+                    '40.4 مليار جنيه بنسبة 100%.'
+                ],
+                correct: 2,
+                explanation: 'الإجابة الأدق: (ج) 21.3 مليار جنيه بنسبة 52.8% من إجمالي إيرادات برنامج الخصخصة (ص 9).'
+            },
+            {
+                id: 38,
+                type: 'mcq',
+                badge: 'أساليب البيع',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'الترتيب التنازلي الصحيح لأهم أساليب بيع الشركات في مصر (1991-2006م) من حيث عدد الشركات هو:',
+                options: [
+                    'مستثمر رئيسي، ثم البورصة، ثم التصفية، ثم اتحاد العاملين.',
+                    'اتحاد العاملين المساهمين (33)، ثم التصفية (32)، ثم مستثمر رئيسي (25)، ثم بيع الأصول (21).',
+                    'التصفية (32)، ثم بيع الأصول (21)، ثم الإيجار (15)، ثم اتحاد العاملين (33).',
+                    'البورصة (15)، ثم الإيجار (15)، ثم مستثمر رئيسي (25)، ثم التصفية (32).'
+                ],
+                correct: 1,
+                explanation: 'الإجابة الأدق: (ب) اتحاد العاملين (33) -> التصفية (32) -> مستثمر رئيسي (25) -> بيع الأصول (21) (جدول 3 ص 9).'
+            },
+            {
+                id: 39,
+                type: 'mcq',
+                badge: 'الترتيب القطاعي',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'الترتيب التنازلي الصحيح للقطاعات الاقتصادية الأربعة من حيث عدد الشركات المباعة حتى عام 2006م هو:',
+                options: [
+                    'الصناعي (64.3%)، التجاري (19.5%)، الخدمات (9.7%)، الزراعة (7.1%).',
+                    'التجاري، الصناعي، الزراعة، الخدمات.',
+                    'الصناعي، الخدمات، التجاري، الزراعة.',
+                    'الصناعي (29.3%)، التجاري (25.2%)، الخدمات (23.2%)، الزراعة (8.1%).'
+                ],
+                correct: 0,
+                explanation: 'الإجابة الأدق: (أ) الصناعي 99 شركة (64.3%)، التجاري 30 شركة (19.5%)، الخدمات 15 شركة (9.7%)، والزراعي 11 شركة (7.1%) (ص 10-11).'
+            },
+            {
+                id: 40,
+                type: 'mcq',
+                badge: 'الترتيب داخل القطاع الصناعي',
+                badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+                question: 'جاء ترتيب الأنشطة داخل القطاع الصناعي (99 شركة) من حيث عدد الشركات المباعة كالتالي:',
+                options: [
+                    'الغذائية، الكيماوية، مواد البناء، الغزل والنسيج، المعدنية.',
+                    'مواد البناء والحراريات (29)، الغذائية (25)، الكيماوية (23)، الغزل والنسيج والهندسية (8 لكل منهما)، المعدنية (6).',
+                    'الكيماوية (23)، مواد البناء (29)، الغذائية (25)، المعدنية (6)، الغزل والنسيج (8).',
+                    'الغزل والنسيج (54)، الغذائية (24)، الكيماوية (21)، التشييد (14).'
+                ],
+                correct: 1,
+                explanation: 'الإجابة الأدق: (ب) مواد البناء (29) -> الغذائية (25) -> الكيماوية (23) -> الغزل والنسيج والهندسية (8) -> المعدنية (6) (ص 10-11).'
+            },
+            {
+                id: 41,
+                type: 'mcq',
+                badge: '📌 نقاط محورية - التوزيع الجغرافي',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'الترتيب الجغرافي الصحيح للمحافظات والأقاليم المصرية حسب عدد الشركات المباعة (1991-2006م) هو:',
+                options: [
+                    'القاهرة (78)، الإسكندرية (34)، الوجه البحري (27)، الوجه القبلي (11)، القناة (4).',
+                    'القاهرة (78)، الوجه البحري (27)، الإسكندرية (34)، الوجه القبلي (11)، القناة (4).',
+                    'الإسكندرية (34)، القاهرة (78)، الوجه القبلي (11)، الوجه البحري (27).',
+                    'القاهرة، القناة، الإسكندرية، الوجه البحري، الوجه القبلي.'
+                ],
+                correct: 0,
+                explanation: 'الإجابة الأدق: (أ) القاهرة أولاً (78 شركة)، الإسكندرية ثانياً (34 شركة)، الوجه البحري ثالثاً (27 شركة)، الوجه القبلي رابعاً (11 شركة)، والقناة خامساً (4 شركات) (جدول 5 الجزء الثاني ص 1).'
+            },
+            {
+                id: 42,
+                type: 'mcq',
+                badge: '📌 نقاط محورية - الوجه البحري',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'داخل إقليم الوجه البحري (27 شركة مباعة)، استأثرت محافظتان بأقل قليلاً من نصف عمليات البيع (13 شركة بنسبة 48.2%) هما:',
+                options: [
+                    'المنوفية والدقهلية.',
+                    'الشرقية وكفر الشيخ.',
+                    'الغربية والبحيرة.',
+                    'دمياط والقليوبية.'
+                ],
+                correct: 2,
+                explanation: 'الإجابة الأدق: (ج) الغربية والبحيرة — استأثرتا بـ 13 شركة تمثل 48.2% من شركات الوجه البحري (الجزء الثاني ص 2).'
+            },
+            {
+                id: 43,
+                type: 'mcq',
+                badge: '🔥 موضع سؤال امتحان - آلية التقييم',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'الجهة التي تقوم باعتماد تقييمات الشركات التابعة قبل بيعها باعتبارها "بيت الخبرة المالي الوطني" هي:',
+                options: [
+                    'المكتب الفني لوزير قطاع الأعمال العام.',
+                    'الجهاز المركزي للمحاسبات.',
+                    'الشركات القابضة.',
+                    'الاستشاريون الدوليون.'
+                ],
+                correct: 1,
+                explanation: 'الإجابة الأدق: (ب) الجهاز المركزي للمحاسبات — باعتباره بيت الخبرة المالي الوطني المعتمد (الجزء الثاني ص 4).'
+            },
+            {
+                id: 44,
+                type: 'mcq',
+                badge: 'الدراسة التطبيقية - أسلوب البيع',
+                badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                question: 'بلغ عدد الشركات الصناعية التي تم بيعها لمستثمر رئيسي ضمن الشركات السبع محل الدراسة التطبيقية:',
+                options: [
+                    '3 شركات بنسبة 42.8%.',
+                    '4 شركات بنسبة 57.1%.',
+                    '5 شركات بنسبة 71.4% من إجمالي الشركات السبع.',
+                    'جميع الشركات السبع بنسبة 100%.'
+                ],
+                correct: 2,
+                explanation: 'الإجابة الأدق: (ج) 5 شركات تمثل 71.4% من شركات الدراسة التطبيقية (جدول 6 الجزء الثاني ص 3-4).'
+            },
+            {
+                id: 45,
+                type: 'mcq',
+                badge: 'الدراسة التطبيقية - الإنتاج',
+                badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+                question: 'احتلت المرتبة الأولى من حيث قيمة الإنتاج قبل وبعد الخصخصة بين الشركات السبع محل الدراسة:',
+                options: [
+                    'شركة مصر شبين الكوم للغزل والنسيج.',
+                    'الشركة العربية للغزل والنسيج (ارتفع إنتاجها إلى 751,180 ألف جنيه بنسبة 139.5%).',
+                    'شركة مصر لصناعة الزجاج.',
+                    'شركة الدلتا للطوب الرملي (سجلت أعلى نسبة زيادة 155.4% لكنها السابعة في القيمة).'
+                ],
+                correct: 1,
+                explanation: 'الإجابة الأدق: (ب) الشركة العربية للغزل والنسيج — بلغت القيمة 538,325 ألف جنيه قبل و 751,180 ألف بعد الخصخصة (جدول 7 الجزء الثاني ص 4-5).'
+            },
+            {
+                id: 46,
+                type: 'mcq',
+                badge: 'الدراسة التطبيقية - العمالة',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'الشركات الثلاث التي شهدت أعلى نسب استغناء عن العاملين (أكثر من سبعة أعشار العمالة) في الدراسة التطبيقية هي:',
+                options: [
+                    'الدلتا للطوب الرملي (82.6%)، مصر للزيوت والصابون (81.2%)، مصر لصناعة الزجاج (70.4%).',
+                    'سيكلام (45.8%)، النصر للملابس (18.8%)، شبين الكوم (16%).',
+                    'العربية للغزل والنسيج، شبين الكوم، كابو.',
+                    'مصر للزيوت والصابون، سيكلام، العربية للغزل والنسيج.'
+                ],
+                correct: 0,
+                explanation: 'الإجابة الأدق: (أ) الدلتا للطوب الرملي 82.6%، مصر للزيوت 81.2%، ومصر للزجاج 70.4% (جدول 8 الجزء الثاني ص 6-7).'
+            },
+            {
+                id: 47,
+                type: 'mcq',
+                badge: 'الدراسة التطبيقية - الأجور',
+                badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                question: 'تراوحت نسبة الزيادة في متوسط الأجور بعد الخصخصة لفئتي "عمال الإنتاج والعمال" ما بين:',
+                options: [
+                    '150% إلى 163.2%.',
+                    '200% إلى 247.8% من قيمة الأجور قبل الخصخصة.',
+                    '35% إلى 45%.',
+                    '80% إلى 90%.'
+                ],
+                correct: 1,
+                explanation: 'الإجابة الأدق: (ب) بين 200% للعمال و 247.8% لعمال الإنتاج (جدول 10 الجزء الثاني ص 8).'
+            },
+            {
+                id: 48,
+                type: 'mcq',
+                badge: 'الدراسة التطبيقية - السوق',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'الشركتان اللتان انخفضت لديهما حصة السوق الداخلي إلى 60% وارتفعت حصة التصدير الخارجي إلى 40% بعد الخصخصة بفضل استحداث إدارات الجودة والتسويق هما:',
+                options: [
+                    'مصر شبين الكوم والدلتا للطوب الرملي.',
+                    'مصر لصناعة الزجاج وسيكلام (لبنيتا).',
+                    'مصر للزيوت والصابون والنصر للملابس (كابو).',
+                    'العربية للغزل والنسيج ومصر شبين الكوم.'
+                ],
+                correct: 1,
+                explanation: 'الإجابة الأدق: (ب) مصر لصناعة الزجاج وسيكلام (لبنيتا) — ارتفع التصدير فيهما من 20% و 0% على التوالي إلى 40% (جدول 12 الجزء الثاني ص 10).'
+            },
+            {
+                id: 49,
+                type: 'mcq',
+                badge: 'الآثار الإيجابية - المؤشرات الكلية',
+                badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+                question: 'من المؤشرات الاقتصادية الإيجابية لبرنامج الخصخصة بين عامي 1992/91م و2002/2001م:',
+                options: [
+                    'ارتفاع معدل النمو الحقيقي للناتج المحلي من 1.9% إلى 3.1%.',
+                    'انخفاض عجز الموازنة كنسبة من الناتج المحلي من 5.2% إلى 3.0%.',
+                    'زيادة مساهمة القطاع الخاص في الناتج المحلي من 61.2% إلى 76.3%.',
+                    'كل ما سبق.'
+                ],
+                correct: 3,
+                explanation: 'الإجابة الأدق: (د) كل ما سبق — وفق جدول المؤشرات الاقتصادية الكلية رقم 13 (الجزء الثاني ص 13).'
+            },
+            {
+                id: 50,
+                type: 'mcq',
+                badge: '🔥 سؤال شبه مؤكد - توزيع الحصيلة',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'التوزيع الدقيق لحصيلة بيع الشركات البالغة 40.4 مليار جنيه (154 شركة حتى 2006م) هو:',
+                options: [
+                    '19 مليار لوزارة المالية (47%)، 12.5 مليار لسداد ديون البنوك (31.1%)، 7.3 مليار للمعاش المبكر (18%)، 1.6 مليار للإصلاح الفني والإداري (4%).',
+                    '12.5 مليار لوزارة المالية، 19 مليار للبنوك، 7.3 مليار للإصلاح الإداري، 1.6 مليار للمعاش المبكر.',
+                    '21.3 مليار لوزارة المالية، 10 مليارات للبنوك، 9.1 مليار للمعاش المبكر.',
+                    '40.4 مليار بالكامل لوزارة المالية لسداد عجز الموازنة.'
+                ],
+                correct: 0,
+                explanation: 'الإجابة الأدق: (أ) 19 مليار (47%) للمالية + 12.5 مليار (31.1%) للبنوك + 7.3 مليار (18%) المعاش المبكر + 1.6 مليار (4%) إصلاح فني وإداري (الجزء الثاني ص 14).'
+            },
+
+            // SECTION 3: ESSAY & TEXTBOOK EXERCISES (15 Questions)
+            {
+                id: 51,
+                type: 'essay',
+                badge: '⭐ تدريبات (1) بالكتاب - س1',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'اشرح مفهوم الخصخصة، موضحاً المفاهيم الأربعة المميزة لها وموقف الدولة من المسؤولية الاجتماعية؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+1. الجذور التاريخية: فكرة نمط الإنتاج الخاص ترجع للعلامة ابن خلدون (1377م)، وتطبيقها الحديث بدأ في بريطانيا بعهد مارجريت تاتشر (1979-1982م).
+2. المفاهيم الأربعة للخصخصة:
+ - المفهوم الأول: تحرير النشاط الاقتصادي والمالي وإعطاء القطاع الخاص مجالاً أوسع للحد من احتكار الدولة.
+ - المفهوم الثاني: علاقة تعاقدية بين الدولة والقطاع الخاص لإدخال الخبرة الإدارية (عقود إدارة، إيجار، امتياز).
+ - المفهوم الثالث: تحويل الملكية (إما كلياً ببيع المشروع بالكامل، أو جزئياً ببيع أسهم).
+ - المفهوم الرابع (ألان والترز): إعادة حقوق الملكية من الدولة إلى فرد أو أسرة أو مجتمع.
+3. الخلاصة وموقف الدولة: الخصخصة وسيلة لرفع الكفاءة وليست هدفاً في حد ذاتها، ولا تعني إلغاء وظيفة الدولة الاقتصادية ومسؤولياتها الاجتماعية. (الملف 1، ص 2-3).`
+            },
+            {
+                id: 52,
+                type: 'essay',
+                badge: '⭐ تدريبات (1) بالكتاب - س2',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'تكلم عن العناصر الأساسية لسياسة الخصخصة؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+تتضمن سياسة الخصخصة 4 عناصر أساسية:
+1. تغيير أسلوب تشغيل وإدارة المشروعات العامة: التوافق مع مبادئ القطاع الخاص (ربح، إنتاجية، أسعار اقتصادية، نظام حوافز).
+2. نقل ملكية بعض وحدات القطاع العام للقطاع الخاص: ببيع الشركات لمستثمر رئيس، أو طرح أسهم بالبورصة، أو بيع لاتحاد العاملين المساهمين.
+3. زيادة الدور الموكل للقطاع الخاص في خطط التنمية: استحواذ تدريجي على النصيب الأكبر من الاستثمار والعمالة والناتج المحالي.
+4. إعادة هيكلة الاقتصاد الوطني: ليترابط مع نمط الاقتصاد الحر وآليات السوق. (الملف 1، ص 3-4).`
+            },
+            {
+                id: 53,
+                type: 'essay',
+                badge: '⭐ تدريب (2) بالكتاب - س1',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'تكلم عن العوامل الواجب توافرها لتطبيق سياسة الخصخصة في مصر، والخطوات التي نفذتها الحكومة للتمهيد لها؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+أولاً: العوامل 4 الواجب توافرها:
+1. تحرير الأسعار وسوق العمل: إطلاق قوى العرض والطلب وإلغاء التسعيرة وتقليص الدعم.
+2. زيادة دعم المنافسة في السوق: توفير فرص متكافئة وسن تشريعات لمواجهة الاحتكار.
+3. تحرير النظامين النقدي والمالي: (تحرير الفائدة، استقلالية البنك المركزي، تطوير بورصة الأوراق المالية، إصلاح الضرائب).
+4. تحرير القطاع الخارجي: الاعتماد على تعريفة جمركية متدرجة.
+
+ثانياً: الخطوات التي قامت بها الحكومة المصية:
+- توحيد سعر صرف الجنيه واستقراره (قانون 230 لسنة 1989).
+- تحرير معدلات الفائدة تدريجياً لتقليل التضخم.
+- استصدار قوانين حديثة لسوق المال والمصارف وتطبيق ضريبة المبيعات وترشيد الدعم.
+- وضع برنامج بالخبراء لعملية التخصيص وإعادة الهيكلة (1995-1996م). (الملف 1، ص 6).`
+            },
+            {
+                id: 54,
+                type: 'essay',
+                badge: '⭐ تدريب (3) بالكتاب - س1',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'ما هي الأساليب المتبعة في بيع الشركات للخصخصة في مصر مع ذكر الأرقام والنسب والترتيب؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+تم خصخصة 154 شركة حسب الأساليب الثمانية التالية (1991-2006م):
+1. اتحاد العاملين المساهمين (المرتبة الأولى): 33 شركة (21.5%).
+2. التصفية (المرتبة الثانية): 32 شركة (20.8%) - (توقف هذا الأسلوب منذ 2003م).
+3. مستثمر رئيسي (المرتبة الثالثة): 25 شركة (16.2%).
+4. بيع أصول: 21 شركة (13.6%) - (توقف منذ 2003م).
+5. بيع أغلبية أو كامل الأسهم بالبورصة: 15 شركة (9.7%).
+6. إيجار طويل الأجل: 15 شركة (9.7%).
+7. شركات بيع منها 40% بالبورصة: 8 شركات (5.3%).
+8. شركات بيع منها شرائح أقل من 50%: 5 شركات (3.2%) - (توقف منذ 1998 باستثناء الشرقية للدخان 2005). (الملف 1 ص 9 والملف 2 ص 2).`
+            },
+            {
+                id: 55,
+                type: 'essay',
+                badge: '⭐ تدريب (3) بالكتاب - س2',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'تكلم عن التوزيع الجغرافي للشركات والمصانع التي تم خصخصتها في مصر (1991 - 2006م)؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+1. القاهرة والإسكندرية (المركز الأول والثاني): استأثرتا بأكثر من سبعة أعشار عمليات البيع (112 شركة بنسبة 72.7%)؛ القاهرة 78 شركة (50.6%) والإسكندرية 34 شركة (22.2%) لتركز الصناعات الغذائية والأنشطة التجارية والخدمية.
+2. محافظات الوجه البحري (المرتبة الثالثة): 27 شركة (17.5%)، غالبيتها صناعية (23 شركة)، واستأثرت الغربية والبحيرة بـ 13 شركة (48.2% من الوجه البحري).
+3. محافظات الوجه القبلي (المرتبة الرابعة): 11 شركة (7.1%)، منها 10 شركات صناعية (90.9%).
+4. محافظات القناة: 4 شركات (2.6%). (الملف 2، ص 1-2).`
+            },
+            {
+                id: 56,
+                type: 'essay',
+                badge: '🔥 موضع سؤال مؤكد',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'اشرح أحكام قانون قطاع الأعمال العام رقم (203) لسنة 1991م وأثره على تحول ملكية الشركات؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+1. استحدث القانون رقم 203 لسنة 1991م نظام الشركات القابضة والشركات التابعة لإعادة تنظيم قطاع الأعمال العام.
+2. أعطى الجمعيات العمومية حق بيع أسهم الملكية حتى 49%.
+3. القاعدة الفاصلة: إذا زادت نسبة بيع الأسهم للقطاع الخاص عن 49%، يخرج المشروع نهائياً من مظلة قطاع الأعمال العام ويتحول للقطاع الخاص الخاضع للقانون 159 لسنة 1981م (الشركات المساهمة) أو القانون 8 لسنة 1997م (ضمانات وحوافز الاستثمار).
+4. تتولى وزارة قطاع الأعمال الإشراف ووضع السياسات والجداول الزمنية للخصخصة. (الملف 1، ص 5).`
+            },
+            {
+                id: 57,
+                type: 'essay',
+                badge: '🔥 هام جداً في المقالي والاختيار',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'ما هي معايير اختيار أسلوب خصخصة الشركات في مصر؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+يتم اختيار أسلوب البيع بعد دراسات مالية وفنية ودراسة العروض بالاتفاق مع رؤساء الشركات القابضة وفق 4 معايير:
+1. الشركة الرابحة والمستقرة: إذا حققت أرباحاً صافية قابلة للتوزيع ومستقرة في آخر 3 سنوات -> تُطرح بالبورصة.
+2. الشركة قليلة الربحية/الخاسرة الممتلكة لإمكانيات واعدة: -> تُباع لمستثمر رئيسي.
+3. الشركة صغيرة الحجم ذات كثافة عمالية: -> تُعرض على اتحاد العاملين المساهمين.
+4. الشركة الخاسرة ميؤوس الإصلاح: -> تُعرض للتصفية على الجمعية العامة غير العادية وتُباع أصولها لمزاد علني بعد تعويض جزء من العمالة. (الملف 1، ص 7).`
+            },
+            {
+                id: 58,
+                type: 'essay',
+                badge: '🔥 موضع سؤال امتحان هام',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'اشرح آلية تقييم الشركات الصناعية محل الدراسة التطبيقية، مبيناً ظاهرة البيع بأقل من القيمة الحقيقية بالأرقام؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+1. الآلية الرسمية: تسند الشركات القابضة التقييم لاستشاريين محليين ودوليين، ويكون المكتب الفني لوزير قطاع الأعمال المنسق، ويقوم خبراء الشركات التابعة بتقييم مماثل، ثم يُعتمد التقييم من "الجهاز المركزي للمحاسبات" بصفته بيت الخبرة المالي الوطني.
+2. الخلل في التقييم والبيع بأقل من القيمة الفعلية: أثبتت الدراسة الميدانية أن جميع الشركات محل الدراسة (7 شركات) تم بيعها بنسب تتراوح بين 30% إلى 45% (وفي ملخص النتيجة 35% إلى 45%) فقط من قيمتها الحقيقية.
+- إجمالي قيمة البيع المسجلة: 1.15 مليار جنيه (بمتوسط 164.4 مليون جنيه/شركة).
+- القيمة الفعلية الحقيقية للأصول: تقدر بنحو 3.1 مليار جنيه مصري. (الملف 2، ص 4).`
+            },
+            {
+                id: 59,
+                type: 'essay',
+                badge: '📌 نقطة محورية',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'وضح التطور التاريخي لمراحل الاقتصاد المصري منذ عام 1952م وحتى عام 2006م (الست مراحل باختصار وأهم خصائص كل مرحلة)؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+1. المرحلة الأولى (1952-1959م): إعادة توزيع الموارد، قانون الإصلاح الزراعي 1952، تأسيس شركة الحديد والصلب 1954، وتأميم قناة السويس 1956.
+2. المرحلة الثانية (1960-1966م): التخطيط المركزي الشامل والتطبيق الاشتراكي (أول خطة خمسية 1960/1965 بنمو 38%).
+3. المرحلة الثالثة (1967-1973م): اقتصاد الحرب وزيادة الإنفاق العسكري من 5.5% عام 1962 إلى 20% عام 1973م.
+4. المرحلة الرابعة (1974-1982م): الانفتاح الاقتصادي وقانون 43 لسنة 1974، ونمو مرتفع 9.8% خدمي.
+5. المرحلة الخامسة (1983-1990م): العودة للتخطيط الشامل مع تفاقم عجز الموازنة والعجز التجاري (6272 مليون دولار عام 1988).
+6. المرحلة السادسة (1991-2006م): الإصلاح الاقتصادي والخصخصة بالتعاون مع صندوق النقد الدولي لتجاوز ديون القطاع العام وعجز الموازنة. (الملف 1، ص 4-5).`
+            },
+            {
+                id: 60,
+                type: 'essay',
+                badge: '📌 دراسة تطبيقية',
+                badgeStyle: 'bg-purple-500/20 text-purple-300 border-purple-500/40',
+                question: 'قارن بين أثر الخصخصة على كل من "حجم العمالة" و"متوسط الأجور والرعاية الاجتماعية" في الشركات الصناعية السبع محل الدراسة؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+1. حجم العمالة المسرحة: انخفضت العمالة من 22,793 إلى 18,032 عاملاً بنسبة استغناء 20.9% (4,761 عاملاً مسرحاً إجبارياً عبر المعاش المبكر بتعويضات 45-55 ألف جنيه). تركز التسريح في الإداريين والماليين والعمال بنسبة 82.9%. وكانت الحالة الوحيدة بالزيادة في "العربية للغزل والنسيج" (+124.6%).
+2. الأجور والرعاية الاجتماعية:
+- ارتفع متوسط الأجور لعمال الإنتاج والعمال بنسبة 200% إلى 247.8%، وللإداريين والخدمات بنسبة 150% إلى 163.2% بسبب زيادة إنتاجية العامل.
+- في المقابل: تنصلت إدارة الشركات من توفير الرعاية الصحية والتأمين الاجتماعي للعاملين لارتفاع تكلفتها، مما تسبب في نزاعات واحتجاجات وتهديد بالإضراب. (الملف 2، ص 6-9).`
+            },
+            {
+                id: 61,
+                type: 'essay',
+                badge: '📌 دراسة تطبيقية',
+                badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                question: 'ما أثر الخصخصة على التوجه التصديري وحصة السوق الخارجي للشركات الصناعية السبع محل الدراسة؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+1. ارتفعت حصة التصدير الخارجي من إجمالي إنتاج الشركات السبع من 15.5% (227.7 مليون جنيه) عام 1995م إلى 20.7% (406.3 مليون جنيه) عام 2006م.
+2. انخفضت حصة السوق الداخلي من 84.5% إلى 79.3%.
+3. أبرز شركتين نجحتا في التصدير: "مصر لصناعة الزجاج" و "سيكلام (لبنيتا)" حيث ارتفعت حصة التصدير لديهما إلى 40% مقابل 60% للسوق المحلى نتيجة استحداث إدارات الجودة والتسويق وتصدير المنتجات لأوروبا وأمريكا والدول العربية. (الملف 2، ص 9-10).`
+            },
+            {
+                id: 62,
+                type: 'essay',
+                badge: '🔥 موضع سؤال مقالي',
+                badgeStyle: 'bg-rose-500/20 text-rose-300 border-rose-500/40',
+                question: 'ما المقصود بالآثار الاقتصادية للخصخصة؟ وما هو المقياس الحقيقي لنجاح برنامج الإصلاح الاقتصادي والخصخصة؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+1. المقصود بالآثار الاقتصادية: هي النتائج المترتبة على تنفيذ برنامج الخصخصة والتي تحدث تلقائياً سواء رغبت الدولة أم لم ترغب (مرتبطة بالتلقائية).
+2. المقياس الحقيقي للنجاح: لا يقاس نجاح البرنامج بمجرد تنفيذ الإجراءات أو حصر عدد الشركات المباعة وتوسيع الملكية (فهذا ليس هدفاً بذاته)، بل يكمن النجاح في:
+ - تحسين المناخ الكلي وزيادة معدلات النمو الاقتصادي.
+ - تحقيق العدالة الاجتماعية بتوسيع دائرة المستفيدين من النمو.
+ - تحقيق الاستقرار في الأسعار والموازين الداخلية والخارجية لحماية ذوي الدخول المحدودة من التضخم. (الملف 2، ص 12).`
+            },
+            {
+                id: 63,
+                type: 'essay',
+                badge: '🔥 سؤال شبه مؤكد',
+                badgeStyle: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+                question: 'كيف تم توزيع حصيلة بيع الشركات البالغة 40.4 مليار جنيه (154 شركة حتى 2006م)؟ وكيف تتم الرقابة عليها؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+أولاً: توزيع الحصيلة (40.4 مليار جنيه):
+1. 19.0 مليار جنيه (47% / 47.5%): توريد لوزارة المالية لتمويل مصروفات الدولة.
+2. 12.5 مليار جنيه (31.1%): تسوية ديون الشركات المباعة للبنوك.
+3. 7.3 مليار جنيه (18.0%): تعويضات المعاش المبكر ومكافآت العاملين.
+4. 1.6 مليار جنيه (4.0%): للإصلاح الفني والإداري وضخ استثمارات جديدة.
+
+ثانياً: الرقابة والضوابط:
+- تم توجيه 53% من الحصيلة لإعادة الهيكلة المالية والعمالية عبر "صندوق إعادة الهيكلة".
+- تتم مراجعة السجلات سنوياً بواسطة "الجهاز المركزي للمحاسبات" للتأكد وإقرار صحة أسلوب استخدام الحصيلة ونزاهته. (الملف 2، ص 14).`
+            },
+            {
+                id: 64,
+                type: 'essay',
+                badge: '📌 الآثار الإيجابية',
+                badgeStyle: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+                question: 'وضح بالأرقام أثر سياسة الخصخصة على المؤشرات الاقتصادية الكلية في مصر بين عامي 1992/91م و2002/2001م؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+وفقاً لبيانات وزارة التخطيط والبنك المركزي (جدول 13):
+1. نمو الناتج المحلي: ارتفع من 1.9% إلى 3.1%.
+2. معدل التضخم: انخفض بحدّة من 21.1% إلى 2.7%.
+3. عجز الموازنة: انخفض من 5.2% إلى 3.0% من الناتج المحلي.
+4. مساهمة القطاع الخاص: ارتفعت من 61.2% إلى 76.3% في الناتج المحلي.
+5. مصانع المدن الجديدة: ارتفع عدد المصانع المنتجة من 209 إلى 2932 مصنعاً (بزيادة 1302%)، والمصانع تحت الإنشاء من 650 إلى 1734 مصنعاً (بزيادة 166%). (الملف 2، ص 13).`
+            },
+            {
+                id: 65,
+                type: 'essay',
+                badge: '📌 التوزيع القطاعي',
+                badgeStyle: 'bg-blue-500/20 text-sky-bright border-blue-500/40',
+                question: 'قارن بالأرقام والنسب بين نصيب القطاعات الاقتصادية الأربعة (الصناعي، التجاري، الخدمات، الزراعي) من الشركات المباعة في مصر حتى يونيو 2006م؟',
+                modelAnswer: `الإجابة النموذجية الشاملة:
+من أصل 154 شركة مباعة:
+1. القطاع الصناعي (المرتبة الأولى): 99 شركة (64.3%) — يتصدره مواد البناء (29 شركة)، ثم الغذائية (25)، فالكيماوية (23)، والغزل والنسيج والهندسية (8 لكل منهما)، والمعدنية (6).
+2. القطاع التجاري (المرتبة الثانية): 30 شركة (19.5%) — يتصدره شركات المقاولات (18)، والبنوك (5)، والتجارة الخارجية (4).
+3. قطاع الخدمات (المرتبة الثالثة): 15 شركة (9.7%) — يتصدره الفنادق والإسكان (12) والنقل (3).
+4. القطاع الزراعي (المرتبة الرابعة والأخيرة): 11 شركة (7.1%) — مشاريع زراعية (6) وري وأشغال عامة (5). (الملف 1 ص 10-11 والملف 2 ص 1).`
+            }
+        ];
+
+        // State Management
+        let userState = {
+            answers: {},      // qId -> selected option index or essay evaluation
+            essayText: {},    // qId -> text entered by user
+            essayEvaluated: {}, // qId -> boolean
+            score: 0,
+            answeredCount: 0,
+            activeFilter: 'all'
+        };
+
+        const STORAGE_KEY = 'geo_exam_amani_2026_state';
+
+        // Load state from localStorage on init
+        function loadSavedState() {
+            try {
+                const saved = localStorage.getItem(STORAGE_KEY);
+                if (saved) {
+                    userState = JSON.parse(saved);
+                }
+            } catch (e) {
+                console.warn('Could not load saved state:', e);
+            }
+        }
+
+        function saveState() {
+            try {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(userState));
+            } catch (e) {
+                console.warn('Could not save state:', e);
+            }
+        }
+
+        // Initialize App
+        window.onload = function() {
+            loadSavedState();
+            renderQuestions();
+            updateGlobalStats();
+        };
+
+        // Render Questions Feed
+        function renderQuestions() {
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+
+            const filter = userState.activeFilter;
+
+            const filteredData = questionsData.filter(q => {
+                if (filter === 'all') return true;
+                if (filter === 'tf') return q.type === 'tf';
+                if (filter === 'mcq') return q.type === 'mcq';
+                if (filter === 'essay') return q.type === 'essay';
+                if (filter === 'starred') return q.badge.includes('كتاب') || q.badge.includes('مؤكد') || q.badge.includes('محورية') || q.badge.includes('تدريب');
+                return true;
+            });
+
+            if (filteredData.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-12 bg-navy-card rounded-2xl border border-navy-border">
+                        <i class="fa-solid fa-folder-open text-4xl text-slate-500 mb-3"></i>
+                        <p class="text-slate-300">لا توجد أسئلة تطابق هذا الفلتر حالياً.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            filteredData.forEach((q, idx) => {
+                const qCard = createQuestionCard(q, idx + 1);
+                container.appendChild(qCard);
+            });
+        }
+
+        // Create HTML Card for a question
+        function createQuestionCard(q, displayNum) {
+            const card = document.createElement('div');
+            card.className = "bg-navy-card rounded-2xl p-4 sm:p-6 border border-navy-border card-shadow relative overflow-hidden transition-all";
+            card.id = `q-card-${q.id}`;
+
+            // Header info: Badge & Type
+            let typeLabel = q.type === 'tf' ? 'صح وخطأ' : (q.type === 'mcq' ? 'اختيار من متعدد' : 'سؤال مقالي / تدريب');
+            let typeIcon = q.type === 'tf' ? 'fa-toggle-on text-sky-bright' : (q.type === 'mcq' ? 'fa-list-check text-emerald-400' : 'fa-pen-to-square text-purple-400');
+
+            let html = `
+                <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+                    <div class="flex items-center gap-2">
+                        <span class="w-7 h-7 rounded-lg bg-navy-deep border border-navy-border flex items-center justify-center font-black text-xs text-sky-bright">
+                            ${q.id}
+                        </span>
+                        <span class="text-xs font-semibold text-slate-400 flex items-center gap-1">
+                            <i class="fa-solid ${typeIcon}"></i> ${typeLabel}
+                        </span>
+                    </div>
+                    <span class="text-xs font-bold px-2.5 py-1 rounded-md border ${q.badgeStyle} badge-pulse">
+                        ${q.badge}
+                    </span>
+                </div>
+
+                <!-- Question Text -->
+                <h3 class="text-base sm:text-lg font-bold text-slate-100 mb-4 leading-relaxed">
+                    ${q.question}
+                </h3>
+            `;
+
+            // Render Options for T/F or MCQ
+            if (q.type === 'tf') {
+                const isAnswered = userState.answers.hasOwnProperty(q.id);
+                const selected = userState.answers[q.id];
+
+                html += `<div class="grid grid-cols-2 gap-3 mb-3">`;
+                
+                const tfOptions = [
+                    { text: 'صح (صحيحة)', val: true, icon: 'fa-check text-emerald-400' },
+                    { text: 'خطأ (خاطئة)', val: false, icon: 'fa-xmark text-rose-400' }
+                ];
+
+                tfOptions.forEach(opt => {
+                    let btnClass = "option-btn flex items-center justify-center gap-2 p-3 rounded-xl border border-navy-border bg-navy-deep text-slate-200 font-bold text-sm";
+                    
+                    if (isAnswered) {
+                        if (opt.val === q.correct) {
+                            btnClass = "flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-emerald-300 font-bold text-sm shadow-md";
+                        } else if (selected === opt.val && selected !== q.correct) {
+                            btnClass = "flex items-center justify-center gap-2 p-3 rounded-xl border-2 border-rose-500 bg-rose-950/40 text-rose-300 font-bold text-sm";
+                        } else {
+                            btnClass = "flex items-center justify-center gap-2 p-3 rounded-xl border border-navy-border/40 bg-navy-deep/40 text-slate-500 font-medium text-sm opacity-60";
+                        }
+                    }
+
+                    html += `
+                        <button onclick="answerTF(${q.id}, ${opt.val})" ${isAnswered ? 'disabled' : ''} class="${btnClass}">
+                            <i class="fa-solid ${opt.icon}"></i> ${opt.text}
+                        </button>
+                    `;
+                });
+
+                html += `</div>`;
+
+                // Render Explanation if answered
+                if (isAnswered) {
+                    const isCorrect = selected === q.correct;
+                    html += `
+                        <div class="mt-3 p-3.5 rounded-xl ${isCorrect ? 'bg-emerald-950/30 border border-emerald-500/30 text-emerald-200' : 'bg-rose-950/30 border border-rose-500/30 text-rose-200'} text-xs sm:text-sm leading-relaxed">
+                            <div class="font-bold mb-1 flex items-center gap-1.5 ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}">
+                                <i class="fa-solid ${isCorrect ? 'fa-circle-check' : 'fa-circle-xmark'}"></i>
+                                ${isCorrect ? 'إجابة صحيحة! (+1 درجة)' : 'إجابة خاطئة!'}
+                            </div>
+                            <div><strong class="text-sky-light">التعليل والمرجع من الملف:</strong> ${q.explanation}</div>
+                        </div>
+                    `;
+                }
+
+            } else if (q.type === 'mcq') {
+                const isAnswered = userState.answers.hasOwnProperty(q.id);
+                const selected = userState.answers[q.id];
+
+                html += `<div class="space-y-2.5 mb-3">`;
+
+                q.options.forEach((optText, optIdx) => {
+                    let btnClass = "option-btn w-full text-right p-3 rounded-xl border border-navy-border bg-navy-deep text-slate-200 font-medium text-xs sm:text-sm flex items-start gap-2.5";
+                    let letter = ['أ', 'ب', 'ج', 'د'][optIdx];
+
+                    if (isAnswered) {
+                        if (optIdx === q.correct) {
+                            btnClass = "w-full text-right p-3 rounded-xl border-2 border-emerald-500 bg-emerald-950/40 text-emerald-200 font-bold text-xs sm:text-sm flex items-start gap-2.5 shadow-md";
+                        } else if (selected === optIdx && selected !== q.correct) {
+                            btnClass = "w-full text-right p-3 rounded-xl border-2 border-rose-500 bg-rose-950/40 text-rose-200 font-bold text-xs sm:text-sm flex items-start gap-2.5";
+                        } else {
+                            btnClass = "w-full text-right p-3 rounded-xl border border-navy-border/40 bg-navy-deep/40 text-slate-500 font-medium text-xs sm:text-sm flex items-start gap-2.5 opacity-60";
+                        }
+                    }
+
+                    html += `
+                        <button onclick="answerMCQ(${q.id}, ${optIdx})" ${isAnswered ? 'disabled' : ''} class="${btnClass}">
+                            <span class="w-6 h-6 rounded-md bg-navy-hover border border-sky-bright/30 text-sky-bright font-bold flex items-center justify-center shrink-0 text-xs">
+                                ${letter}
+                            </span>
+                            <span class="pt-0.5">${optText}</span>
+                        </button>
+                    `;
+                });
+
+                html += `</div>`;
+
+                // Render Explanation if answered
+                if (isAnswered) {
+                    const isCorrect = selected === q.correct;
+                    html += `
+                        <div class="mt-3 p-3.5 rounded-xl ${isCorrect ? 'bg-emerald-950/30 border border-emerald-500/30 text-emerald-200' : 'bg-rose-950/30 border border-rose-500/30 text-rose-200'} text-xs sm:text-sm leading-relaxed">
+                            <div class="font-bold mb-1 flex items-center gap-1.5 ${isCorrect ? 'text-emerald-400' : 'text-rose-400'}">
+                                <i class="fa-solid ${isCorrect ? 'fa-circle-check' : 'fa-circle-xmark'}"></i>
+                                ${isCorrect ? 'إجابة صحيحة! (+1 درجة)' : 'إجابة غير دقيقة!'}
+                            </div>
+                            <div><strong class="text-sky-light">التوضيح والمرجع الرسمي:</strong> ${q.explanation}</div>
+                        </div>
+                    `;
+                }
+
+            } else if (q.type === 'essay') {
+                const userText = userState.essayText[q.id] || '';
+                const isShowAnswer = userState.answers[q.id] === 'show_model';
+                const isEvaluated = userState.essayEvaluated.hasOwnProperty(q.id);
+                const evalVal = userState.essayEvaluated[q.id];
+
+                html += `
+                    <div class="space-y-3">
+                        <textarea 
+                            id="essay-input-${q.id}"
+                            oninput="onEssayTextInput(${q.id})"
+                            placeholder="اكتب إجابتك واستنتاجك هنا بالتفصيل والأرقام..." 
+                            rows="3"
+                            class="w-full p-3 rounded-xl bg-navy-deep border border-navy-border text-slate-100 text-xs sm:text-sm focus:outline-none focus:border-sky-bright focus:ring-1 focus:ring-sky-bright resize-y"
+                        >${userText}</textarea>
+
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <button onclick="toggleModelAnswer(${q.id})" class="px-4 py-2 rounded-xl bg-blue-900/60 border border-sky-bright/40 text-sky-bright hover:bg-blue-800/60 font-bold text-xs flex items-center gap-2">
+                                <i class="fa-solid ${isShowAnswer ? 'fa-eye-slash' : 'fa-eye'}"></i>
+                                ${isShowAnswer ? 'إخفاء الإجابة النموذجية' : 'أظهر الإجابة النموذجية والكود الرقمي'}
+                            </button>
+
+                            ${isShowAnswer ? `
+                                <div class="flex items-center gap-2">
+                                    <span class="text-xs text-slate-300">التقييم الذاتي:</span>
+                                    <button onclick="evaluateEssay(${q.id}, true)" class="px-3 py-1.5 rounded-lg ${evalVal === true ? 'bg-emerald-600 text-white font-bold' : 'bg-emerald-950/60 text-emerald-400 border border-emerald-500/40'} text-xs">
+                                        <i class="fa-solid fa-check ml-1"></i> إجابة صحيحة (+1)
+                                    </button>
+                                    <button onclick="evaluateEssay(${q.id}, false)" class="px-3 py-1.5 rounded-lg ${evalVal === false ? 'bg-rose-600 text-white font-bold' : 'bg-rose-950/60 text-rose-400 border border-rose-500/40'} text-xs">
+                                        <i class="fa-solid fa-xmark ml-1"></i> تحتاج مراجعة
+                                    </button>
+                                </div>
+                            ` : ''}
+                        </div>
+
+                        ${isShowAnswer ? `
+                            <div class="mt-3 p-4 rounded-xl bg-blue-950/40 border border-sky-bright/30 text-xs sm:text-sm text-slate-200 leading-relaxed whitespace-pre-line">
+                                <div class="font-extrabold text-sky-bright mb-2 flex items-center gap-2 border-b border-sky-bright/20 pb-2">
+                                    <i class="fa-solid fa-file-lines text-base"></i> الإجابة النموذجية الكاملة والمنظمة من الكتاب:
+                                </div>
+                                ${q.modelAnswer}
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            }
+
+            card.innerHTML = html;
+            return card;
+        }
+
+        // Answer Handling logic
+        function answerTF(qId, userVal) {
+            if (userState.answers.hasOwnProperty(qId)) return;
+            
+            userState.answers[qId] = userVal;
+            const q = questionsData.find(item => item.id === qId);
+            
+            if (userVal === q.correct) {
+                userState.score += 1;
+            }
+            
+            saveState();
+            updateGlobalStats();
+            refreshSingleCard(qId);
+        }
+
+        function answerMCQ(qId, optIdx) {
+            if (userState.answers.hasOwnProperty(qId)) return;
+
+            userState.answers[qId] = optIdx;
+            const q = questionsData.find(item => item.id === qId);
+
+            if (optIdx === q.correct) {
+                userState.score += 1;
+            }
+
+            saveState();
+            updateGlobalStats();
+            refreshSingleCard(qId);
+        }
+
+        function onEssayTextInput(qId) {
+            const input = document.getElementById(`essay-input-${qId}`);
+            if (input) {
+                userState.essayText[qId] = input.value;
+                saveState();
+            }
+        }
+
+        function toggleModelAnswer(qId) {
+            if (userState.answers[qId] === 'show_model') {
+                delete userState.answers[qId];
+            } else {
+                userState.answers[qId] = 'show_model';
+            }
+            saveState();
+            updateGlobalStats();
+            refreshSingleCard(qId);
+        }
+
+        function evaluateEssay(qId, isCorrect) {
+            const currentEval = userState.essayEvaluated[qId];
+            
+            if (currentEval === true && !isCorrect) {
+                userState.score = Math.max(0, userState.score - 1);
+            } else if (currentEval !== true && isCorrect) {
+                userState.score += 1;
+            }
+
+            userState.essayEvaluated[qId] = isCorrect;
+            saveState();
+            updateGlobalStats();
+            refreshSingleCard(qId);
+        }
+
+        function refreshSingleCard(qId) {
+            const oldCard = document.getElementById(`q-card-${qId}`);
+            if (!oldCard) return;
+
+            const q = questionsData.find(item => item.id === qId);
+            const newCard = createQuestionCard(q, qId);
+            oldCard.replaceWith(newCard);
+        }
+
+        // Global Stats and Header Updates
+        function updateGlobalStats() {
+            // Count answered questions
+            let answered = 0;
+            questionsData.forEach(q => {
+                if (q.type === 'tf' || q.type === 'mcq') {
+                    if (userState.answers.hasOwnProperty(q.id)) answered++;
+                } else if (q.type === 'essay') {
+                    if (userState.essayEvaluated.hasOwnProperty(q.id) || (userState.essayText[q.id] && userState.essayText[q.id].trim().length > 0)) {
+                        answered++;
+                    }
+                }
+            });
+
+            userState.answeredCount = answered;
+
+            // Recalculate Score accurately from state
+            let currentScore = 0;
+            questionsData.forEach(q => {
+                if (q.type === 'tf' || q.type === 'mcq') {
+                    if (userState.answers[q.id] === q.correct) {
+                        currentScore++;
+                    }
+                } else if (q.type === 'essay') {
+                    if (userState.essayEvaluated[q.id] === true) {
+                        currentScore++;
+                    }
+                }
+            });
+
+            userState.score = currentScore;
+
+            const scoreEl = document.getElementById('scoreDisplay');
+            const percentEl = document.getElementById('percentDisplay');
+            const answeredEl = document.getElementById('answeredDisplay');
+            const progressBar = document.getElementById('progressBar');
+
+            scoreEl.textContent = userState.score;
+            answeredEl.textContent = userState.answeredCount;
+            
+            const percent = Math.round((userState.score / 65) * 100);
+            percentEl.textContent = `${percent}%`;
+
+            const answeredPercent = Math.round((userState.answeredCount / 65) * 100);
+            progressBar.style.width = `${answeredPercent}%`;
+        }
+
+        // Filter Tabs Logic
+        function filterQuestions(filterType) {
+            userState.activeFilter = filterType;
+            
+            document.querySelectorAll('.filter-tab').forEach(tab => {
+                tab.className = "filter-tab px-3 py-1.5 rounded-lg font-medium whitespace-nowrap bg-navy-card text-sky-light hover:bg-navy-hover border border-navy-border";
+            });
+
+            const activeBtn = document.getElementById(`btn-filter-${filterType}`);
+            if (activeBtn) {
+                activeBtn.className = "filter-tab px-3 py-1.5 rounded-lg font-bold whitespace-nowrap bg-sky-bright text-slate-950 shadow";
+            }
+
+            renderQuestions();
+        }
+
+        // Final Report & Modal
+        function finishExam() {
+            updateGlobalStats();
+
+            const modal = document.getElementById('reportModal');
+            document.getElementById('modalFinalScore').textContent = `${userState.score}/65`;
+            
+            const percent = Math.round((userState.score / 65) * 100);
+            document.getElementById('modalFinalPercent').textContent = `${percent}%`;
+            document.getElementById('modalAnswered').textContent = `${userState.answeredCount}/65`;
+
+            // Calculate Grade
+            let grade = 'غير مكتمل';
+            if (percent >= 85) grade = 'تستاهلي جايزه :) (A+)';
+            else if (percent >= 75) grade = 'يجي منك (B+)';
+            else if (percent >= 65) grade = 'مش  وحش(C)';
+            else if (percent >= 50) grade = 'شغال (D)';
+            else grade = 'دي  نتيجه ؟!!!!! / نامي احسن';
+            document.getElementById('modalGrade').textContent = grade;
+
+            // Section breakdown statistics
+            let tfCorrect = 0, mcqCorrect = 0, essayCorrect = 0;
+
+            questionsData.forEach(q => {
+                if (q.type === 'tf' && userState.answers[q.id] === q.correct) tfCorrect++;
+                if (q.type === 'mcq' && userState.answers[q.id] === q.correct) mcqCorrect++;
+                if (q.type === 'essay' && userState.essayEvaluated[q.id] === true) essayCorrect++;
+            });
+
+            document.getElementById('stat-tf').textContent = `${tfCorrect}/25`;
+            document.getElementById('bar-tf').style.width = `${(tfCorrect / 25) * 100}%`;
+
+            document.getElementById('stat-mcq').textContent = `${mcqCorrect}/25`;
+            document.getElementById('bar-mcq').style.width = `${(mcqCorrect / 25) * 100}%`;
+
+            document.getElementById('stat-essay').textContent = `${essayCorrect}/15`;
+            document.getElementById('bar-essay').style.width = `${(essayCorrect / 15) * 100}%`;
+
+            // List incorrect questions for review
+            const wrongContainer = document.getElementById('wrongQuestionsList');
+            const wrongSection = document.getElementById('wrongQuestionsSection');
+            wrongContainer.innerHTML = '';
+
+            const wrongQuestions = questionsData.filter(q => {
+                if (q.type === 'tf' || q.type === 'mcq') {
+                    return userState.answers.hasOwnProperty(q.id) && userState.answers[q.id] !== q.correct;
+                } else if (q.type === 'essay') {
+                    return userState.essayEvaluated[q.id] === false;
+                }
+                return false;
+            });
+
+            if (wrongQuestions.length > 0) {
+                wrongSection.classList.remove('hidden');
+                wrongQuestions.forEach(q => {
+                    const item = document.createElement('div');
+                    item.className = "p-2 bg-rose-950/30 border border-rose-500/20 rounded-lg text-rose-200 flex items-start gap-2";
+                    item.innerHTML = `
+                        <span class="font-bold text-sky-bright shrink-0">س${q.id}:</span>
+                        <div>
+                            <p class="font-semibold text-slate-100">${q.question}</p>
+                            <p class="text-[11px] text-rose-300 mt-1">${q.type === 'essay' ? q.modelAnswer.substring(0, 100) + '...' : q.explanation}</p>
+                        </div>
+                    `;
+                    wrongContainer.appendChild(item);
+                });
+            } else {
+                wrongSection.classList.add('hidden');
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeReportModal() {
+            document.getElementById('reportModal').classList.add('hidden');
+        }
+
+        // Reset Exam Dialog
+        function resetExamConfirm() {
+            document.getElementById('resetDialog').classList.remove('hidden');
+        }
+
+        function closeResetDialog() {
+            document.getElementById('resetDialog').classList.add('hidden');
+        }
+
+        function confirmResetExam() {
+            userState = {
+                answers: {},
+                essayText: {},
+                essayEvaluated: {},
+                score: 0,
+                answeredCount: 0,
+                activeFilter: 'all'
+            };
+            localStorage.removeItem(STORAGE_KEY);
+            closeResetDialog();
+            closeReportModal();
+            renderQuestions();
+            updateGlobalStats();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
