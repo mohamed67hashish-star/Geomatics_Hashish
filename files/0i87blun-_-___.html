@@ -1,0 +1,1671 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>امتحان تفاعلي شامل (100 سؤال) - الفصل الثاني: المعلومة الجغرافية</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            cairo: ['Cairo', 'sans-serif'],
+          },
+          colors: {
+            deepnavy: '#0b132b',
+            cardnavy: '#111c3d',
+            bordernavy: '#1e3266',
+            skybright: '#60a5fa',
+            skylight: '#93c5fd',
+            goldsoft: '#fde68a',
+          },
+        },
+      },
+    };
+  </script>
+  <style>
+    body {
+      background-color: rgb(11, 19, 43);
+      color: #f1f5f9;
+      font-family: 'Cairo', sans-serif;
+      overflow-x: hidden;
+    }
+    /* Custom scrollbar for comfortable dark reading */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0b132b;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #1e3a8a;
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3b82f6;
+    }
+    /* Highlight badges matching the study guide theme */
+    .hl-gold {
+      background-color: rgba(251, 191, 36, 0.16);
+      color: #fde68a;
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      padding: 0.1rem 0.45rem;
+      border-radius: 0.375rem;
+      font-weight: 700;
+    }
+    .hl-blue {
+      background-color: rgba(147, 197, 253, 0.16);
+      color: #93c5fd;
+      border: 1px solid rgba(147, 197, 253, 0.4);
+      padding: 0.1rem 0.45rem;
+      border-radius: 0.375rem;
+      font-weight: 700;
+    }
+    .glass-header {
+      background-color: rgba(11, 19, 43, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased selection:bg-skybright selection:text-deepnavy">
+
+  <!-- Sticky Top Dashboard Header -->
+  <header class="sticky top-0 z-40 glass-header border-b border-blue-500/30 shadow-lg shadow-black/40">
+    <div class="max-w-6xl mx-auto px-4 py-3">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+        <!-- Title & Stats -->
+        <div class="flex items-center justify-between gap-4">
+          <div>
+            <h1 class="text-base sm:text-lg font-extrabold text-skybright leading-tight">
+              بنك الأسئلة التفاعلي: الفصل الثاني (المعلومة الجغرافية)
+            </h1>
+            <p class="text-xs text-skylight/80">
+               • 100 سؤال شامل (80 صح وخطأ + 20 اختيار من متعدد)
+            </p>
+          </div>
+          <!-- Score Pill (Mobile) -->
+          <div class="flex md:hidden items-center gap-2 bg-blue-950/80 border border-blue-400/30 px-3 py-1.5 rounded-xl">
+            <span class="text-xs text-skylight">الدرجة:</span>
+            <span id="mobileScoreDisplay" class="text-sm font-extrabold text-amber-300">0 / 100</span>
+          </div>
+        </div>
+
+        <!-- Progress & Score Controls (Desktop & Tablet) -->
+        <div class="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div class="hidden md:flex items-center gap-2 bg-blue-950/70 border border-blue-400/30 px-3 py-1.5 rounded-xl">
+            <span class="text-xs text-skylight">المُجاب:</span>
+            <span id="answeredCountDisplay" class="text-sm font-bold text-white">0 / 100</span>
+          </div>
+          <div class="hidden md:flex items-center gap-2 bg-blue-950/70 border border-emerald-400/30 px-3 py-1.5 rounded-xl">
+            <span class="text-xs text-emerald-300">الصحيحة:</span>
+            <span id="correctCountDisplay" class="text-sm font-extrabold text-emerald-400">0</span>
+          </div>
+          <div class="hidden md:flex items-center gap-2 bg-blue-950/70 border border-rose-400/30 px-3 py-1.5 rounded-xl">
+            <span class="text-xs text-rose-300">الخاطئة:</span>
+            <span id="wrongCountDisplay" class="text-sm font-extrabold text-rose-400">0</span>
+          </div>
+          <button
+            onclick="openResultModal()"
+            class="px-3.5 py-2 rounded-xl bg-skybright hover:bg-blue-400 text-deepnavy font-extrabold text-xs sm:text-sm transition shadow-md shadow-blue-500/20 active:scale-95"
+          >
+            عرض النتيجة النهائية
+          </button>
+          <button
+            onclick="confirmResetAll()"
+            class="px-3 py-2 rounded-xl bg-slate-800/90 hover:bg-slate-700 text-skylight border border-blue-400/25 font-bold text-xs sm:text-sm transition active:scale-95"
+            title="إعادة الامتحان بالكامل"
+          >
+            إعادة الكل
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="mt-2.5">
+        <div class="flex justify-between text-[11px] text-skylight/90 mb-1">
+          <span>نسبة إنجاز الامتحان: <strong id="progressPercentText" class="text-amber-300">0%</strong></span>
+          <span class="md:hidden">
+            صحيح: <strong id="mobileCorrect" class="text-emerald-400">0</strong> | خطأ: <strong id="mobileWrong" class="text-rose-400">0</strong>
+          </span>
+        </div>
+        <div class="w-full h-2 bg-slate-900 rounded-full overflow-hidden border border-blue-500/20">
+          <div id="progressBar" class="h-full bg-gradient-to-l from-skybright via-blue-400 to-amber-300 transition-all duration-300" style="width: 0%"></div>
+        </div>
+      </div>
+
+      <!-- Filter Tabs -->
+      <div class="mt-3 flex items-center gap-1.5 overflow-x-auto pb-1 no-scrollbar">
+        <button data-filter="all" onclick="setFilter('all')" class="filter-btn active-filter shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-skybright text-deepnavy">
+          الكل (100)
+        </button>
+        <button data-filter="tf" onclick="setFilter('tf')" class="filter-btn shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-blue-950/60 text-skylight border border-blue-500/25 hover:bg-blue-900/60">
+          صح وخطأ (80)
+        </button>
+        <button data-filter="mcq" onclick="setFilter('mcq')" class="filter-btn shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-blue-950/60 text-skylight border border-blue-500/25 hover:bg-blue-900/60">
+          اختيار من متعدد (20)
+        </button>
+        <button data-filter="unanswered" onclick="setFilter('unanswered')" class="filter-btn shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-blue-950/60 text-skylight border border-blue-500/25 hover:bg-blue-900/60">
+          لم يُجب عنها (<span id="unansweredTabCount">100</span>)
+        </button>
+        <button data-filter="wrong" onclick="setFilter('wrong')" class="filter-btn shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-rose-950/50 text-rose-300 border border-rose-500/30 hover:bg-rose-900/50">
+          الأسئلة الخاطئة (<span id="wrongTabCount">0</span>)
+        </button>
+        <button
+          id="retryWrongBtn"
+          onclick="retryWrongQuestions()"
+          class="hidden shrink-0 px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-amber-400/20 text-amber-300 border border-amber-400/40 hover:bg-amber-400/30"
+        >
+          إعادة حل الخاطئة فقط ↻
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content Container -->
+  <main class="max-w-5xl mx-auto px-4 py-6">
+    <!-- Legend Card -->
+    <div class="mb-6 p-4 rounded-2xl bg-[#111c3d]/90 border border-blue-500/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
+        <span class="font-bold text-skybright">دليل التمييز البصري:</span>
+        <span><span class="hl-gold"></span> </span>
+        <span><span class="hl-blue"></span> </span>
+      </div>
+      <div class="text-xs text-skylight/80">
+        
+      </div>
+    </div>
+
+    <!-- Questions List Container -->
+    <div id="questionsContainer" class="space-y-5"></div>
+
+    <!-- Bottom Action Bar -->
+    <div class="mt-10 p-6 rounded-2xl bg-[#111c3d] border border-blue-500/30 text-center space-y-4">
+      <h2 class="text-lg sm:text-xl font-extrabold text-skybright">هل انتهيت من مراجعة الأسئلة؟</h2>
+      <p class="text-sm text-skylight/90 max-w-xl mx-auto">
+        يمكنك استعراض تقريرك النهائي وتقييم مستواك في الفصل الثاني، أو إعادة الأسئلة التي أخطأت فيها لتثبيت المعلومات.
+      </p>
+      <div class="flex flex-wrap justify-center gap-3">
+        <button
+          onclick="openResultModal()"
+          class="px-6 py-3 rounded-xl bg-skybright hover:bg-blue-400 text-deepnavy font-extrabold text-sm transition shadow-lg shadow-blue-500/25"
+        >
+          إنهاء الامتحان وعرض التقرير النهائي
+        </button>
+        <button
+          onclick="retryWrongQuestions()"
+          class="px-5 py-3 rounded-xl bg-amber-400/15 hover:bg-amber-400/25 text-amber-300 border border-amber-400/40 font-bold text-sm transition"
+        >
+          إعادة الأسئلة الخاطئة فقط
+        </button>
+        <button
+          onclick="confirmResetAll()"
+          class="px-5 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 text-skylight border border-blue-400/30 font-bold text-sm transition"
+        >
+          بدء الامتحان من جديد
+        </button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Custom Message / Confirmation Dialog (No alert/confirm) -->
+  <div id="customDialog" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/75 backdrop-blur-sm p-4">
+    <div class="w-full max-w-md rounded-2xl bg-[#111c3d] border border-blue-400/40 p-6 shadow-2xl">
+      <h3 id="dialogTitle" class="text-lg font-extrabold text-skybright mb-2">تأكيد الإجراء</h3>
+      <p id="dialogMessage" class="text-sm text-slate-200 leading-relaxed mb-5"></p>
+      <div class="flex justify-end gap-2.5">
+        <button
+          id="dialogCancelBtn"
+          onclick="closeCustomDialog()"
+          class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-skylight text-sm font-bold transition"
+        >
+          إلغاء
+        </button>
+        <button
+          id="dialogConfirmBtn"
+          class="px-4 py-2 rounded-xl bg-skybright hover:bg-blue-400 text-deepnavy text-sm font-extrabold transition"
+        >
+          تأكيد
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final Result Modal -->
+  <div id="resultModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4 overflow-y-auto">
+    <div class="w-full max-w-lg rounded-3xl bg-[#111c3d] border-2 border-skybright/50 p-6 sm:p-8 shadow-2xl my-auto">
+      <div class="text-center">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-blue-500/20 border border-skybright/40 text-skybright text-3xl font-black mb-3">
+          ★
+        </div>
+        <h2 class="text-2xl font-black text-skybright">تقرير النتيجة النهائية</h2>
+        <p class="text-xs sm:text-sm text-skylight/80 mt-1">الفصل الثاني: المعلومة الجغرافية — أ.د. عاطف حافظ سلامة محمد</p>
+      </div>
+
+      <div class="mt-6 p-5 rounded-2xl bg-deepnavy/90 border border-blue-500/30 text-center">
+        <div class="text-xs text-skylight mb-1">الدرجة النهائية المحققة</div>
+        <div id="modalFinalScore" class="text-4xl font-black text-amber-300">0 / 100</div>
+        <div id="modalPercentage" class="text-sm font-bold text-skybright mt-1">النسبة المئوية: 0%</div>
+        <div id="modalGradeBadge" class="inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-extrabold bg-blue-500/20 text-skylight border border-blue-400/40">
+          التقييم: قيد التقييم
+        </div>
+      </div>
+
+      <div class="mt-4 grid grid-cols-3 gap-2.5 text-center">
+        <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-500/30">
+          <div class="text-xs text-emerald-300">إجابات صحيحة</div>
+          <div id="modalCorrectCount" class="text-xl font-black text-emerald-400 mt-0.5">0</div>
+        </div>
+        <div class="p-3 rounded-xl bg-rose-950/40 border border-rose-500/30">
+          <div class="text-xs text-rose-300">إجابات خاطئة</div>
+          <div id="modalWrongCount" class="text-xl font-black text-rose-400 mt-0.5">0</div>
+        </div>
+        <div class="p-3 rounded-xl bg-slate-900/70 border border-blue-500/25">
+          <div class="text-xs text-skylight">لم يُجب عنها</div>
+          <div id="modalUnansweredCount" class="text-xl font-black text-slate-300 mt-0.5">100</div>
+        </div>
+      </div>
+
+      <div class="mt-4 p-3.5 rounded-xl bg-blue-950/40 border border-blue-500/25 text-xs text-slate-200 space-y-1">
+        <div class="flex justify-between">
+          <span>أداء قسم الصح والخطأ (80 سؤال):</span>
+          <strong id="modalTfBreakdown" class="text-amber-300">0 / 80</strong>
+        </div>
+        <div class="flex justify-between">
+          <span>أداء قسم الاختيار من متعدد (20 سؤال):</span>
+          <strong id="modalMcqBreakdown" class="text-skybright">0 / 20</strong>
+        </div>
+      </div>
+
+      <div class="mt-6 flex flex-col sm:flex-row gap-2.5">
+        <button
+          onclick="closeResultModal(); setFilter('wrong');"
+          class="flex-1 px-4 py-2.5 rounded-xl bg-rose-500/20 hover:bg-rose-500/30 text-rose-200 border border-rose-400/40 font-bold text-xs sm:text-sm transition"
+        >
+          مراجعة الأسئلة الخاطئة
+        </button>
+        <button
+          onclick="closeResultModal(); retryWrongQuestions();"
+          class="flex-1 px-4 py-2.5 rounded-xl bg-amber-400/20 hover:bg-amber-400/30 text-amber-300 border border-amber-400/40 font-bold text-xs sm:text-sm transition"
+        >
+          إعادة الخاطئة فقط
+        </button>
+        <button
+          onclick="closeResultModal()"
+          class="px-5 py-2.5 rounded-xl bg-skybright hover:bg-blue-400 text-deepnavy font-extrabold text-xs sm:text-sm transition"
+        >
+          إغلاق
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Complete 100 Questions Database (80 True/False + 20 Multiple Choice)
+    // Covering every single detail, term, date, figure, and concept in Chapter 2
+    const questionsData = [
+      // ==================== القسم الأول: 80 سؤال صح وخطأ (1 - 80) ====================
+      {
+        id: 1,
+        type: 'tf',
+        topic: 'مقدمة وأهداف الفصل',
+        question: 'يروي <span class="hl-gold">الفصل الثاني</span> رواية <span class="hl-blue">التحول الرقمي للمعلومات الجغرافية</span>، وقد استدعى ذلك تحديد تعريف للمعلومة الجغرافية بغض النظر عن التخصص الذي تنتمي إليه.',
+        answer: true,
+        explanation: 'صحيح؛ يركز الفصل الثاني على قصة التحول الرقمي للمعلومات الجغرافية ووضع تعريف موحد لها بغض النظر عن التخصص الجغرافي.'
+      },
+      {
+        id: 2,
+        type: 'tf',
+        topic: 'مقدمة وأهداف الفصل',
+        question: 'بدأ عمل التقني بابتكار أداة قادرة على تحويل الأشكال الرقمية الحديثة للمعلومات الجغرافية إلى أشكال حقيقية تقليدية بدون مرجعية مكانية.',
+        answer: false,
+        explanation: 'خطأ؛ العكس هو الصحيح، حيث ابتكر التقني أداة تحوّل الأشكال الحقيقية التقليدية إلى الشكل الرقمي ذات المرجعية المكانية.'
+      },
+      {
+        id: 3,
+        type: 'tf',
+        topic: 'مقدمة وأهداف الفصل',
+        question: 'من أهداف الفصل الثاني <span class="hl-blue">إدراك الطالب للشروط الواجب توفرها لتحويل المعلومات الجغرافية الحقيقية إلى معلومات جغرافية رقمية</span>.',
+        answer: true,
+        explanation: 'صحيح؛ هذا أحد الأهداف الأربعة الرئيسية للفصل الثاني، والشرط الأساسي هو وجود مرجعية مكانية.'
+      },
+      {
+        id: 4,
+        type: 'tf',
+        topic: 'مقدمة وأهداف الفصل',
+        question: 'يقتصر تعريف <span class="hl-gold">المعلومة الجغرافية</span> في الفصل الثاني على تخصص الجغرافيا الطبيعية دون الجغرافيا البشرية.',
+        answer: false,
+        explanation: 'خطأ؛ من أهداف الفصل إكساب الطالب تعريفاً محدداً للمعلومة الجغرافية بغض النظر عن تخصصها الجغرافي.'
+      },
+      {
+        id: 5,
+        type: 'tf',
+        topic: 'تعريف المعلومة الجغرافية',
+        question: 'تُحدد <span class="hl-gold">المعلومة الجغرافية</span> كإجمالي مترابط من فئتين أساسيتين هما: <span class="hl-blue">المعلومة المكانية</span> و<span class="hl-blue">المعلومة الوصفية</span>.',
+        answer: true,
+        explanation: 'صحيح؛ تتكامل المعلومة الجغرافية من شقين مترابطين: شق مكاني يحدد الموقع، وشق وصفي يحدد الخصائص.'
+      },
+      {
+        id: 6,
+        type: 'tf',
+        topic: 'تعريف المعلومة الجغرافية',
+        question: 'تُحدد <span class="hl-gold">المعلومة المكانية</span> موقع الظاهرة على الحيز الأرضي وتُوصف بأنظمة المرجعيات المكانية مثل نظام الإحداثيات الجغرافية والمساقط والجيوديسيا.',
+        answer: true,
+        explanation: 'صحيح؛ المعلومة المكانية تختص بتحديد الموقع على الحيز الأرضي وفق أنظمة مرجعية مكانية واضحة.'
+      },
+      {
+        id: 7,
+        type: 'tf',
+        topic: 'تعريف المعلومة الجغرافية',
+        question: 'ارتفاع المنزل، وعدد طوابقه، ووظائفه، وانتسابه إلى وحدة إدارية معينة تُعد أمثلة على <span class="hl-gold">المعلومة المكانية</span>.',
+        answer: false,
+        explanation: 'خطأ؛ هذه الأمثلة تصف طبيعة الظاهرة ومظهرها وخصائصها وعلاقاتها الإدارية، لذا فهي أمثلة على المعلومة الوصفية.'
+      },
+      {
+        id: 8,
+        type: 'tf',
+        topic: 'تعريف المعلومة الجغرافية',
+        question: 'العلاقات بين موضوعات الفئة الثانية (<span class="hl-gold">المعلومة الوصفية</span>) تكون <span class="hl-blue">وصفية</span> متعلقة بجملة المقاييس الوصفية للموضوعات بصرف النظر عن نظامها المكاني.',
+        answer: true,
+        explanation: 'صحيح؛ العلاقات الوصفية ترتبط بالسمات والخصائص دون النظر إلى الموقع الإحداثي.'
+      },
+      {
+        id: 9,
+        type: 'tf',
+        topic: 'تعريف المعلومة الجغرافية',
+        question: 'العلاقات بين موضوعات الفئة الأولى (<span class="hl-gold">المعلومة المكانية</span>) تتعلق بقياس مكان الموضوعات على وجه الأرض، وكذلك <span class="hl-blue">شكلها وأبعادها</span>.',
+        answer: true,
+        explanation: 'صحيح؛ العلاقات المكانية تبعاً للمفهوم الأصلي للكلمة تتعلق بقياس المكان والشكل والأبعاد على سطح الأرض.'
+      },
+      {
+        id: 10,
+        type: 'tf',
+        topic: 'تعريف المعلومة الجغرافية',
+        question: 'التعريف الجامع لـ <span class="hl-gold">المعلومة الجغرافية</span> هو أنها <span class="hl-blue">تمثيل لواحد من الموضوعات أو من الظاهرات الحقيقية، المدونة في الحيز المكاني، في لحظة معينة</span>.',
+        answer: true,
+        explanation: 'صحيح؛ هذا هو نص التعريف الجامع للمعلومة الجغرافية الذي يجمع الموضوع والمكان والزمن (في لحظة معينة).'
+      },
+      {
+        id: 11,
+        type: 'tf',
+        topic: 'تعريف المعلومة الجغرافية',
+        question: 'لا يدخل البُعد الزمني ("في لحظة معينة") ضمن التعريف الجامع للمعلومة الجغرافية لأن الظاهرات الجغرافية ثابتة لا تتغير.',
+        answer: false,
+        explanation: 'خطأ؛ نص التعريف صراحة على عبارة "في لحظة معينة" لأن الظاهرات الحقيقية تتغير بمرور الزمن.'
+      },
+      {
+        id: 12,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'قدم الجغرافي المعلومات الوصفية والمكانية منذ العصور القديمة بطريقتين رئيستين هما: <span class="hl-gold">النص</span> و<span class="hl-gold">الخريطة</span>.',
+        answer: true,
+        explanation: 'صحيح؛ النص والخريطة هما الطريقتان الرئيستان للتعبير الجغرافي منذ العصور القديمة قبل ظهور التصوير.'
+      },
+      {
+        id: 13,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'يُطلق البعض على المعلومات الواردة في <span class="hl-gold">النص الجغرافي</span> اسم <span class="hl-blue">المعلومات الأبجدية - الرقمية</span>، ويعمم الآخر الاسم ويطلق عليها <span class="hl-blue">المعلومات غير المكانية</span>.',
+        answer: true,
+        explanation: 'صحيح؛ لأن النص يقدم العالم الحقيقي بطريقة وصفية ويشمل المعلومات الكمية والإحصائية.'
+      },
+      {
+        id: 14,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'يقتصر <span class="hl-gold">النص الجغرافي</span> الكلاسيكي على السرد الإنشائي فقط ولا يشمل المعلومات الكمية أو الإحصائية.',
+        answer: false,
+        explanation: 'خطأ؛ النص الجغرافي يشمل بالتساوي المعلومات الوصفية والكمية والإحصائية.'
+      },
+      {
+        id: 15,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'تستخدم <span class="hl-gold">الخريطة</span> تعبيراً مرئياً لإعادة تمثيل العالم الحقيقي تحت شكل <span class="hl-blue">شبه متحرر من اللغات، وأكثر شمولاً من النص</span>.',
+        answer: true,
+        explanation: 'صحيح؛ تتميز الخريطة عن النص بأنها لغة بصرية عالمية شبه متحررة من قيود اللغات وأكثر شمولاً.'
+      },
+      {
+        id: 16,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'تصف <span class="hl-gold">الخرائط الطبوغرافية</span> بصفة عامة الموضوعات الطبيعية (كالمناسيب والمجاري المائية) والموضوعات المجردة (كالحدود الإدارية وأسماء المواقع).',
+        answer: true,
+        explanation: 'صحيح؛ تجمع الخرائط الطبوغرافية بين المعالم الطبيعية والبشرية والمجردة.'
+      },
+      {
+        id: 17,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'تُعد خرائط الزراعة والغابات والجيولوجيا والمناخ والحضر والاقتصاد أمثلة على <span class="hl-gold">الخرائط الطبوغرافية</span> العامة.',
+        answer: false,
+        explanation: 'خطأ؛ هذه أمثلة على الخرائط الموضوعية المتخصصة التي لا تُحصى في المجالات الخاصة.'
+      },
+      {
+        id: 18,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'ظهر <span class="hl-gold">التصوير الجوي</span> في القرن التاسع عشر، وأُخذت أول صورة بواسطة البالون الطائر عام <span class="hl-blue">1858</span>.',
+        answer: true,
+        explanation: 'صحيح؛ التقطت أول صورة جوية من بالون طائر عام 1858 في القرن التاسع عشر.'
+      },
+      {
+        id: 19,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'ظهرت <span class="hl-gold">صور الأقمار الصناعية</span> في نفس العام الذي ظهر فيه التصوير الجوي بالبالون الطائر (1858).',
+        answer: false,
+        explanation: 'خطأ؛ ظهرت صور الأقمار الصناعية بعد التصوير الجوي بقرن من الزمن (أي في القرن العشرين).'
+      },
+      {
+        id: 20,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'تعتمد أقمار <span class="hl-gold">الاستشعار عن بعد</span> على التسجيل المباشر من مسافة للأشعة المرسلة أو المنبعثة من وجه الأرض.',
+        answer: true,
+        explanation: 'صحيح؛ يسجل الاستشعار عن بعد الأشعة المنعكسة/المرسلة أو المنبعثة حرارياً من سطح الأرض عن بُعد.'
+      },
+      {
+        id: 21,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'تشمل <span class="hl-gold">الصورة</span> الفضائية أو الجوية وصفاً مباشراً وجاهزاً للموضوعات الجغرافية دون الحاجة إلى تفسيرها.',
+        answer: false,
+        explanation: 'خطأ؛ الصورة تصف الشكل وموقع الموضوعات المكانية، ولكن هذا الوصف لا يشمل مباشرة وصف الموضوعات، بل لابد من تفسير الصورة لاستخلاص الاستنتاجات الضمنية.'
+      },
+      {
+        id: 22,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'تنحصر أشكال التعبير الحقيقي للمعلومة الجغرافية في ثلاثة أشكال هي: <span class="hl-gold">النص</span>، و<span class="hl-gold">الخريطة</span>، و<span class="hl-gold">الصورة</span>.',
+        answer: true,
+        explanation: 'صحيح؛ هذه هي الأشكال الثلاثة الحقيقية التقليدية للتعبير عن المعلومة الجغرافية.'
+      },
+      {
+        id: 23,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: '<span class="hl-blue">يتزايد الجزء الوصفي (الموضوعي) بالذهاب تدريجياً من الصورة، إلى النص، مروراً بالخريطة</span>.',
+        answer: true,
+        explanation: 'صحيح؛ أقل الأشكال وصفاً مباشراً هو الصورة، ثم تزداد الصفة الوصفية في الخريطة، وتصل ذروتها في النص.'
+      },
+      {
+        id: 24,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'يتزايد الجزء المكاني بالانتقال تدريجياً من الصورة إلى النص مروراً بالخريطة.',
+        answer: false,
+        explanation: 'خطأ؛ يتناقص الجزء المكاني في الاتجاه نفسه (من الصورة إلى الخريطة ثم النص).'
+      },
+      {
+        id: 25,
+        type: 'tf',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'تتحقق اليوم تكاملية الأشكال الثلاثة للتعبير الجغرافي (النص، الخريطة، الصورة) بفضل الظهور التدريجي للغة موحدة جديدة هي <span class="hl-gold">المعلوماتية</span>.',
+        answer: true,
+        explanation: 'صحيح؛ المعلوماتية (التقنية الرقمية والحوسبة) وحدت الأشكال الثلاثة في بيئة رقمية متكاملة.'
+      },
+      {
+        id: 26,
+        type: 'tf',
+        topic: 'المعلومة الجغرافية الرقمية',
+        question: 'أنتج علم المساحة في <span class="hl-blue">نهاية الستينيات</span> شكلاً جديداً من التعبير للمعلومة الجغرافية هو <span class="hl-gold">الشكل الرقمي</span>.',
+        answer: true,
+        explanation: 'صحيح؛ في أواخر الستينيات ظهر الشكل الرقمي ليجمع مميزات النص والخريطة والصورة معاً.'
+      },
+      {
+        id: 27,
+        type: 'tf',
+        topic: 'المعلومة الجغرافية الرقمية',
+        question: 'تظهر الموضوعات الجغرافية الرقمية بواسطة الشكل والمضمون، أي بواسطة <span class="hl-gold">الحاوي والمحتوى</span>؛ حيث يمثل <span class="hl-blue">الحاوي إعادة الإخراج الخطي</span> بينما يمثل <span class="hl-blue">المحتوى إعادة الإخراج للخصائص</span>.',
+        answer: true,
+        explanation: 'صحيح؛ الحاوي يقابل التمثيل الخطي (الفيكتور)، والمحتوى يقابل تمثيل الخصائص والقيم في الخلايا (الرستر).'
+      },
+      {
+        id: 28,
+        type: 'tf',
+        topic: 'الفيكتور والرستر',
+        question: 'تُعرف <span class="hl-gold">طريقة الفيكتور</span> بالطريقة الخطية، وتحدد الصور الكارتوجرافية بواسطة <span class="hl-blue">نقطة واحدة، خط، أو منطقة</span> نحصل عليها بعملية <span class="hl-gold">الترقيم</span>.',
+        answer: true,
+        explanation: 'صحيح؛ عناصر الفيكتور الأساسية هي النقطة (Point) والخط (Line) والمنطقة/المضلع (Polygon) وتُنتج عبر الترقيم (Digitizing).'
+      },
+      {
+        id: 29,
+        type: 'tf',
+        topic: 'الفيكتور والرستر',
+        question: 'تُسمى <span class="hl-gold">طريقة الرستر</span> بالطريقة المساحية أو <span class="hl-gold">سجلي</span>، كما تُترجم حرفياً من الأصل الفرنسي بلفظ <span class="hl-gold">مزرد</span>.',
+        answer: true,
+        explanation: 'صحيح؛ الرستر يُطلق عليه الطريقة المساحية أو السجلية، والترجمة الحرفية من الفرنسية هي "مزرد".'
+      },
+      {
+        id: 30,
+        type: 'tf',
+        topic: 'الفيكتور والرستر',
+        question: 'تُعد الصورة الكارتوجرافية في <span class="hl-gold">طريقة الرستر</span> وفق منطق <span class="hl-blue">الكنس خط بخط (قريبة من طريقة التليفزيون)</span>، وكل خط مكون من نقاط بسيطة متصلة تُسمى <span class="hl-gold">PIXEL</span>.',
+        answer: true,
+        explanation: 'صحيح؛ يعتمد الرستر على المسح أو الكنس سطراً بسطر في مصفوفة من البكسلات المتجاورة.'
+      },
+      {
+        id: 31,
+        type: 'tf',
+        topic: 'الفيكتور والرستر',
+        question: 'يستحيل فنياً التحويل من البيانات البيكسلية (الرستر) إلى الفيكتور أو العكس في نظم المعلومات الجغرافية.',
+        answer: false,
+        explanation: 'خطأ؛ يمكن بطبيعة الحال المرور من طريقة إلى أخرى (Raster to Vector و Vector to Raster).'
+      },
+      {
+        id: 32,
+        type: 'tf',
+        topic: 'الفيكتور والرستر',
+        question: 'عند إدخال خريطة ورقية على جهاز الماسح الضوئي (Scanner) فإنها تدخل أولاً بطريقة الكنس (<span class="hl-gold">رستر</span>) ثم يتم ترقيمها وتحويلها إلى (<span class="hl-gold">فيكتور</span>).',
+        answer: true,
+        explanation: 'صحيح؛ المسح الضوئي ينتج صورة نقطية (رستر)، ثم تُرقّم (Digitized) لتحويل معالمها إلى فيكتور.'
+      },
+      {
+        id: 33,
+        type: 'tf',
+        topic: 'الفيكتور والرستر',
+        question: 'تُعد <span class="hl-gold">طريقة الرستر</span> مناسبة لإعادة تمثيل <span class="hl-blue">الموضوعات الجغرافية المفردة</span>، لكنها غير مناسبة لتمثيل المساحات الجغرافية المتصلة.',
+        answer: false,
+        explanation: 'خطأ؛ العكس تماماً هو الصحيح: الرستر مناسب للمساحات الجغرافية المتصلة وغير مناسب للموضوعات المفردة.'
+      },
+      {
+        id: 34,
+        type: 'tf',
+        topic: 'الفيكتور والرستر',
+        question: 'تُعد <span class="hl-gold">طريقة الفيكتور</span> مناسبة لإعادة تمثيل <span class="hl-blue">الموضوعات الجغرافية المفردة</span>، لكنها غير مناسبة لإعادة تمثيل المساحات الجغرافية في شكل موضوعات متصلة.',
+        answer: true,
+        explanation: 'صحيح؛ الفيكتور مثالي للمعالم المنفصلة والمحددة الحدود (كمبنى أو طريق أو بركة)، بينما الرستر مثالي للظاهرات المستمرة المتصلة.'
+      },
+      {
+        id: 35,
+        type: 'tf',
+        topic: 'الفيكتور والرستر',
+        question: 'تستوجب <span class="hl-gold">طريقة الفيكتور</span> إعداد <span class="hl-blue">علاقات طوبولوجية (مكانية)</span> بين الموضوعات المكانية.',
+        answer: true,
+        explanation: 'صحيح؛ العلاقات الطوبولوجية (التجاور، الاحتواء، الاتصال) ضرورية في بنية الفيكتور.'
+      },
+      {
+        id: 36,
+        type: 'tf',
+        topic: 'الفيكتور والرستر',
+        question: 'تمثل صور الأقمار الصناعية، والخرائط المسحوبة على جهاز الماسح الضوئي، ونماذج ترقيم الأرض (مثل الجبال المحيطة بالكعبة المكرمة) معطيات مدونة بطريقة <span class="hl-gold">الرستر</span>.',
+        answer: true,
+        explanation: 'صحيح؛ هذه أمثلة نموذجية للبيانات المساحية الشبكية (Raster)، ومنها شكل (12) لنموذج ترقيم الأرض للجبال المحيطة بموقع الكعبة المكرمة.'
+      },
+      {
+        id: 37,
+        type: 'tf',
+        topic: 'نظم المرجعيات المكانية',
+        question: 'تشمل <span class="hl-gold">نظم المرجعيات المكانية</span> بصفة عامة: <span class="hl-blue">نظام الإحداثيات الجغرافية، والمساقط، والمرجع الجيوديسي</span>.',
+        answer: true,
+        explanation: 'صحيح؛ هذه العناصر الثلاثة تمثل الأساسيات الضرورية لإعداد الخريطة وربط المعلومات بنظم المواقع الجغرافية.'
+      },
+      {
+        id: 38,
+        type: 'tf',
+        topic: 'نظام الإحداثيات الجغرافية',
+        question: 'يُقسم <span class="hl-gold">خط الاستواء</span> في نظام الإحداثيات الجغرافية إلى <span class="hl-blue">180 درجة شرقاً (E) و180 درجة غرباً (W)</span> من خط الزوال.',
+        answer: true,
+        explanation: 'صحيح؛ محيط دائرة الاستواء 360 درجة مقسمة بالتساوي 180° شرق خط الزوال (E - East) و180° غربه (W - West).'
+      },
+      {
+        id: 39,
+        type: 'tf',
+        topic: 'نظام الإحداثيات الجغرافية',
+        question: 'يُقسم <span class="hl-gold">خط الطول</span> إلى 180 درجة شمال خط الاستواء و180 درجة جنوب خط الاستواء.',
+        answer: false,
+        explanation: 'خطأ؛ يُقسم خط الطول إلى 90 درجة شمال خط الاستواء (N) و90 درجة جنوب خط الاستواء (S).'
+      },
+      {
+        id: 40,
+        type: 'tf',
+        topic: 'نظام الإحداثيات الجغرافية',
+        question: 'إذا وقعت ظاهرة إلى الجنوب من خط الاستواء نُلحق عدد درجات العرض بالحرف <span class="hl-gold">S</span> إشارة للكلمة الإنجليزية <span class="hl-gold">South</span>.',
+        answer: true,
+        explanation: 'صحيح؛ N للشمال (North) و S للجنوب (South).'
+      },
+      {
+        id: 41,
+        type: 'tf',
+        topic: 'نظام الإحداثيات الجغرافية',
+        question: 'إذا وقعت نقطة إلى الغرب من خط الزوال نُلحق عدد درجات الطول بالحرف <span class="hl-gold">E</span>.',
+        answer: false,
+        explanation: 'خطأ؛ الغرب يُرمز له بالحرف W (West)، بينما الشرق يُرمز له بالحرف E (East).'
+      },
+      {
+        id: 42,
+        type: 'tf',
+        topic: 'نظام المساقط',
+        question: 'يُقصد بـ <span class="hl-gold">تسقيط الخرائط</span> تحويل شكل سطح الأرض من <span class="hl-blue">السطح الكروي إلى السطح المستوي</span> للتمكين من إدراجها في الكتب والمجلدات.',
+        answer: true,
+        explanation: 'صحيح؛ الإسقاط الكارتوجرافي يعالج مشكلة نقل سطح الأرض المنحني على لوحة أو ورقة مستوية.'
+      },
+      {
+        id: 43,
+        type: 'tf',
+        topic: 'نظام المساقط',
+        question: 'رُسمت الخرائط القديمة على سطح مستوٍ وفق نظريات رياضية دقيقة أخذت في اعتبارها كروية الأرض.',
+        answer: false,
+        explanation: 'خطأ؛ الخرائط القديمة لم تتقيد بأي نظرية بل أهملت كروية الأرض لعدم معرفتهم بها في ذلك الزمن، فكانت غير مفيدة في تحديد المواقع بدقة.'
+      },
+      {
+        id: 44,
+        type: 'tf',
+        topic: 'نظام المساقط',
+        question: 'يستخدم النظام الجغرافي لتحديد إحداثيات النقاط على سطح الأرض <span class="hl-gold">نظام الدرجات الستينية</span>.',
+        answer: true,
+        explanation: 'صحيح؛ الدرجات الستينية (درجة، دقيقة، ثانية) هي الأساس في التعبير عن الإحداثيات الجغرافية.'
+      },
+      {
+        id: 45,
+        type: 'tf',
+        topic: 'نظام المساقط',
+        question: 'نجحت نظريات تسقيط الخرائط الحديثة في الحفاظ على المواصفات الأربع للخريطة (<span class="hl-blue">الشكل، المساحة، المسافة، الاتجاه</span>) معاً في وقت واحد دون أي تشوه.',
+        answer: false,
+        explanation: 'خطأ؛ لم تتمكن أي من نظريات التسقيط من الحفاظ على الأربع مواصفات معاً، فضبط بعضها يؤدي بالضرورة إلى تشوه المواصفات الأخرى.'
+      },
+      {
+        id: 46,
+        type: 'tf',
+        topic: 'نظام المساقط',
+        question: 'الطريقة الوحيدة لضبط كل مواصفات الخريطة الأربع (الشكل والمساحة والمسافة والاتجاه) في وقت واحد هي استخدام <span class="hl-blue">مجسم كروي يطابق شكل الأرض</span>.',
+        answer: true,
+        explanation: 'صحيح؛ الكرة الأرضية المجسمة (Globe) هي الوسيلة الوحيدة الخالية من تشوهات الإسقاط، لكنها غير عملية في الكتب والاستخدام اليومي.'
+      },
+      {
+        id: 47,
+        type: 'tf',
+        topic: 'مسقط GCS',
+        question: 'في النظام الجغرافي <span class="hl-gold">GCS</span> تتشوه المساحة والشكل والمسافة بالقرب من خط الاستواء بينما تبقى دقيقة جداً عند القطبين.',
+        answer: false,
+        explanation: 'خطأ؛ العكس صحيح، فالتشوه الكبير يحدث بالقرب من القطبين، بينما الأجسام القريبة من خط الاستواء تبقى على نفس حجمها.'
+      },
+      {
+        id: 48,
+        type: 'tf',
+        topic: 'مسقط GCS',
+        question: 'في مسقط <span class="hl-gold">GCS</span> تبدو مساحة جزيرة <span class="hl-blue">جرينلاند أكبر من مساحة البرازيل</span>، وهو غير صحيح لأن مساحة البرازيل أكبر بكثير في الحقيقة.',
+        answer: true,
+        explanation: 'صحيح؛ هذا أشهر مثال على التضخم المساحي القطبي في مسقط GCS (مثل خريطة World Plate Carree في شكل 14).'
+      },
+      {
+        id: 49,
+        type: 'tf',
+        topic: 'مسقط GCS',
+        question: 'يعود سبب التشوه في نظام <span class="hl-gold">GCS</span> إلى أنه يحول كل مثلث كروي (قاعدته على خط الاستواء ورأسه عند القطب) إلى <span class="hl-blue">مستطيل بفتح رأس المثلث وتثبيت قاعدته</span>.',
+        answer: true,
+        explanation: 'صحيح؛ مدّ نقطة القطب لتصبح مساوية لطول خط الاستواء يضخم الأجسام القريبة من القطبين بشكل هائل.'
+      },
+      {
+        id: 50,
+        type: 'tf',
+        topic: 'مسقط ميركاتور UTM',
+        question: 'تُعد نظرية <span class="hl-gold">UTM</span> اختصاراً لـ <span class="hl-blue">Universal Transverse Mercator</span> (نظام ميركاتور المستعرض العالمي).',
+        answer: true,
+        explanation: 'صحيح؛ هي أحدث نظريات تسقيط الخرائط وتعتمد على معادلات رياضية معقدة نسبة للعالم ميركاتور.'
+      },
+      {
+        id: 51,
+        type: 'tf',
+        topic: 'مسقط ميركاتور UTM',
+        question: 'يقسم نظام <span class="hl-gold">UTM</span> العالم إلى مناطق (<span class="hl-gold">Zones</span>) كل منها على شكل مثلث منحني قاعدته على خط الاستواء طولها <span class="hl-blue">ست درجات (6°)</span> ورأسه على أحد القطبين.',
+        answer: true,
+        explanation: 'صحيح؛ تقسيم العالم إلى شرائح ضيقة بعرض 6 درجات طولية يقلل التشوه الهندسي إلى أدنى حد ممكن.'
+      },
+      {
+        id: 52,
+        type: 'tf',
+        topic: 'مسقط ميركاتور UTM',
+        question: 'يحوّل نظام <span class="hl-gold">UTM</span> كل منطقة (Zone) إلى مستطيل بنفس طريقة نظام GCS.',
+        answer: false,
+        explanation: 'خطأ؛ يتم تحويل كل منطقة في UTM إلى سطح مستوٍ بشكل مستقل ولا تُحول إلى مستطيل مثل نظام GCS، مما يجعل نسبة الخطأ أقل ما يمكن.'
+      },
+      {
+        id: 53,
+        type: 'tf',
+        topic: 'مسقط ميركاتور UTM',
+        question: 'يُطبق نظام <span class="hl-gold">UTM</span> في مختلف المشاريع البحثية في نظم المعلومات الجغرافية (<span class="hl-gold">GIS</span>) لأن نسبة الخطأ فيه أقل ما يمكن.',
+        answer: true,
+        explanation: 'صحيح؛ دقة نظام UTM العالية داخل كل منطقة جعلته النظام المعتمد في المشاريع الهندسية والبحثية في GIS.'
+      },
+      {
+        id: 54,
+        type: 'tf',
+        topic: 'علم الجيوديسيا وشكل الأرض',
+        question: 'قام المساحون الأمريكيون عام <span class="hl-blue">1927</span> بمسح سطح الأرض لحساب طول خط الاستواء (المحيط الأفقي) وطول خط الزوال (المحيط العمودي) باستخدام <span class="hl-blue">أجهزة قياس بصرية</span>.',
+        answer: true,
+        explanation: 'صحيح؛ في المرحلة الأولى عام 1927 اعتمد المساحون على أجهزة القياس البصرية والحسابات اليدوية.'
+      },
+      {
+        id: 55,
+        type: 'tf',
+        topic: 'علم الجيوديسيا وشكل الأرض',
+        question: '<span class="hl-gold">علم الجيوديسيا</span> هو أحد فروع علم الرياضيات يختص بدراسة <span class="hl-blue">الأسطح البيضاوية ومعادلاتها</span>.',
+        answer: true,
+        explanation: 'صحيح؛ هذا هو تعريف علم الجيوديسيا كما ورد في النص.'
+      },
+      {
+        id: 56,
+        type: 'tf',
+        topic: 'علم الجيوديسيا وشكل الأرض',
+        question: 'أثبتت نتائج مسح عام 1927 أن الأرض كروية تماماً كما كان سائداً في الاعتقاد القديم.',
+        answer: false,
+        explanation: 'خطأ؛ أبدت النتائج صحة الشكل البيضاوي للأرض خلافاً للاعتقاد السائد سابقاً بأن الأرض كروية.'
+      },
+      {
+        id: 57,
+        type: 'tf',
+        topic: 'علم الجيوديسيا وشكل الأرض',
+        question: 'ترمز عبارة <span class="hl-gold">NAD27</span> إلى <span class="hl-blue">North American Datum 1927</span> وتدل على النظام الجيوديسي المستخدم لتحديد شكل وحجم الأرض البيضاوي.',
+        answer: true,
+        explanation: 'صحيح؛ اعتمدت دول كثيرة نتائج المساحين الأمريكيين عام 1927 ووضعت رمز NAD27 على خرائطها.'
+      },
+      {
+        id: 58,
+        type: 'tf',
+        topic: 'علم الجيوديسيا وشكل الأرض',
+        question: 'يتكون نظام الإحداثيات لأي خريطة من مصطلحين هما: <span class="hl-blue">نظام التسقيط المتبع</span> (مثل GCS أو UTM) و<span class="hl-blue">النظام الجيوديسي</span> (مثل NAD27).',
+        answer: true,
+        explanation: 'صحيح؛ مثل كتابة عبارة UTM NAD27 على الخريطة.'
+      },
+      {
+        id: 59,
+        type: 'tf',
+        topic: 'علم الجيوديسيا وشكل الأرض',
+        question: 'يمكن تسقيط إحداثيات مباشرة على أي خريطة حتى لو اختلف النظام الجيوديسي أو نظام التسقيط بين الإحداثيات والخريطة.',
+        answer: false,
+        explanation: 'خطأ؛ إذا لم يتطابق النظامان فلا يمكن عمل شيء مباشرة، بل يجب أن يتطابق نظام التسقيط والمرجع الجيوديسي.'
+      },
+      {
+        id: 60,
+        type: 'tf',
+        topic: 'علم الجيوديسيا وشكل الأرض',
+        question: 'يبلغ الفرق بين طول نصف القطر الاستوائي ونصف القطر القطبي للأرض نحو <span class="hl-blue">21.5 كيلومتر</span>، ونصف القطر الاستوائي هو الأطول.',
+        answer: true,
+        explanation: 'صحيح؛ بسبب التفلطح عند القطبين والانبعاج عند خط الاستواء يزيد نصف القطر الاستوائي بنحو 21.5 كم.'
+      },
+      {
+        id: 61,
+        type: 'tf',
+        topic: 'علم الجيوديسيا وشكل الأرض',
+        question: 'نصف القطر القطبي للأرض أطول من نصف القطر الاستوائي بنحو 21.5 كيلومتر.',
+        answer: false,
+        explanation: 'خطأ؛ نصف القطر الاستوائي هو الأطول بنحو 21.5 كيلومتر.'
+      },
+      {
+        id: 62,
+        type: 'tf',
+        topic: 'المرحلة الثانية للجيوديسيا',
+        question: 'في المرحلة الثانية، وبعد تطور أجهزة القياس الإلكترونية والأقمار الصناعية، اكتشف العلماء أن شكل الأرض <span class="hl-blue">بيضاوي غير منتظم</span> حيث يكون محدباً في مناطق ومقعراً في مناطق أخرى.',
+        answer: true,
+        explanation: 'صحيح؛ هذا التحدب والتقعر يخص عموم سطح الأرض (الجيؤويد) وليس التضاريس السطحية من جبال ووديان.'
+      },
+      {
+        id: 63,
+        type: 'tf',
+        topic: 'المرحلة الثانية للجيوديسيا',
+        question: 'يُقصد بتحدب وتقعر شكل الأرض في المرحلة الثانية تضاريس سطح الأرض من جبال ووديان فقط.',
+        answer: false,
+        explanation: 'خطأ؛ نص المؤلف بوضوح: "ولا نقصد بذلك تضاريس سطح الأرض من جبال ووديان بل نقصد عموم سطح الأرض".'
+      },
+      {
+        id: 64,
+        type: 'tf',
+        topic: 'المرحلة الثانية للجيوديسيا',
+        question: 'وجد العلماء في المرحلة الثانية أن <span class="hl-blue">المحيط القطبي الجنوبي أقرب إلى مركز الأرض من المحيط القطبي الشمالي</span>.',
+        answer: true,
+        explanation: 'صحيح؛ وهذا دليل إضافي على عدم انتظام الشكل البيضاوي للأرض.'
+      },
+      {
+        id: 65,
+        type: 'tf',
+        topic: 'المرحلة الثانية للجيوديسيا',
+        question: 'أصبح <span class="hl-gold">النظام الجيوديسي</span> (أو <span class="hl-gold">مصطلح التحويل</span>) في المرحلة الثانية يشير إلى تحويل شكل الأرض غير المنتظم إلى منتظم، بالإضافة إلى تحديد شكل وحجم الأرض.',
+        answer: true,
+        explanation: 'صحيح؛ ويفضل المؤلف استخدام مصطلح "التحويل" لأنه أقرب للواقع ويعبر عن تحويل السطح غير المنتظم إلى سطح بيضاوي منتظم.'
+      },
+      {
+        id: 66,
+        type: 'tf',
+        topic: 'المرحلة الثانية للجيوديسيا',
+        question: 'أهمل المساحون الأمريكيون عام 1927 عملية تحويل الشكل غير المنتظم إلى منتظم، مما أدى مع الحسابات اليدوية إلى <span class="hl-blue">تقلص حجم العالم بنسبة خطأ كبيرة</span>.',
+        answer: true,
+        explanation: 'صحيح؛ إهمال عملية التحويل مع الأجهزة البصرية القديمة والحسابات اليدوية أنتج خطأً كبيراً أدى لتقلص حجم الأرض المحسوب.'
+      },
+      {
+        id: 67,
+        type: 'tf',
+        topic: 'المرحلة الثالثة للجيوديسيا',
+        question: 'في المرحلة الثالثة قامت الولايات المتحدة الأمريكية <span class="hl-blue">بتصوير سطح الأرض رادارياً</span> من الأقمار الصناعية للحصول على <span class="hl-blue">صورة ثلاثية الأبعاد دقيقة جداً</span>.',
+        answer: true,
+        explanation: 'صحيح؛ التصوير الراداري الفضائي ثلاثي الأبعاد وفّر بيانات دقيقة جداً لعموم سطح الأرض.'
+      },
+      {
+        id: 68,
+        type: 'tf',
+        topic: 'المرحلة الثالثة للجيوديسيا',
+        question: 'يُعد نظام <span class="hl-gold">NAD83</span> ونظام <span class="hl-gold">WGS84</span> من أنظمة الجيل الجديد للتحويل التي خفضت نسبة الخطأ إلى أقل مقدار ممكن.',
+        answer: true,
+        explanation: 'صحيح؛ هما أشهر أنظمة المراجع الجيوديسية الحديثة الدقيقة.'
+      },
+      {
+        id: 69,
+        type: 'tf',
+        topic: 'المرحلة الثالثة للجيوديسيا',
+        question: 'يرمز <span class="hl-gold">WGS84</span> إلى <span class="hl-blue">World Geodetic System 1984</span>، بينما يرمز <span class="hl-gold">NAD83</span> إلى <span class="hl-blue">North American Datum 1983</span>.',
+        answer: true,
+        explanation: 'صحيح؛ وكلاهما يأخذ في الاعتبار تحويل شكل الأرض لأفضل شكل منتظم ثم تحديد الشكل والحجم بعلم الجيوديسيا.'
+      },
+      {
+        id: 70,
+        type: 'tf',
+        topic: 'خاتمة الفصل الثاني',
+        question: 'الشرط الأساسي لتحويل المعلومة الجغرافية الحقيقية إلى معلومة جغرافية رقمية هو <span class="hl-blue">أن تكون ذات مرجعية مكانية</span>.',
+        answer: true,
+        explanation: 'صحيح؛ بدون المرجعية المكانية لا يمكن ربط البيانات وإدراج العالم الحقيقي في نظم المعلومات الجغرافية.'
+      },
+      {
+        id: 71,
+        type: 'tf',
+        topic: 'مراجعة شاملة للفصل',
+        question: 'يُطلق على المعلومات الوصفية غير المكانية في النصوص الجغرافية اسم المعلومات الكارتوجرافية.',
+        answer: false,
+        explanation: 'خطأ؛ يُطلق عليها اسم المعلومات الأبجدية - الرقمية أو المعلومات غير المكانية.'
+      },
+      {
+        id: 72,
+        type: 'tf',
+        topic: 'مراجعة شاملة للفصل',
+        question: 'تُعد الحدود الإدارية وأسماء المواقع من <span class="hl-blue">الموضوعات المجردة</span> التي تصفها الخرائط الطبوغرافية.',
+        answer: true,
+        explanation: 'صحيح؛ الخرائط الطبوغرافية تصف موضوعات طبيعية (مناسيب، مجاري مائية) وموضوعات مجردة (حدود إدارية، أسماء مواقع).'
+      },
+      {
+        id: 73,
+        type: 'tf',
+        topic: 'مراجعة شاملة للفصل',
+        question: 'نموذج ترقيم الأرض للجبال المحيطة بموقع الكعبة المكرمة (شكل 12) هو مثال على البيانات المدونة بطريقة <span class="hl-gold">الفيكتور</span>.',
+        answer: false,
+        explanation: 'خطأ؛ نماذج ترقيم الأرض (DEM) هي مثال على المعطيات المدونة بطريقة الرستر.'
+      },
+      {
+        id: 74,
+        type: 'tf',
+        topic: 'مراجعة شاملة للفصل',
+        question: 'المجسم الجيوديسي يُحدد بالإحداثيات <span class="hl-gold">φ, λ, h</span> بينما يُحدد الإسقاط الكارتوجرافي بالإحداثيات المستوية <span class="hl-gold">E, N</span> (كما في شكل 13).',
+        answer: true,
+        explanation: 'صحيح؛ المصدر الجيوديسي OXYZ، والمجسم الجيوديسي (φ, λ, h)، والإسقاط الكارتوجرافي (E, N).'
+      },
+      {
+        id: 75,
+        type: 'tf',
+        topic: 'مراجعة شاملة للفصل',
+        question: 'تمتلك المعلومة الجغرافية الرقمية مهارة غير محدودة لوصف الموضوعات وخصائصها وعلاقاتها بفضل الكثافة المتزايدة من تسجيل الدعامات المعلوماتية.',
+        answer: true,
+        explanation: 'صحيح؛ هذه إحدى المهارات الثلاث التي جمعها الشكل الرقمي منذ نهاية الستينيات.'
+      },
+      {
+        id: 76,
+        type: 'tf',
+        topic: 'مراجعة شاملة للفصل',
+        question: 'في <span class="hl-gold">طريقة الرستر</span> تتكون الصورة الكارتوجرافية من خطوط متصلة من النقاط البسيطة تُعرف الواحدة منها بـ <span class="hl-gold">PIXEL</span>.',
+        answer: true,
+        explanation: 'صحيح؛ البكسل (Pixel) هو أصغر وحدة مساحية في بنية الرستر.'
+      },
+      {
+        id: 77,
+        type: 'tf',
+        topic: 'مراجعة شاملة للفصل',
+        question: 'تحتاج الصور الفضائية والجوية إلى عملية <span class="hl-blue">تفسير الصورة</span> لاستخلاص الاستنتاجات الضمنية لأنها لا تصف الموضوعات مباشرة.',
+        answer: true,
+        explanation: 'صحيح؛ الصورة توضح الشكل والموقع لكن استخلاص نوع الظاهرة يتطلب تفسيراً بصرياً أو رقمياً.'
+      },
+      {
+        id: 78,
+        type: 'tf',
+        topic: 'مراجعة شاملة للفصل',
+        question: 'يربط <span class="hl-gold">نظام الإحداثيات الجغرافية</span> موقع كل ظاهرة على سطح الأرض باستخدام تقسيم دائري يبلغ مجموعه 360 درجة طولية و180 درجة عرضية.',
+        answer: true,
+        explanation: 'صحيح؛ 180° شرقاً + 180° غرباً = 360° طولية، و90° شمالاً + 90° جنوباً = 180° عرضية.'
+      },
+      {
+        id: 79,
+        type: 'tf',
+        topic: 'مراجعة شاملة للفصل',
+        question: 'تستطيع أنظمة الإحداثيات المستوية الحفاظ على المساحة والشكل معاً في كافة أنحاء العالم دون أي تشوه.',
+        answer: false,
+        explanation: 'خطأ؛ أي إسقاط من سطح كروي إلى مستوٍ يتضمن قدراً من التشوه في إحدى المواصفات الأربع.'
+      },
+      {
+        id: 80,
+        type: 'tf',
+        topic: 'مراجعة شاملة للفصل',
+        question: 'أدى استخدام الحواسيب المتقدمة والمعادلات الرياضية المعقدة في المرحلة الثالثة إلى تحويل سطح الأرض غير المنتظم إلى <span class="hl-blue">أفضل شكل منتظم</span>.',
+        answer: true,
+        explanation: 'صحيح؛ وهذا ما ميّز أنظمة NAD83 و WGS84.'
+      },
+
+      // ==================== القسم الثاني: 20 سؤال اختيار من متعدد (81 - 100) ====================
+      {
+        id: 81,
+        type: 'mcq',
+        topic: 'تعريف المعلومة الجغرافية',
+        question: 'تُعرّف <span class="hl-gold">المعلومة الجغرافية</span> تعريفاً جامعاً بأنها:',
+        options: [
+          'تمثيل لواحد من الموضوعات أو الظاهرات الحقيقية، المدونة في الحيز المكاني، في لحظة معينة.',
+          'مجموعة من الجداول الإحصائية والبيانات الأبجدية الرقمية غير المرتبطة بأي موقع مكاني.',
+          'مجسم كروي يطابق شكل الأرض الحقيقي ويُستخدم بديلاً عن الخرائط الورقية في الكتب.',
+          'عملية مسح ضوئي للخرائط الورقية لتحويلها إلى مصفوفة من الخلايا المتجاورة.'
+        ],
+        answer: 0,
+        explanation: 'التعريف الجامع للمعلومة الجغرافية يربط بين الظاهرة الحقيقية والحيز المكاني واللحظة الزمنية.'
+      },
+      {
+        id: 82,
+        type: 'mcq',
+        topic: 'تعريف المعلومة الجغرافية',
+        question: 'العلاقات بين موضوعات الفئة الأولى (<span class="hl-gold">المعلومة المكانية</span>) تكون علاقات:',
+        options: [
+          'وصفية بحتة تتعلق بالوظائف والخصائص الإدارية.',
+          'مكانية تتعلق بقياس مكان الموضوعات على وجه الأرض وشكلها وأبعادها.',
+          'إحصائية تتعلق بالمقاييس الكمية بصرف النظر عن النظام المكاني.',
+          'تاريخية تتعلق بتطور طباعة الخرائط في العصور القديمة.'
+        ],
+        answer: 1,
+        explanation: 'العلاقات بين موضوعات الفئة الأولى مكانية تتعلق بقياس المكان والشكل والأبعاد على سطح الأرض.'
+      },
+      {
+        id: 83,
+        type: 'mcq',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'أُخذت أول صورة جوية بواسطة <span class="hl-blue">البالون الطائر</span> في القرن التاسع عشر تحديداً عام:',
+        options: [
+          '1927 م',
+          '1858 م',
+          '1984 م',
+          '1969 م'
+        ],
+        answer: 1,
+        explanation: 'التقطت أول صورة جوية بواسطة البالون الطائر عام 1858، وتلتها صور الأقمار الصناعية بعد قرن من الزمن.'
+      },
+      {
+        id: 84,
+        type: 'mcq',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'عند الانتقال تدريجياً من <span class="hl-gold">الصورة</span> إلى <span class="hl-gold">النص</span> مروراً بـ <span class="hl-gold">الخريطة</span>، فإن:',
+        options: [
+          'الجزء الوصفي يتزايد، بينما يتناقص الجزء المكاني في الاتجاه نفسه.',
+          'الجزء المكاني يتزايد، بينما يتناقص الجزء الوصفي في الاتجاه نفسه.',
+          'الجزء الوصفي والمكاني يتزايدان معاً بنفس الدرجة.',
+          'الجزء الوصفي والمكاني يتناقصان معاً حتى يختفيا في النص.'
+        ],
+        answer: 0,
+        explanation: 'يتزايد الجزء الوصفي (الموضوعي) بالانتقال من الصورة إلى الخريطة ثم النص، ويتناقص الجزء المكاني في الاتجاه نفسه.'
+      },
+      {
+        id: 85,
+        type: 'mcq',
+        topic: 'أشكال التعبير الحقيقي',
+        question: 'اللغة الموحدة الجديدة التي حققت اليوم تكاملية الأشكال الثلاثة للتعبير الجغرافي (النص، الخريطة، الصورة) هي:',
+        options: [
+          'الجيوديسيا التطبيقية',
+          'المعلوماتية',
+          'الدرجات الستينية',
+          'الطبوغرافيا الكلاسيكية'
+        ],
+        answer: 1,
+        explanation: 'المعلوماتية هي اللغة الرقمية الموحدة التي دمجت النص والخريطة والصورة في بيئة واحدة.'
+      },
+      {
+        id: 86,
+        type: 'mcq',
+        topic: 'المعلومة الجغرافية الرقمية',
+        question: 'أنتج علم المساحة الشكل الرقمي للمعلومة الجغرافية في:',
+        options: [
+          'بداية القرن التاسع عشر',
+          'نهاية الستينيات',
+          'منتصف الثمانينيات',
+          'عام 1927'
+        ],
+        answer: 1,
+        explanation: 'في نهاية الستينيات أنتج علم المساحة الشكل الرقمي جامعاً مميزات النص والخريطة والصورة.'
+      },
+      {
+        id: 87,
+        type: 'mcq',
+        topic: 'الفيكتور والرستر',
+        question: 'في تمثيل الموضوعات الجغرافية رقمياً بواسطة "الحاوي والمحتوى"، فإن <span class="hl-gold">الحاوي</span> يمثل:',
+        options: [
+          'طريقة الرستر (إعادة الإخراج للخصائص في خلايا).',
+          'طريقة الفيكتور (إعادة الإخراج الخطي بواسطة نقطة وخط ومنطقة).',
+          'المسح الراداري ثلاثي الأبعاد لسطح الأرض.',
+          'المعلومات الأبجدية الرقمية غير المكانية.'
+        ],
+        answer: 1,
+        explanation: 'الحاوي يمثل إعادة الإخراج الخطي (طريقة الفيكتور)، بينما يمثل المحتوى إعادة الإخراج للخصائص (طريقة الرستر).'
+      },
+      {
+        id: 88,
+        type: 'mcq',
+        topic: 'الفيكتور والرستر',
+        question: 'تُترجم كلمة <span class="hl-gold">رستر (Raster)</span> ترجمة حرفية من الأصل الفرنسي بلفظ:',
+        options: [
+          'مرقم',
+          'مزرد',
+          'مجسم',
+          'مسقط'
+        ],
+        answer: 1,
+        explanation: 'تُسمى الطريقة المساحية "مزرد" طبقاً للترجمة الحرفية من الأصل الفرنسي، أو "رستر" بالإنجليزية، أو "سجلي".'
+      },
+      {
+        id: 89,
+        type: 'mcq',
+        topic: 'الفيكتور والرستر',
+        question: 'أي من العبارات التالية تصف بدقة الفرق في الاستخدام بين <span class="hl-gold">الرستر</span> و<span class="hl-gold">الفيكتور</span>؟',
+        options: [
+          'الرستر مناسب للموضوعات المفردة، والفيكتور مناسب للمساحات المتصلة.',
+          'الرستر مناسب للمساحات الجغرافية المتصلة، والفيكتور مناسب للموضوعات الجغرافية المفردة.',
+          'كلاهما غير مناسب لتمثيل الظاهرات الحقيقية في نظم المعلومات الجغرافية.',
+          'الرستر يستوجب إعداد علاقات طوبولوجية، بينما الفيكتور يعتمد على الكنس خط بخط.'
+        ],
+        answer: 1,
+        explanation: 'الرستر يناسب المساحات المتصلة (كالارتفاعات والغطاء النباتي)، والفيكتور يناسب الموضوعات المفردة ويستوجب علاقات طوبولوجية.'
+      },
+      {
+        id: 90,
+        type: 'mcq',
+        topic: 'الفيكتور والرستر',
+        question: 'تستوجب <span class="hl-gold">طريقة الفيكتور</span> إعداد علاقات خاصة بين الموضوعات المكانية تُسمى علاقات:',
+        options: [
+          'طوبولوجية (مكانية)',
+          'ستينية (درجية)',
+          'رادارية (إشعاعية)',
+          'إحصائية (أبجدية)'
+        ],
+        answer: 0,
+        explanation: 'العلاقات الطوبولوجية (Topology) تحدد الاتصال والتجاور والاحتواء بين العناصر الخطية والمساحية في الفيكتور.'
+      },
+      {
+        id: 91,
+        type: 'mcq',
+        topic: 'نظام الإحداثيات الجغرافية',
+        question: 'في <span class="hl-gold">نظام الإحداثيات الجغرافية</span>، يُقسم خط الاستواء إلى:',
+        options: [
+          '90 درجة شرقاً (E) و90 درجة غرباً (W).',
+          '180 درجة شرقاً (E) و180 درجة غرباً (W) من خط الزوال.',
+          '180 درجة شمالاً (N) و180 درجة جنوباً (S).',
+          '360 درجة شرقاً فقط من خط الزوال.'
+        ],
+        answer: 1,
+        explanation: 'يُقسم خط الاستواء إلى 180° شرق خط الزوال (E) و180° غربه (W)، بينما يُقسم خط الطول إلى 90° شمالاً (N) و90° جنوباً (S).'
+      },
+      {
+        id: 92,
+        type: 'mcq',
+        topic: 'نظام المساقط',
+        question: 'المواصفات الأربع الخاصة بالخرائط والتي يستحيل الحفاظ عليها جميعاً في وقت واحد في أي نظرية تسقيط هي:',
+        options: [
+          'النص، الخريطة، الصورة، المعلوماتية.',
+          'الشكل، المساحة، المسافة، الاتجاه.',
+          'النقطة، الخط، المضلع، البكسل.',
+          'الطول، العرض، الارتفاع، الزمن.'
+        ],
+        answer: 1,
+        explanation: 'المواصفات الأربع للخريطة هي: الشكل، المساحة، المسافة، والاتجاه.'
+      },
+      {
+        id: 93,
+        type: 'mcq',
+        topic: 'مسقط GCS',
+        question: 'لماذا تبدو مساحة جزيرة <span class="hl-blue">جرينلاند أكبر من مساحة البرازيل</span> في النظام الجغرافي <span class="hl-gold">GCS</span>؟',
+        options: [
+          'لأن مساحة جرينلاند الحقيقية أكبر من البرازيل.',
+          'لأن GCS يحول المثلثات الممتدة من خط الاستواء للقطب إلى مستطيلات بفتح رأس المثلث عند القطب وتثبيت قاعدته عند الاستواء.',
+          'لأن مسقط GCS يقسم العالم إلى مناطق عرض كل منها 6 درجات طولية.',
+          'لأن مسقط GCS يعتمد على التصوير الراداري ثلاثي الأبعاد.'
+        ],
+        answer: 1,
+        explanation: 'فتح رأس المثلث عند القطب ليصبح مساوياً لقاعدته الاستوائية يسبب تضخماً كبيراً للأجسام القريبة من القطبين مثل جرينلاند.'
+      },
+      {
+        id: 94,
+        type: 'mcq',
+        topic: 'مسقط ميركاتور UTM',
+        question: 'يقسم نظام <span class="hl-gold">UTM</span> العالم إلى مناطق (<span class="hl-gold">Zones</span>) كل منها على شكل مثلث منحني قاعدته على خط الاستواء طولها:',
+        options: [
+          '6 درجات (6°)',
+          '15 درجة (15°)',
+          '90 درجة (90°)',
+          '180 درجة (180°)'
+        ],
+        answer: 0,
+        explanation: 'يقسم مسقط UTM العالم إلى 60 منطقة طولية عرض كل منها 6 درجات على خط الاستواء.'
+      },
+      {
+        id: 95,
+        type: 'mcq',
+        topic: 'علم الجيوديسيا وشكل الأرض',
+        question: 'الفرع من علم الرياضيات الذي يختص بدراسة <span class="hl-blue">الأسطح البيضاوية ومعادلاتها</span> هو:',
+        options: [
+          'الطوبولوجيا',
+          'علم الجيوديسيا',
+          'الاستشعار عن بعد',
+          'الكارتوجرافيا الموضوعية'
+        ],
+        answer: 1,
+        explanation: 'علم الجيوديسيا هو فرع الرياضيات المختص بدراسة الأسطح البيضاوية ومعادلاتها لتحديد شكل وحجم الأرض.'
+      },
+      {
+        id: 96,
+        type: 'mcq',
+        topic: 'علم الجيوديسيا وشكل الأرض',
+        question: 'يبلغ الفرق بين طول نصف القطر الاستوائي ونصف القطر القطبي للأرض نحو:',
+        options: [
+          '6 كيلومترات (القطبي أطول).',
+          '21.5 كيلومتر (الاستوائي أطول).',
+          '21.5 كيلومتر (القطبي أطول).',
+          '180 كيلومتراً (الاستوائي أطول).'
+        ],
+        answer: 1,
+        explanation: 'نصف القطر الاستوائي أطول من نصف القطر القطبي بنحو 21.5 كيلومتر.'
+      },
+      {
+        id: 97,
+        type: 'mcq',
+        topic: 'علم الجيوديسيا وشكل الأرض',
+        question: 'عند قراءة العبارة <span class="hl-gold">UTM NAD27</span> على خريطة، فإن <span class="hl-gold">UTM</span> و<span class="hl-gold">NAD27</span> يشيران على الترتيب إلى:',
+        options: [
+          'النظام الجيوديسي ثم نظام التسقيط.',
+          'نظام التسقيط المتبع ثم النظام الجيوديسي المرجعي.',
+          'نوع الماسح الضوئي ثم دقة البكسل.',
+          'خط الاستواء ثم خط الزوال الرئيسي.'
+        ],
+        answer: 1,
+        explanation: 'يتكون نظام الإحداثيات من مصطلحين: الأول نظام التسقيط (UTM) والثاني النظام الجيوديسي (NAD27).'
+      },
+      {
+        id: 98,
+        type: 'mcq',
+        topic: 'المرحلة الثانية للجيوديسيا',
+        question: 'في المرحلة الثانية لتطور المرجع الجيوديسي، اكتشف العلماء أن:',
+        options: [
+          'الأرض كروية تماماً ولا يوجد أي فرق بين نصفي القطر.',
+          'الأرض بيضاوية غير منتظمة (محدبة ومقعرة) والمحيط القطبي الجنوبي أقرب لمركز الأرض من الشمالي.',
+          'نظام NAD27 أعطى حجماً أكبر للعالم من حجمه الحقيقي.',
+          'التصوير البصري اليدوي أدق من الأقمار الصناعية.'
+        ],
+        answer: 1,
+        explanation: 'اكتُشف في المرحلة الثانية عدم انتظام الشكل البيضاوي للأرض وقرب القطب الجنوبي للمركز أكثر من الشمالي.'
+      },
+      {
+        id: 99,
+        type: 'mcq',
+        topic: 'المرحلة الثالثة للجيوديسيا',
+        question: 'تُعد أنظمة <span class="hl-gold">NAD83</span> و<span class="hl-gold">WGS84</span> نتاج المرحلة الثالثة التي اعتمدت على:',
+        options: [
+          'التصوير الجوي بالبالون الطائر عام 1858.',
+          'التصوير الراداري ثلاثي الأبعاد لسطح الأرض واستخدام حواسيب متقدمة ومعادلات معقدة.',
+          'الحسابات اليدوية وأجهزة القياس البصرية عام 1927.',
+          'رسم الخرائط على سطح مستوٍ مع إهمال كروية الأرض.'
+        ],
+        answer: 1,
+        explanation: 'اعتمدت المرحلة الثالثة على التصوير الراداري الفضائي ثلاثي الأبعاد والحواسيب المتقدمة لتقليل الخطأ لأدنى قدر.'
+      },
+      {
+        id: 100,
+        type: 'mcq',
+        topic: 'خاتمة الفصل الثاني',
+        question: 'لكي يتم تحويل المعلومة الجغرافية الحقيقية إلى معلومة جغرافية رقمية وإدراج العالم الحقيقي في نظم المعلومات الجغرافية، يجب أن تكون:',
+        options: [
+          'مكتوبة بلغة نصية كلاسيكية خالية من الأرقام.',
+          'ذات مرجعية مكانية محددة.',
+          'مرسومة على مجسم كروي فقط.',
+          'ممسوحة ضوئياً دون الحاجة لأي إحداثيات.'
+        ],
+        answer: 1,
+        explanation: 'المرجعية المكانية هي الشرط الجوهري لتحويل المعلومة الجغرافية الحقيقية إلى معلومة رقمية داخل نظم المعلومات الجغرافية.'
+      }
+    ];
+
+    // State Management
+    // userAnswers[id] = selectedValue (boolean for 'tf', number index for 'mcq')
+    let userAnswers = {};
+    let currentFilter = 'all';
+
+    // Initialize App
+    function initApp() {
+      renderQuestions();
+      updateStats();
+    }
+
+    // Filter Logic
+    function setFilter(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        const isSelected = btn.getAttribute('data-filter') === filter;
+        if (isSelected) {
+          btn.className = 'filter-btn active-filter shrink-0 px-3 py-1.5 rounded-lg text-xs font-extrabold transition bg-skybright text-deepnavy shadow-sm';
+        } else if (btn.getAttribute('data-filter') === 'wrong') {
+          btn.className = 'filter-btn shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-rose-950/50 text-rose-300 border border-rose-500/30 hover:bg-rose-900/50';
+        } else {
+          btn.className = 'filter-btn shrink-0 px-3 py-1.5 rounded-lg text-xs font-bold transition bg-blue-950/60 text-skylight border border-blue-500/25 hover:bg-blue-900/60';
+        }
+      });
+      renderQuestions();
+    }
+
+    // Render Questions based on current filter
+    function renderQuestions() {
+      const container = document.getElementById('questionsContainer');
+      const filtered = questionsData.filter(q => {
+        const hasAnswered = Object.prototype.hasOwnProperty.call(userAnswers, q.id);
+        const isCorrect = hasAnswered && userAnswers[q.id] === q.answer;
+        if (currentFilter === 'tf') return q.type === 'tf';
+        if (currentFilter === 'mcq') return q.type === 'mcq';
+        if (currentFilter === 'unanswered') return !hasAnswered;
+        if (currentFilter === 'wrong') return hasAnswered && !isCorrect;
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="p-10 rounded-2xl bg-[#111c3d] border border-blue-500/30 text-center space-y-2">
+            <div class="text-2xl text-skybright font-bold">لا توجد أسئلة مطابقة لهذا التصنيف حالياً</div>
+            <p class="text-sm text-skylight/80">يمكنك العودة لعرض جميع الأسئلة من شريط التصفية بالأعلى.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      let lastSectionHeader = '';
+
+      filtered.forEach(q => {
+        // Section Banner when viewing 'all'
+        if (currentFilter === 'all') {
+          if (q.id === 1 && lastSectionHeader !== 'tf') {
+            lastSectionHeader = 'tf';
+            html += `
+              <div class="pt-2 pb-1">
+                <div class="p-4 rounded-2xl bg-gradient-to-l from-blue-900/50 to-[#111c3d] border-r-4 border-skybright flex items-center justify-between">
+                  <div>
+                    <h2 class="text-lg sm:text-xl font-black text-skybright">القسم الأول: أسئلة الصواب والخطأ (80 سؤالاً)</h2>
+                    <p class="text-xs text-skylight/85 mt-0.5">حدد مدى صحة أو خطأ كل عبارة علمية مما يلي بدقة</p>
+                  </div>
+                  <span class="px-3 py-1 rounded-lg bg-skybright/15 text-skybright border border-skybright/30 text-xs font-extrabold">1 - 80</span>
+                </div>
+              </div>
+            `;
+          } else if (q.id === 81 && lastSectionHeader !== 'mcq') {
+            lastSectionHeader = 'mcq';
+            html += `
+              <div class="pt-6 pb-1">
+                <div class="p-4 rounded-2xl bg-gradient-to-l from-amber-500/15 to-[#111c3d] border-r-4 border-amber-300 flex items-center justify-between">
+                  <div>
+                    <h2 class="text-lg sm:text-xl font-black text-amber-300">القسم الثاني: أسئلة الاختيار من متعدد (20 سؤالاً)</h2>
+                    <p class="text-xs text-skylight/85 mt-0.5">اختر الإجابة الأدق من بين البدائل الأربعة لكل سؤال</p>
+                  </div>
+                  <span class="px-3 py-1 rounded-lg bg-amber-400/15 text-amber-300 border border-amber-400/30 text-xs font-extrabold">81 - 100</span>
+                </div>
+              </div>
+            `;
+          }
+        }
+
+        const hasAnswered = Object.prototype.hasOwnProperty.call(userAnswers, q.id);
+        const userVal = userAnswers[q.id];
+        const isCorrect = hasAnswered && userVal === q.answer;
+
+        // Card border styling based on state
+        let cardBorder = 'border-blue-500/25 hover:border-blue-400/45';
+        if (hasAnswered) {
+          cardBorder = isCorrect
+            ? 'border-emerald-500/60 shadow-md shadow-emerald-950/30'
+            : 'border-rose-500/60 shadow-md shadow-rose-950/30';
+        }
+
+        html += `
+          <article id="q-card-${q.id}" class="p-5 sm:p-6 rounded-2xl bg-[#111c3d] border ${cardBorder} transition-all duration-200">
+            <!-- Top Row: Question Number, Type Badge & Topic -->
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center justify-center px-2.5 py-1 rounded-lg bg-blue-500/20 text-skybright border border-blue-400/35 text-xs font-black">
+                  سؤال ${q.id}
+                </span>
+                <span class="px-2.5 py-1 rounded-lg text-[11px] font-bold ${
+                  q.type === 'tf'
+                    ? 'bg-sky-950/80 text-skylight border border-sky-400/25'
+                    : 'bg-amber-950/50 text-amber-300 border border-amber-400/30'
+                }">
+                  ${q.type === 'tf' ? 'صح / خطأ' : 'اختيار من متعدد'}
+                </span>
+                <span class="text-[11px] text-slate-400 hidden sm:inline">• ${q.topic}</span>
+              </div>
+              ${
+                hasAnswered
+                  ? isCorrect
+                    ? '<span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">✓ إجابة صحيحة</span>'
+                    : '<span class="px-2.5 py-0.5 rounded-full text-xs font-extrabold bg-rose-500/20 text-rose-300 border border-rose-400/40">✕ إجابة خاطئة</span>'
+                  : '<span class="text-[11px] text-slate-400">في انتظار إجابتك</span>'
+              }
+            </div>
+
+            <!-- Question Text -->
+            <p class="text-base sm:text-[17px] font-bold text-slate-100 leading-relaxed mb-4">
+              ${q.question}
+            </p>
+
+            <!-- Options Area -->
+            ${q.type === 'tf' ? renderTfOptions(q, hasAnswered, userVal) : renderMcqOptions(q, hasAnswered, userVal)}
+
+            <!-- Instant Explanation Box -->
+            ${
+              hasAnswered
+                ? `
+                <div class="mt-4 p-3.5 rounded-xl ${
+                  isCorrect
+                    ? 'bg-emerald-950/40 border border-emerald-500/35 text-emerald-100'
+                    : 'bg-rose-950/40 border border-rose-500/35 text-rose-100'
+                } text-xs sm:text-sm leading-relaxed">
+                  <span class="font-extrabold ${isCorrect ? 'text-emerald-300' : 'text-amber-300'}">التوضيح العلمي: </span>
+                  ${q.explanation}
+                </div>
+              `
+                : ''
+            }
+          </article>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    // Render True/False Buttons
+    function renderTfOptions(q, hasAnswered, userVal) {
+      const choices = [
+        { val: true, label: '✔ صواب (صح)' },
+        { val: false, label: '✘ خطأ' }
+      ];
+
+      return `
+        <div class="grid grid-cols-2 gap-3">
+          ${choices
+            .map(c => {
+              let btnClass =
+                'bg-deepnavy/80 hover:bg-blue-900/50 text-slate-200 border-blue-500/30 cursor-pointer';
+              if (hasAnswered) {
+                if (c.val === q.answer) {
+                  btnClass =
+                    'bg-emerald-600/30 text-emerald-200 border-emerald-400 ring-1 ring-emerald-400 font-extrabold';
+                } else if (c.val === userVal && userVal !== q.answer) {
+                  btnClass =
+                    'bg-rose-600/30 text-rose-200 border-rose-400 ring-1 ring-rose-400 font-extrabold';
+                } else {
+                  btnClass = 'bg-deepnavy/40 text-slate-500 border-slate-700/50 opacity-60';
+                }
+              }
+              return `
+                <button
+                  type="button"
+                  ${hasAnswered ? 'disabled' : `onclick="submitAnswer(${q.id}, ${c.val})"`}
+                  class="w-full py-3 px-4 rounded-xl border text-sm sm:text-base font-bold transition text-center ${btnClass}"
+                >
+                  ${c.label}
+                </button>
+              `;
+            })
+            .join('')}
+        </div>
+      `;
+    }
+
+    // Render Multiple Choice Options
+    function renderMcqOptions(q, hasAnswered, userVal) {
+      const letters = ['أ', 'ب', 'ج', 'د'];
+      return `
+        <div class="space-y-2.5">
+          ${q.options
+            .map((optText, idx) => {
+              let optClass =
+                'bg-deepnavy/80 hover:bg-blue-900/45 text-slate-200 border-blue-500/30 cursor-pointer';
+              let badgeClass = 'bg-blue-500/20 text-skybright border-blue-400/30';
+
+              if (hasAnswered) {
+                if (idx === q.answer) {
+                  optClass =
+                    'bg-emerald-600/25 text-emerald-100 border-emerald-400 ring-1 ring-emerald-400 font-bold';
+                  badgeClass = 'bg-emerald-500 text-deepnavy border-emerald-300 font-black';
+                } else if (idx === userVal && userVal !== q.answer) {
+                  optClass =
+                    'bg-rose-600/25 text-rose-100 border-rose-400 ring-1 ring-rose-400 font-bold';
+                  badgeClass = 'bg-rose-500 text-white border-rose-300 font-black';
+                } else {
+                  optClass = 'bg-deepnavy/40 text-slate-400 border-slate-700/50 opacity-65';
+                  badgeClass = 'bg-slate-800 text-slate-500 border-slate-700';
+                }
+              }
+
+              return `
+                <button
+                  type="button"
+                  ${hasAnswered ? 'disabled' : `onclick="submitAnswer(${q.id}, ${idx})"`}
+                  class="w-full p-3.5 rounded-xl border text-right flex items-start gap-3 transition ${optClass}"
+                >
+                  <span class="shrink-0 w-7 h-7 rounded-lg border flex items-center justify-center text-xs font-extrabold ${badgeClass}">
+                    ${letters[idx]}
+                  </span>
+                  <span class="text-sm sm:text-base leading-snug pt-0.5">${optText}</span>
+                </button>
+              `;
+            })
+            .join('')}
+        </div>
+      `;
+    }
+
+    // Submit Answer Handler
+    function submitAnswer(questionId, selectedValue) {
+      if (Object.prototype.hasOwnProperty.call(userAnswers, questionId)) return;
+      userAnswers[questionId] = selectedValue;
+      updateStats();
+      renderQuestions();
+    }
+
+    // Update Top Dashboard & Counters
+    function updateStats() {
+      const total = questionsData.length;
+      const answeredIds = Object.keys(userAnswers).map(Number);
+      const answeredCount = answeredIds.length;
+
+      let correctCount = 0;
+      let wrongCount = 0;
+
+      answeredIds.forEach(id => {
+        const q = questionsData.find(item => item.id === id);
+        if (q && userAnswers[id] === q.answer) {
+          correctCount++;
+        } else {
+          wrongCount++;
+        }
+      });
+
+      const unansweredCount = total - answeredCount;
+      const percent = Math.round((answeredCount / total) * 100);
+
+      document.getElementById('answeredCountDisplay').textContent = `${answeredCount} / ${total}`;
+      document.getElementById('correctCountDisplay').textContent = correctCount;
+      document.getElementById('wrongCountDisplay').textContent = wrongCount;
+      document.getElementById('mobileScoreDisplay').textContent = `${correctCount} / ${total}`;
+      document.getElementById('mobileCorrect').textContent = correctCount;
+      document.getElementById('mobileWrong').textContent = wrongCount;
+
+      document.getElementById('progressPercentText').textContent = `${percent}%`;
+      document.getElementById('progressBar').style.width = `${percent}%`;
+
+      document.getElementById('unansweredTabCount').textContent = unansweredCount;
+      document.getElementById('wrongTabCount').textContent = wrongCount;
+
+      const retryWrongBtn = document.getElementById('retryWrongBtn');
+      if (wrongCount > 0) {
+        retryWrongBtn.classList.remove('hidden');
+      } else {
+        retryWrongBtn.classList.add('hidden');
+      }
+    }
+
+    // Retry Only Wrong Questions
+    function retryWrongQuestions() {
+      const wrongIds = Object.keys(userAnswers)
+        .map(Number)
+        .filter(id => {
+          const q = questionsData.find(item => item.id === id);
+          return q && userAnswers[id] !== q.answer;
+        });
+
+      if (wrongIds.length === 0) {
+        showInfoDialog('تنبيه', 'لا توجد أسئلة خاطئة لإعادتها حالياً! استمر في حل الأسئلة.');
+        return;
+      }
+
+      wrongIds.forEach(id => {
+        delete userAnswers[id];
+      });
+
+      updateStats();
+      setFilter('unanswered');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Confirm Reset All
+    function confirmResetAll() {
+      if (Object.keys(userAnswers).length === 0) {
+        showInfoDialog('تنبيه', 'لم تقم بالإجابة عن أي سؤال بعد.');
+        return;
+      }
+      showConfirmDialog(
+        'إعادة ضبط الامتحان',
+        'هل أنت متأكد من رغبتك في مسح جميع إجاباتك الحالية والبدء من جديد في الـ 100 سؤال؟',
+        () => {
+          userAnswers = {};
+          updateStats();
+          setFilter('all');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+      );
+    }
+
+    // Custom Dialog Helpers (No native alert/confirm)
+    function showConfirmDialog(title, message, onConfirm) {
+      const dialog = document.getElementById('customDialog');
+      document.getElementById('dialogTitle').textContent = title;
+      document.getElementById('dialogMessage').textContent = message;
+      const cancelBtn = document.getElementById('dialogCancelBtn');
+      const confirmBtn = document.getElementById('dialogConfirmBtn');
+
+      cancelBtn.classList.remove('hidden');
+      confirmBtn.textContent = 'نعم، تأكيد';
+      confirmBtn.onclick = () => {
+        closeCustomDialog();
+        onConfirm();
+      };
+
+      dialog.classList.remove('hidden');
+      dialog.classList.add('flex');
+    }
+
+    function showInfoDialog(title, message) {
+      const dialog = document.getElementById('customDialog');
+      document.getElementById('dialogTitle').textContent = title;
+      document.getElementById('dialogMessage').textContent = message;
+      const cancelBtn = document.getElementById('dialogCancelBtn');
+      const confirmBtn = document.getElementById('dialogConfirmBtn');
+
+      cancelBtn.classList.add('hidden');
+      confirmBtn.textContent = 'حسناً';
+      confirmBtn.onclick = closeCustomDialog;
+
+      dialog.classList.remove('hidden');
+      dialog.classList.add('flex');
+    }
+
+    function closeCustomDialog() {
+      const dialog = document.getElementById('customDialog');
+      dialog.classList.add('hidden');
+      dialog.classList.remove('flex');
+    }
+
+    // Final Result Modal
+    function openResultModal() {
+      const total = questionsData.length;
+      const answeredIds = Object.keys(userAnswers).map(Number);
+      let correctCount = 0;
+      let wrongCount = 0;
+      let tfCorrect = 0;
+      let mcqCorrect = 0;
+
+      answeredIds.forEach(id => {
+        const q = questionsData.find(item => item.id === id);
+        if (q && userAnswers[id] === q.answer) {
+          correctCount++;
+          if (q.type === 'tf') tfCorrect++;
+          if (q.type === 'mcq') mcqCorrect++;
+        } else {
+          wrongCount++;
+        }
+      });
+
+      const unansweredCount = total - answeredIds.length;
+      const percentage = Math.round((correctCount / total) * 100);
+
+      document.getElementById('modalFinalScore').textContent = `${correctCount} / ${total}`;
+      document.getElementById('modalPercentage').textContent = `النسبة المئوية: ${percentage}%`;
+      document.getElementById('modalCorrectCount').textContent = correctCount;
+      document.getElementById('modalWrongCount').textContent = wrongCount;
+      document.getElementById('modalUnansweredCount').textContent = unansweredCount;
+      document.getElementById('modalTfBreakdown').textContent = `${tfCorrect} / 80`;
+      document.getElementById('modalMcqBreakdown').textContent = `${mcqCorrect} / 20`;
+
+      const gradeBadge = document.getElementById('modalGradeBadge');
+      if (percentage >= 90) {
+        gradeBadge.textContent = 'ده انت تيجي تحل الامتحان معايا بقا 012968*****';
+        gradeBadge.className = 'inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-extrabold bg-emerald-500/20 text-emerald-300 border border-emerald-400/40';
+      } else if (percentage >= 80) {
+        gradeBadge.textContent = 'يجي منك';
+        gradeBadge.className = 'inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-extrabold bg-sky-500/20 text-skybright border border-sky-400/40';
+      } else if (percentage >= 65) {
+        gradeBadge.textContent = 'شغال';
+        gradeBadge.className = 'inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-extrabold bg-amber-500/20 text-amber-300 border border-amber-400/40';
+      } else if (percentage >= 50) {
+        gradeBadge.textContent = 'تمام';
+        gradeBadge.className = 'inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-extrabold bg-orange-500/20 text-orange-300 border border-orange-400/40';
+      } else {
+        gradeBadge.textContent = 'اي الخرا ده ؟!!!';
+        gradeBadge.className = 'inline-block mt-3 px-4 py-1.5 rounded-full text-xs font-extrabold bg-rose-500/20 text-rose-300 border border-rose-400/40';
+      }
+
+      const modal = document.getElementById('resultModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeResultModal() {
+      const modal = document.getElementById('resultModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    // Start on load
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>aded', initApp);
+  </script>
+</body>
+</html>
